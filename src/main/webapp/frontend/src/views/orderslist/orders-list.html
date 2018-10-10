@@ -1,0 +1,275 @@
+<!--
+  ~ Copyright 2000-2017 Vaadin Ltd.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License"); you may not
+  ~ use this file except in compliance with the License. You may obtain a copy of
+  ~ the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+  ~ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+  ~ License for the specific language governing permissions and limitations under
+  ~ the License.
+  -->
+
+<!-- Dependency resources -->
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<!-- Added Web Component dependencies to make Vaadin Designer preview work -->
+<link rel="import" href="../../../bower_components/vaadin-text-field/src/vaadin-text-field.html">
+<link rel="import" href="../../../bower_components/vaadin-button/src/vaadin-button.html">
+<link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../../bower_components/vaadin-lumo-styles/badge.html">
+<!-- TODO Needed to show icons in Vaadin Designer preview mode for now, but can be removed soon -->
+<link rel="import" href="../../../bower_components/vaadin-lumo-styles/icons.html">
+
+
+<!-- Defines the reviews-list element -->
+<dom-module id="orders-list">
+    <template>
+        <style include="lumo-color lumo-typography lumo-badge view-styles">
+            :host {
+                display: block;
+            }
+
+            #header {
+                display: flex;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                align-items: baseline;
+            }
+
+            /* Subtitle for the header */
+            #header span {
+                display: block;
+                font-size: var(--lumo-font-size-s);
+                font-weight: 400;
+                color: var(--lumo-secondary-text-color);
+                letter-spacing: 0;
+                margin-top: 0.3em;
+                margin-left: auto;
+                margin-right: 20px;
+            }
+
+            .order {
+                display: flex;
+                align-items: center;
+                width: 100%;
+                padding: var(--lumo-space-wide-xl);
+                padding-right: var(--lumo-space-m);
+                box-sizing: border-box;
+                margin-bottom: 8px;
+                background-color: var(--lumo-base-color);
+                box-shadow: 0 0 0 1px var(--lumo-shade-5pct), 0 2px 5px 0 var(--lumo-shade-10pct);
+                border-radius: var(--lumo-border-radius);
+            }
+
+            .order__rating {
+                flex: none;
+                align-self: flex-start;
+                margin: 0 1em 0 0;
+                position: relative;
+                cursor: default;
+            }
+
+            .order__score {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: var(--lumo-border-radius);
+                font-weight: 600;
+                width: calc(100% + 10px);
+                height: 2.5em;
+                margin: 0;
+                background-color: var(--lumo-contrast-80pct);
+                color: var(--lumo-base-color);
+            }
+
+            .order__count {
+                position: absolute;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                height: 20px;
+                min-width: 8px;
+                padding: 0 6px;
+                background: var(--lumo-base-color);
+                color: var(--lumo-secondary-text-color);
+                top: -10px;
+                left: -10px;
+                border-radius: var(--lumo-border-radius);
+                margin: 0;
+                font-size: 12px;
+                font-weight: 500;
+                box-shadow: 0 0 0 1px var(--lumo-contrast-20pct);
+            }
+
+            .order__count span {
+                width: 0;
+                overflow: hidden;
+                white-space: nowrap;
+            }
+
+            .order__rating:hover .order__count span {
+                width: auto;
+                margin-left: 0.4em;
+            }
+
+            .order__details {
+                width: 100%;
+                max-width: calc(100% - 8.5em);
+                flex: auto;
+                line-height: var(--lumo-line-height-xs);
+                overflow: hidden;
+            }
+
+            .order__name {
+                margin: 0 0.5em 0 0;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .order__category {
+                margin: 0;
+                flex: none;
+            }
+
+            [data-status="PLANNED"] {
+                color: var(--lumo-base-color);
+                background-color: var(--lumo-shade);
+            }
+
+            [data-status="ORDERED"] {
+                color: var(--lumo-base-color);
+                background-color: var(--lumo-primary-color);
+            }
+
+            [data-status="DELIVERED"] {
+                color: var(--lumo-base-color);
+                background-color: var(--lumo-success-color);
+            }
+
+            [data-status="CANCELLED"] {
+                color: var(--lumo-base-color);
+                background-color: var(--lumo-error-color);
+            }
+
+            .order__date {
+                white-space: nowrap;
+                line-height: var(--lumo-line-height-xs);
+                margin: 0 1em;
+                width: 30%;
+            }
+
+            .order__date h5 {
+                font-size: var(--lumo-font-size-s);
+                font-weight: 400;
+                color: var(--lumo-secondary-text-color);
+                margin: 0;
+            }
+
+            .order__date p {
+                font-size: var(--lumo-font-size-s);
+                margin: 0;
+            }
+
+            .order__edit {
+                align-self: flex-start;
+                flex: none;
+                margin: 0 0 0 auto;
+                width: 5em;
+            }
+
+            .orders__no-matches {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 4em;
+                font-size: 22px;
+                color: var(--lumo-tertiary-text-color);
+            }
+
+            /* Small viewport styles */
+
+            @media (max-width: 500px) {
+                .order {
+                    padding: var(--lumo-space-m);
+                    padding-right: var(--lumo-space-s);
+                    flex-wrap: wrap;
+                }
+
+                .order__date {
+                    order: 1;
+                    margin-left: 3.5em;
+                    margin-top: 0.5em;
+                }
+            }
+
+        </style>
+
+        <div class="view-toolbar">
+            <vaadin-text-field id="search" class="view-toolbar__search-field" autocapitalize=off>
+                <iron-icon icon="lumo:search" slot="prefix"></iron-icon>
+            </vaadin-text-field>
+            <vaadin-button id="newOrder" class="view-toolbar__button" theme="primary">
+                <iron-icon icon="lumo:plus" slot="prefix"></iron-icon>
+                <span>New order</span>
+            </vaadin-button>
+        </div>
+
+        <div class="view-container orders">
+            <h2 id="header"></h2>
+            <template is="dom-if" if="{{!_isEmpty(orders)}}">
+                <template is="dom-repeat" items="[[orders]]">
+                    <div class="order">
+                        <div class="order__rating">
+                            <p class="order__score">{{_setTwoNumberDecimal(item.totalPrice)}} $</p>
+                            <p class="order__count">
+                                [[item.counter]]
+                                <span>ordered before</span>
+                            </p>
+                        </div>
+                        <div class="order__details">
+                            <h4 class="order__name">[[item.title]]</h4>
+                            <template is="dom-if" if="[[item.status]]">
+                                <p class="order__category" data-status$="[[item.status]]" theme="badge small">[[item.status]]</p>
+                            </template>
+                        </div>
+                        <div class="order__date">
+                            <h5>Date</h5>
+                            <p>[[item.orderDate]]</p>
+                        </div>
+                        <vaadin-button on-click="edit" class="order__edit" theme="tertiary">
+                            <iron-icon icon="lumo:edit"></iron-icon><span>Edit</span>
+                        </vaadin-button>
+                    </div>
+                </template>
+            </template>
+
+            <template is="dom-if" if="{{_isEmpty(orders)}}">
+                <div class="orders__no-matches">No matches</div>
+            </template>
+        </div>
+    </template>
+
+    <!-- Polymer boilerplate to register the reviews-list element -->
+    <script>
+        class OrderListElement extends Polymer.Element {
+            static get is() {
+                return 'orders-list'
+            }
+
+            _isEmpty(array) {
+                return array.length == 0;
+            }
+
+            _setTwoNumberDecimal(el) {
+                return parseFloat(el).toFixed(2);
+            }
+        }
+        customElements.define(OrderListElement.is, OrderListElement);
+    </script>
+
+</dom-module>
