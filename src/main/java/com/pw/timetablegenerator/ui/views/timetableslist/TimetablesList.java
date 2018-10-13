@@ -1,9 +1,14 @@
 package com.pw.timetablegenerator.ui.views.timetableslist;
 
+import com.pw.timetablegenerator.backend.entity.Timetable;
 import com.pw.timetablegenerator.backend.utils.security.SecurityUtils;
 import com.pw.timetablegenerator.ui.MainLayout;
+import com.pw.timetablegenerator.ui.encoders.LocalDateToStringEncoder;
+import com.pw.timetablegenerator.ui.encoders.LongToStringEncoder;
+import com.pw.timetablegenerator.ui.encoders.TimetableTypeToStringEncoder;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dependency.HtmlImport;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.polymertemplate.Id;
@@ -14,9 +19,12 @@ import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.templatemodel.Encode;
+import com.vaadin.flow.templatemodel.Exclude;
 import com.vaadin.flow.templatemodel.TemplateModel;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 
 /**
  * Displays the list of available orders, with a search filter as well as
@@ -26,9 +34,9 @@ import javax.annotation.PostConstruct;
  */
 @Route(value = "", layout = MainLayout.class)
 @PageTitle("Timetables")
-//@Tag("timetables-list")
-//@HtmlImport("frontend://src/views/timetableslist/orders-list.html")
-public class TimetablesList extends VerticalLayout implements BeforeEnterObserver {
+@Tag("timetables-list")
+@HtmlImport("frontend://src/views/timetableslist/timetables-list.html")
+public class TimetablesList extends PolymerTemplate<TimetablesList.TimetablesModel> implements BeforeEnterObserver {
 
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
@@ -38,18 +46,19 @@ public class TimetablesList extends VerticalLayout implements BeforeEnterObserve
     }
 
     public interface TimetablesModel extends TemplateModel {
-//        @Encode(value = OrderStatusToStringEncoder.class, path = "status")
-//        @Encode(value = LocalDateToStringEncoder.class, path = "orderDate")
-//        @Encode(value = LongToStringEncoder.class, path = "counter")
-//        @Encode(value = LongToStringEncoder.class, path = "orderId")
-//        @Exclude({"owner", "orderedProduct"})
-//        void setOrders(List<Order> orders);
+        @Encode(value = LocalDateToStringEncoder.class, path = "generationDate")
+        @Encode(value = LongToStringEncoder.class, path = "timetableId")
+        @Encode(value = LongToStringEncoder.class, path = "semester")
+        @Encode(value = LongToStringEncoder.class, path = "quality")
+        @Encode(value = TimetableTypeToStringEncoder.class, path = "timetableType")
+        @Exclude({"owner", "courses"})
+        void setTimetables(List<Timetable> timetables);
     }
 
     @Id("search")
     private TextField search;
-    @Id("newOrder")
-    private Button addOrder;
+    @Id("newTimetable")
+    private Button addTimetable;
     @Id("header")
     private H2 header;
 
