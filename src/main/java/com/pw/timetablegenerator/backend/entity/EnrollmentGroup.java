@@ -22,9 +22,9 @@ public class EnrollmentGroup {
     @Column(unique = true)
     private String name;
 
-    private Integer ectsSum;
+    private Long ectsSum;
 
-    private Integer semester;
+    private Long semester;
 
     @NotNull
     @LazyCollection(LazyCollectionOption.FALSE)
@@ -33,6 +33,6 @@ public class EnrollmentGroup {
     private User owner;
 
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(mappedBy="enrollment_group")
+    @OneToMany(mappedBy="enrollmentGroup")
     private List<Class> classes;
 }

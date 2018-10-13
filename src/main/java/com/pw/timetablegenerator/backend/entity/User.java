@@ -56,9 +56,9 @@ public class User implements Serializable {
 
     private String address;
 
-    private Integer actualSemester;
+    private Long actualSemester;
 
-    private boolean enrollmentAccess;
+    private Boolean enrollmentAccess;
 
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy="owner")

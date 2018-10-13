@@ -22,7 +22,7 @@ public class Class {
     @Column(unique = true)
     private String name;
 
-    private Integer ects;
+    private Long ects;
 
     @NotNull
     @LazyCollection(LazyCollectionOption.FALSE)
@@ -31,6 +31,6 @@ public class Class {
     private EnrollmentGroup enrollmentGroup;
 
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(mappedBy="class_owner")
+    @OneToMany(mappedBy="classOwner")
     private List<Course> courses;
 }

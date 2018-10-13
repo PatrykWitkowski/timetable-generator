@@ -6,6 +6,7 @@ import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -19,7 +20,7 @@ public class Course {
 
     private String groupCode;
 
-    private Date coursesDate;
+    private LocalDate coursesDate;
 
     private String coursesPlace;
 
@@ -27,7 +28,7 @@ public class Course {
 
     private Boolean evenWeek;
 
-    private Integer freePlaces;
+    private Long freePlaces;
 
     @NotNull
     @LazyCollection(LazyCollectionOption.FALSE)

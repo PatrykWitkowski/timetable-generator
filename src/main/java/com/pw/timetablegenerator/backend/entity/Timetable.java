@@ -8,14 +8,15 @@ import org.hibernate.annotations.LazyCollectionOption;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "timetables")
 @Data
-public class Timetable {
+public class Timetable implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,6 +32,8 @@ public class Timetable {
 
     private LocalDate generationDate;
 
+    @Enumerated(EnumType.STRING)
+    @Column(length = 10)
     private TimetableType timetableType;
 
     @NotNull
@@ -42,4 +45,13 @@ public class Timetable {
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy="timetable")
     private List<Course> courses;
+
+    public Timetable(){
+        this.courses = new ArrayList<>();
+    }
+
+    public Timetable(User user) {
+        this();
+        this.owner = user;
+    }
 }
