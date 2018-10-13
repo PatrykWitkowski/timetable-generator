@@ -1,5 +1,6 @@
 package com.pw.timetablegenerator.backend.entity;
 
+import com.pw.timetablegenerator.backend.common.Gender;
 import com.pw.timetablegenerator.backend.common.UserType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +12,8 @@ import org.hibernate.annotations.LazyCollectionOption;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -35,17 +38,35 @@ public class User implements Serializable {
     @Column(length = 8)
     private UserType type;
 
-//    @LazyCollection(LazyCollectionOption.FALSE)
-//    @OneToMany(mappedBy="owner")
-//    private List<Order> orders;
-//
-//    @LazyCollection(LazyCollectionOption.FALSE)
-//    @OneToMany(mappedBy="owner")
-//    private List<Product> products;
-//
-//    @LazyCollection(LazyCollectionOption.FALSE)
-//    @OneToMany(mappedBy="owner")
-//    private List<Seller> sellers;
+    private String firstName;
+
+    private String lastName;
+
+    private String indexNumber;
+
+    private String personalNumber;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 10)
+    private Gender gender;
+
+    private LocalDate birthDate;
+
+    private String email;
+
+    private String address;
+
+    private Integer actualSemester;
+
+    private boolean enrollmentAccess;
+
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy="owner")
+    private List<Timetable> timetables;
+
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy="owner")
+    private List<EnrollmentGroup> enrollmentGroups;
 
     public User(String username, String password, UserType type){
         this.username = username;
