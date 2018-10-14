@@ -32,6 +32,10 @@ public class Timetable implements Serializable {
 
     private Long semester;
 
+    private LocalDate semesterStartDate;
+
+    private LocalDate semesterEndDate;
+
     private Long quality;
 
     private LocalDate generationDate;

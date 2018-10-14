@@ -56,7 +56,7 @@ public class TimetablesList extends PolymerTemplate<TimetablesList.TimetablesMod
         @Encode(value = LongToStringEncoder.class, path = "semester")
         @Encode(value = LongToStringEncoder.class, path = "quality")
         @Encode(value = TimetableTypeToStringEncoder.class, path = "timetableType")
-        @Exclude({"owner", "courses"})
+        @Exclude({"owner", "courses", "semesterStartDate", "semesterEndDate"})
         void setTimetables(List<Timetable> timetables);
     }
 

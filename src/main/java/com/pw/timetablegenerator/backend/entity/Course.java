@@ -6,7 +6,8 @@ import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.time.DayOfWeek;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "courses")
@@ -19,7 +20,13 @@ public class Course {
 
     private String groupCode;
 
-    private LocalDateTime coursesDate;
+    private LocalTime courseStartTime;
+
+    private LocalTime courseEndTime;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 9)
+    private DayOfWeek courseDay;
 
     private String coursesPlace;
 
