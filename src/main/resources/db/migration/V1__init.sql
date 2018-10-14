@@ -52,7 +52,7 @@ CREATE TABLE courses (
     class_id bigint NOT NULL,
     timetable_id bigint NOT NULL,
     group_code varchar(50),
-    courses_date date,
+    courses_date timestamp,
     courses_place varchar(255),
     lecturer varchar(255),
     even_week bit,

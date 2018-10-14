@@ -1,6 +1,7 @@
 package com.pw.timetablegenerator.ui.views.timetableslist;
 
 import com.pw.timetablegenerator.backend.entity.Timetable;
+import com.pw.timetablegenerator.backend.service.TimetableService;
 import com.pw.timetablegenerator.backend.utils.security.SecurityUtils;
 import com.pw.timetablegenerator.ui.MainLayout;
 import com.pw.timetablegenerator.ui.common.AbstractEditorDialog;
@@ -11,6 +12,7 @@ import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.HtmlImport;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.polymertemplate.EventHandler;
 import com.vaadin.flow.component.polymertemplate.Id;
 import com.vaadin.flow.component.polymertemplate.ModelItem;
@@ -24,6 +26,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.templatemodel.Encode;
 import com.vaadin.flow.templatemodel.Exclude;
 import com.vaadin.flow.templatemodel.TemplateModel;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -67,6 +70,9 @@ public class TimetablesList extends PolymerTemplate<TimetablesList.TimetablesMod
     private TimetableEditorDialog timetableForm = new TimetableEditorDialog(
             this::saveUpdate, this::deleteUpdate);
 
+    @Autowired
+    private TimetableService timetableService;
+
     /**
      * Needs to be done here, because autowireds field are injected after constructor
      */
@@ -92,12 +98,27 @@ public class TimetablesList extends PolymerTemplate<TimetablesList.TimetablesMod
     }
 
     private void updateList() {
-        //find all timetables for user
+        final List<Timetable> timetables = timetableService.findTimetables(SecurityUtils.getCurrentUser().getUser(), search.getValue());
+        if (search.isEmpty()) {
+            header.setText("Orders");
+            header.add(new Span(timetables.size() + " in total"));
+        } else {
+            header.setText("Search for “" + search.getValue() + "”");
+            if (!timetables.isEmpty()) {
+                header.add(new Span(timetables.size() + " results"));
+            }
+        }
+        getModel().setTimetables(timetables);
     }
 
     @EventHandler
     private void edit(@ModelItem Timetable timetable) {
-        // preview timetable
+        final Timetable timetableToPreview = timetableService.findByTimetableId(timetable.getTimetableId());
+        TimetablePreviewDialog previewDialog = new TimetablePreviewDialog(timetableToPreview);
+        if (previewDialog.getElement().getParent() == null) {
+            getUI().ifPresent(ui -> ui.add(previewDialog));
+        }
+        previewDialog.open();
     }
 
     private void openForm(Timetable timetable,

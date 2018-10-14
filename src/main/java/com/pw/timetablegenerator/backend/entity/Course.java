@@ -6,8 +6,7 @@ import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "courses")
@@ -20,7 +19,7 @@ public class Course {
 
     private String groupCode;
 
-    private LocalDate coursesDate;
+    private LocalDateTime coursesDate;
 
     private String coursesPlace;
 

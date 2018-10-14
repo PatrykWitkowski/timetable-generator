@@ -1,7 +1,7 @@
 package com.pw.timetablegenerator.backend.entity;
 
 import com.pw.timetablegenerator.backend.common.TimetableType;
-import lombok.Data;
+import lombok.*;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -16,6 +16,10 @@ import java.util.List;
 @Entity
 @Table(name = "timetables")
 @Data
+@EqualsAndHashCode(exclude="owner")
+@Builder
+@AllArgsConstructor
+@ToString(exclude = "owner")
 public class Timetable implements Serializable {
 
     @Id

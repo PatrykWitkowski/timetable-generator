@@ -44,8 +44,8 @@ public class MainLayout extends Div
         // Only show as active for the exact URL, but not for sub paths
         orders.setHighlightCondition(HighlightConditions.sameLocation());
 
-//        RouterLink products = new RouterLink(null, ProductsList.class);
-//        products.add(new Icon(VaadinIcon.STORAGE), productText);
+//        RouterLink products = new RouterLink(null, TimetableComponent.class);
+//        products.add(new Icon(VaadinIcon.STORAGE), new Text("Test"));
 //        products.addClassName(MAIN_LAYOUT_NAV_ITEM);
 //        products.setHighlightCondition(HighlightConditions.sameLocation());
 //
