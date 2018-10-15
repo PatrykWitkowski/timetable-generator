@@ -8,4 +8,4 @@ insert into classes(class_id, enrollment_id, name, ects)
 values (1, 1, 'analiza', 12);
 
 insert into courses(course_id, class_id, timetable_id, group_code, course_start_time, course_end_time, course_day, courses_place, lecturer, even_week, free_places)
-values (1, 1, 1, 'CODE_1', '08:20:00', '10:00:00', 'MONDAY', 'w dupie', 'debil', 0, 1);
+values (1, 1, 1, 'CODE_1', '08:20:00', '10:00:00', 'MONDAY', 'w dupie', 'debil', null, 1);

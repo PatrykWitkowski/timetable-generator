@@ -12,7 +12,10 @@ import org.apache.commons.lang3.StringUtils;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.temporal.TemporalField;
+import java.time.temporal.WeekFields;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Tag("timetable-component")
@@ -71,7 +74,12 @@ public class TimetableComponent extends PolymerTemplate<TimetableComponent.Timet
     }
 
     private void addEvents(List<String> events, List<Course> coursesForSpecificDay, final LocalDate firstDate) {
+        TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
+
         events.addAll(coursesForSpecificDay.stream()
+                .filter(c -> c.getEvenWeek() == null
+                        || (c.getEvenWeek() == true && firstDate.get(woy) % 2 == 0)
+                        || (c.getEvenWeek() == false && firstDate.get(woy) % 2 == 1))
                 .map(c -> String.format("{%s, %s, %s}", addTitle(c.getGroupCode()),
                         addStartDateTime(firstDate, c.getCourseStartTime()), addEndDateTime(firstDate, c.getCourseEndTime())))
                 .collect(Collectors.toList()));
