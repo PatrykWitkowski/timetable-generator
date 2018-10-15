@@ -45,6 +45,7 @@ CREATE TABLE classes (
     enrollment_id bigint NOT NULL,
     name varchar(255) NOT NULL UNIQUE,
     ects bigint,
+    class_type varchar(10),
     PRIMARY KEY (class_id),
     CONSTRAINT enrolmmenthasmanyclasses FOREIGN KEY(enrollment_id) REFERENCES enrollment_groups(enrollment_id)
 );

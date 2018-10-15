@@ -65,28 +65,24 @@ public class TimetableComponent extends PolymerTemplate<TimetableComponent.Timet
         result += "]";
         return result;
 
-        // poczatek i koniec semestru
-        // kod i nazwa zajec
-        // prowadzacy i sala
-        // poczatek i koniec zajec oraz w jaki dzien, parzystosc
         // typ zajec
 
     }
 
     private void addEvents(List<String> events, List<Course> coursesForSpecificDay, final LocalDate firstDate) {
         TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
-
         events.addAll(coursesForSpecificDay.stream()
                 .filter(c -> c.getEvenWeek() == null
                         || (c.getEvenWeek() == true && firstDate.get(woy) % 2 == 0)
                         || (c.getEvenWeek() == false && firstDate.get(woy) % 2 == 1))
-                .map(c -> String.format("{%s, %s, %s}", addTitle(c.getGroupCode()),
-                        addStartDateTime(firstDate, c.getCourseStartTime()), addEndDateTime(firstDate, c.getCourseEndTime())))
+                .map(c -> String.format("{%s, %s, %s, %s}", addTitle(c),
+                        addStartDateTime(firstDate, c.getCourseStartTime()), addEndDateTime(firstDate, c.getCourseEndTime()),
+                        addCatoegory(c.getClassOwner().getClassType().name())))
                 .collect(Collectors.toList()));
     }
 
-    private String addTitle(String title){
-        return String.format("\"title\" : \"%s\"", title);
+    private String addTitle(Course course){
+        return String.format("\"title\" : \"%s\"", course.getClassOwner().getName());
     }
 
     private String addStartDateTime(LocalDate startDate, LocalTime startTime){
@@ -95,5 +91,9 @@ public class TimetableComponent extends PolymerTemplate<TimetableComponent.Timet
 
     private String addEndDateTime(LocalDate startDate, LocalTime startTime){
         return String.format("\"end\" : \"%sT%s\"", startDate.toString(), startTime.toString());
+    }
+
+    private String addCatoegory(String category){
+        return String.format("\"category\" : \"%s\"", category);
     }
 }

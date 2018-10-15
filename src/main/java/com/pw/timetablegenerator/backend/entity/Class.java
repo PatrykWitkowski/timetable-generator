@@ -1,5 +1,6 @@
 package com.pw.timetablegenerator.backend.entity;
 
+import com.pw.timetablegenerator.backend.common.ClassType;
 import lombok.Data;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -23,6 +24,10 @@ public class Class {
     private String name;
 
     private Long ects;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 10)
+    private ClassType classType;
 
     @NotNull
     @LazyCollection(LazyCollectionOption.FALSE)
