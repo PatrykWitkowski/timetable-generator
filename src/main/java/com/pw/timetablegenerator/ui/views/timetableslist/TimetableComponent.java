@@ -27,52 +27,74 @@ public class TimetableComponent extends PolymerTemplate<TimetableComponent.Timet
     }
 
     public void setTimetable(Timetable timetable){
-        final String s = formatCoursesToString(timetable);
-        getModel().setCourses(s);
+        getModel().setCourses(formatCoursesToString(timetable));
     }
 
     private String formatCoursesToString(Timetable timetable) {
         List<String> events = Lists.newArrayList();
         for(DayOfWeek day : DayOfWeek.values()){
             LocalDate semesterStartDate = timetable.getSemesterStartDate();
-            //znajdz wszystkie kursy z tego dnia
-            final List<Course> coursesForSpecificDay = timetable.getCourses().stream()
-                    .filter(c -> c.getCourseDay() == day)
-                    .collect(Collectors.toList());
-
-            //znajdz ten pierwszy dzien w semestrze
-            while(semesterStartDate.getDayOfWeek() != day){
-                semesterStartDate = semesterStartDate.plusDays(1);
-            }
-            LocalDate firstDate = semesterStartDate;
-
-            //dodaj dla wszystkich tych dni do konca semestru
-            while(firstDate.isBefore(timetable.getSemesterEndDate())){
-                addEvents(events, coursesForSpecificDay, firstDate);
-                firstDate = firstDate.plusWeeks(1);
-            }
+            final List<Course> coursesForSpecificDay = findAllCoursesForSpecificDay(timetable, day);
+            LocalDate firstDate = findFirstSpecificDayInSemester(day, semesterStartDate);
+            addCourseForAllSpecificDayToSemestersEnd(timetable, events, coursesForSpecificDay, firstDate);
         }
 
+        return prepareResultEventsString(events);
+    }
+
+    private String prepareResultEventsString(List<String> events) {
         String result = "[";
-        for(String c : events){
-            result += c;
+        for(String event : events){
+            result += event;
             result +=",";
         }
         result = StringUtils.removeEnd(result, ",");
         result += "]";
+
         return result;
     }
 
+    private void addCourseForAllSpecificDayToSemestersEnd(Timetable timetable, List<String> events,
+                                                          List<Course> coursesForSpecificDay, LocalDate firstDate) {
+        while(firstDate.isBefore(timetable.getSemesterEndDate())){
+            addEvents(events, coursesForSpecificDay, firstDate);
+            firstDate = firstDate.plusWeeks(1);
+        }
+    }
+
+    private LocalDate findFirstSpecificDayInSemester(DayOfWeek day, LocalDate semesterStartDate) {
+        while(semesterStartDate.getDayOfWeek() != day){
+            semesterStartDate = semesterStartDate.plusDays(1);
+        }
+        return semesterStartDate;
+    }
+
+    private List<Course> findAllCoursesForSpecificDay(Timetable timetable, DayOfWeek day) {
+        return timetable.getCourses().stream()
+                        .filter(c -> c.getCourseDay() == day)
+                        .collect(Collectors.toList());
+    }
+
     private void addEvents(List<String> events, List<Course> coursesForSpecificDay, final LocalDate firstDate) {
-        TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
+        TemporalField weekOfYear = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
         events.addAll(coursesForSpecificDay.stream()
                 .filter(c -> c.getEvenWeek() == null
-                        || (c.getEvenWeek() == true && firstDate.get(woy) % 2 == 0)
-                        || (c.getEvenWeek() == false && firstDate.get(woy) % 2 == 1))
-                .map(c -> String.format("{%s, %s, %s, %s}", addTitle(c),
-                        addStartDateTime(firstDate, c.getCourseStartTime()), addEndDateTime(firstDate, c.getCourseEndTime()),
+                        || actualDateIsInEvenWeek(firstDate, weekOfYear, c)
+                        || actualDateIsInOddWeek(firstDate, weekOfYear, c))
+                .map(c -> String.format("{%s, %s, %s, %s}",
+                        addTitle(c),
+                        addStartDateTime(firstDate, c.getCourseStartTime()),
+                        addEndDateTime(firstDate, c.getCourseEndTime()),
                         addCategory(c.getClassOwner().getClassType().name())))
                 .collect(Collectors.toList()));
+    }
+
+    private boolean actualDateIsInOddWeek(LocalDate firstDate, TemporalField woy, Course c) {
+        return !c.getEvenWeek() && firstDate.get(woy) % 2 == 1;
+    }
+
+    private boolean actualDateIsInEvenWeek(LocalDate firstDate, TemporalField woy, Course c) {
+        return c.getEvenWeek() && firstDate.get(woy) % 2 == 0;
     }
 
     private String addTitle(Course course){
