@@ -16,22 +16,21 @@
     <template>
         <div class="view-container courses">
             <scheduler-component
+                    default-view="basicWeek"
                     show-categories
-                    default-view="month"
                     max-time="21:00:00" min-time="07:00:00"
                     event-color="#8e44ad"
                     text-color="#ecf0f1"
-                    height="50%"
+                    height="100%"
                     categories='[{ "label": "Lecture", "color": "#59B373"},
                        { "label": "Exercise", "color": "#F4AA4C"},
                        { "label": "Laboratory", "color": "#549EC5"},
                        { "label": "Project", "color": "#5ACAF1"},
                        { "label": "Seminar", "color": "#5BC1BC"}]'
                     events$="[[courses]]"
-                    header='{"center":"title","left":"prev,next,today","right":"month,agendaWeek,agendaDay"}'>
+                    header='{"center":"title","left":"prev,next,today","right":"basicWeek,agendaWeek,agendaDay"}'>
             </scheduler-component>
         </div>
-
     </template>
 
     <script>

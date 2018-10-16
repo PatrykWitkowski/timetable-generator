@@ -43,7 +43,7 @@ CREATE TABLE enrollment_groups (
 CREATE TABLE classes (
     class_id bigint NOT NULL AUTO_INCREMENT,
     enrollment_id bigint NOT NULL,
-    name varchar(255) NOT NULL UNIQUE,
+    name varchar(255) NOT NULL,
     ects bigint,
     class_type varchar(10),
     PRIMARY KEY (class_id),

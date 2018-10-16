@@ -51,9 +51,6 @@ public class TimetableComponent extends PolymerTemplate<TimetableComponent.Timet
                 addEvents(events, coursesForSpecificDay, firstDate);
                 firstDate = firstDate.plusWeeks(1);
             }
-
-            // uwzglednic parzystosc
-
         }
 
         String result = "[";
@@ -64,9 +61,6 @@ public class TimetableComponent extends PolymerTemplate<TimetableComponent.Timet
         result = StringUtils.removeEnd(result, ",");
         result += "]";
         return result;
-
-        // typ zajec
-
     }
 
     private void addEvents(List<String> events, List<Course> coursesForSpecificDay, final LocalDate firstDate) {
@@ -77,12 +71,13 @@ public class TimetableComponent extends PolymerTemplate<TimetableComponent.Timet
                         || (c.getEvenWeek() == false && firstDate.get(woy) % 2 == 1))
                 .map(c -> String.format("{%s, %s, %s, %s}", addTitle(c),
                         addStartDateTime(firstDate, c.getCourseStartTime()), addEndDateTime(firstDate, c.getCourseEndTime()),
-                        addCatoegory(c.getClassOwner().getClassType().name())))
+                        addCategory(c.getClassOwner().getClassType().name())))
                 .collect(Collectors.toList()));
     }
 
     private String addTitle(Course course){
-        return String.format("\"title\" : \"%s\"", course.getClassOwner().getName());
+        return String.format("\"title\" : \"%s\\n\\n%s\\n%s\"", course.getClassOwner().getName(),
+                course.getCoursesPlace(), course.getLecturer());
     }
 
     private String addStartDateTime(LocalDate startDate, LocalTime startTime){
@@ -93,7 +88,7 @@ public class TimetableComponent extends PolymerTemplate<TimetableComponent.Timet
         return String.format("\"end\" : \"%sT%s\"", startDate.toString(), startTime.toString());
     }
 
-    private String addCatoegory(String category){
+    private String addCategory(String category){
         return String.format("\"category\" : \"%s\"", category);
     }
 }

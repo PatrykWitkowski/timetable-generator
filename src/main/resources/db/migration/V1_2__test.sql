@@ -6,6 +6,10 @@ values (1, 1, 'zapisowa_1', 30, 1);
 
 insert into classes(class_id, enrollment_id, name, ects, class_type)
 values (1, 1, 'Analiza matematyczna', 12, 'LECTURE');
+insert into classes(class_id, enrollment_id, name, ects, class_type)
+values (2, 1, 'Analiza matematyczna', 4, 'EXERCISE');
 
 insert into courses(course_id, class_id, timetable_id, group_code, course_start_time, course_end_time, course_day, courses_place, lecturer, even_week, free_places)
 values (1, 1, 1, 'EFG324F', '08:20:00', '10:00:00', 'MONDAY', 'C-14 A1.1', 'Prof. Zakrzewski', null, 1);
+insert into courses(course_id, class_id, timetable_id, group_code, course_start_time, course_end_time, course_day, courses_place, lecturer, even_week, free_places)
+values (2, 2, 1, 'EFG324F', '10:00:00', '13:00:00', 'MONDAY', 'C-14 A1.1', 'Prof. Zakrzewski', 1, 1);

@@ -20,7 +20,6 @@ public class Class {
     private Long classId;
 
     @NotBlank
-    @Column(unique = true)
     private String name;
 
     private Long ects;
