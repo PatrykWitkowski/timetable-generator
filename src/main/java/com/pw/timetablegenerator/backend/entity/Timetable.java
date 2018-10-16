@@ -51,7 +51,12 @@ public class Timetable implements Serializable {
     private User owner;
 
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(mappedBy="timetable")
+    @ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+            name = "Timetable_Course",
+            joinColumns = { @JoinColumn(name = "timetable_id") },
+            inverseJoinColumns = { @JoinColumn(name = "course_id") }
+    )
     private List<Course> courses;
 
     public Timetable(){

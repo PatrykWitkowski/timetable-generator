@@ -24,4 +24,9 @@ public class TimetableServiceImpl implements TimetableService {
     public Timetable findByTimetableId(long id) {
         return timetableRepository.findByTimetableId(id);
     }
+
+    @Override
+    public void delete(Timetable timetable) {
+        timetableRepository.delete(timetable);
+    }
 }

@@ -5,6 +5,7 @@ import com.pw.timetablegenerator.backend.service.TimetableService;
 import com.pw.timetablegenerator.backend.utils.security.SecurityUtils;
 import com.pw.timetablegenerator.ui.MainLayout;
 import com.pw.timetablegenerator.ui.common.AbstractEditorDialog;
+import com.pw.timetablegenerator.ui.common.ConfirmationDialog;
 import com.pw.timetablegenerator.ui.encoders.LocalDateToStringEncoder;
 import com.pw.timetablegenerator.ui.encoders.LongToStringEncoder;
 import com.pw.timetablegenerator.ui.encoders.TimetableTypeToStringEncoder;
@@ -13,6 +14,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.HtmlImport;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.polymertemplate.EventHandler;
 import com.vaadin.flow.component.polymertemplate.Id;
 import com.vaadin.flow.component.polymertemplate.ModelItem;
@@ -70,6 +72,8 @@ public class TimetablesList extends PolymerTemplate<TimetablesList.TimetablesMod
     private TimetableEditorDialog timetableForm = new TimetableEditorDialog(
             this::saveUpdate, this::deleteUpdate);
 
+    private ConfirmationDialog<Timetable> confirmationDialog = new ConfirmationDialog<>();
+
     @Autowired
     private TimetableService timetableService;
 
@@ -94,13 +98,17 @@ public class TimetablesList extends PolymerTemplate<TimetablesList.TimetablesMod
     }
 
     public void deleteUpdate(Timetable timetable){
-        //delete timetable
+        timetableService.delete(timetable);
+        updateList();
+        Notification.show("Timetable successfully deleted.", 3000,
+                Notification.Position.BOTTOM_START);
     }
 
     private void updateList() {
-        final List<Timetable> timetables = timetableService.findTimetables(SecurityUtils.getCurrentUser().getUser(), search.getValue());
+        final List<Timetable> timetables
+                = timetableService.findTimetables(SecurityUtils.getCurrentUser().getUser(), search.getValue());
         if (search.isEmpty()) {
-            header.setText("Orders");
+            header.setText("Timetables");
             header.add(new Span(timetables.size() + " in total"));
         } else {
             header.setText("Search for “" + search.getValue() + "”");
@@ -119,6 +127,13 @@ public class TimetablesList extends PolymerTemplate<TimetablesList.TimetablesMod
             getUI().ifPresent(ui -> ui.add(previewDialog));
         }
         previewDialog.open();
+    }
+
+    @EventHandler
+    private void delete(@ModelItem Timetable timetable){
+        final Timetable timetableToDelete = timetableService.findByTimetableId(timetable.getTimetableId());
+        confirmationDialog.open("Delete timetable", "Do you wanna delete this timetable?", "",
+                "Delete", true, timetableToDelete, this::deleteUpdate, this::updateList);
     }
 
     private void openForm(Timetable timetable,

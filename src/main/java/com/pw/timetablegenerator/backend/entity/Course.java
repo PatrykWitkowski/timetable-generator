@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
+import java.util.List;
 
 @Entity
 @Table(name = "courses")
@@ -42,9 +43,7 @@ public class Course {
     @JoinColumn(name="class_id")
     private Class classOwner;
 
-    @NotNull
     @LazyCollection(LazyCollectionOption.FALSE)
-    @ManyToOne
-    @JoinColumn(name="timetable_id")
-    private Class timetable;
+    @ManyToMany(mappedBy = "courses")
+    private List<Timetable> timetables;
 }

@@ -53,7 +53,6 @@ CREATE TABLE classes (
 CREATE TABLE courses (
     course_id bigint NOT NULL AUTO_INCREMENT,
     class_id bigint NOT NULL,
-    timetable_id bigint NOT NULL,
     group_code varchar(50),
     course_start_time time,
     course_end_time time,
@@ -63,6 +62,13 @@ CREATE TABLE courses (
     even_week bit,
     free_places bigint,
     PRIMARY KEY (course_id),
-    CONSTRAINT classhasmanycourses FOREIGN KEY(class_id) REFERENCES classes(class_id),
-    CONSTRAINT timetableshasmanycourses FOREIGN KEY(timetable_id) REFERENCES timetables(timetable_id)
+    CONSTRAINT classhasmanycourses FOREIGN KEY(class_id) REFERENCES classes(class_id)
+);
+
+CREATE TABLE timetable_course (
+    timetable_id bigint NOT NULL,
+    course_id bigint NOT NULL,
+    PRIMARY KEY (timetable_id, course_id),
+    CONSTRAINT timetableshasmanycourses FOREIGN KEY(timetable_id) REFERENCES timetables(timetable_id),
+    CONSTRAINT coursehasmanytimetables FOREIGN KEY(course_id) REFERENCES courses(course_id)
 );
