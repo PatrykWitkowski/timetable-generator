@@ -180,7 +180,15 @@
                 align-self: flex-start;
                 flex: none;
                 margin: 0 0 0 auto;
-                width: 5em;
+                font-size: var(--lumo-icon-size-m);
+            }
+
+            .timetable__delete {
+                align-self: flex-start;
+                flex: none;
+                margin: 0 0 0 auto;
+                font-size: var(--lumo-icon-size-m);
+                color: var(--lumo-error-color);
             }
 
             .timetables__no-matches {
@@ -190,6 +198,53 @@
                 height: 4em;
                 font-size: 22px;
                 color: var(--lumo-tertiary-text-color);
+            }
+
+            /* Tooltip container */
+            .tooltip {
+                position: relative;
+                display: inline-block;
+            }
+
+            /* Tooltip text */
+            .tooltip .tooltiptext {
+                visibility: hidden;
+                width: 120px;
+                background-color: #555;
+                color: #fff;
+                text-align: center;
+                padding: 5px 0;
+                border-radius: 6px;
+                font-size: 0.75em;
+
+                /* Position the tooltip text */
+                position: absolute;
+                z-index: 1;
+                bottom: 125%;
+                left: 50%;
+                margin-left: -60px;
+
+                /* Fade in tooltip */
+                opacity: 0;
+                transition: opacity 0.3s;
+            }
+
+            /* Tooltip arrow */
+            .tooltip .tooltiptext::after {
+                content: "";
+                position: absolute;
+                top: 100%;
+                left: 50%;
+                margin-left: -5px;
+                border-width: 5px;
+                border-style: solid;
+                border-color: #555 transparent transparent transparent;
+            }
+
+            /* Show the tooltip text when you mouse over the tooltip container */
+            .tooltip:hover .tooltiptext {
+                visibility: visible;
+                opacity: 1;
             }
 
             /* Small viewport styles */
@@ -242,9 +297,16 @@
                             <h5>Generation date</h5>
                             <p>[[item.generationDate]]</p>
                         </div>
-                        <vaadin-button on-click="edit" class="timetable__edit" theme="tertiary">
-                            <iron-icon icon="lumo:edit"></iron-icon><span>Preview</span>
-                        </vaadin-button>
+                        <div class="tooltip">
+                            <vaadin-button on-click="edit" class="timetable__edit" theme="tertiary">
+                                <iron-icon icon="lumo:calendar"></iron-icon><span class="tooltiptext">Preview</span>
+                            </vaadin-button>
+                        </div>
+                        <div class="tooltip">
+                            <vaadin-button on-click="delete" class="timetable__delete" theme="tertiary">
+                                <iron-icon icon="lumo:cross"></iron-icon><span class="tooltiptext">Delete</span>
+                            </vaadin-button>
+                        </div>
                     </div>
                 </template>
             </template>
