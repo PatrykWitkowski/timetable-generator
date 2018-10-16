@@ -23,7 +23,7 @@ CREATE TABLE timetables (
     semester bigint,
     semester_start_date date,
     semester_end_date date,
-    quality bigint,
+    quality double,
     generation_date date,
     timetable_type varchar(10),
     PRIMARY KEY (timetable_id),

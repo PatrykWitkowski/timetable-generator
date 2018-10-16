@@ -1,5 +1,5 @@
 insert into timetables(timetable_id, user_id, name, semester, semester_start_date, semester_end_date, quality, generation_date, timetable_type)
-values (1, 1, 'test_timetable', 1, '2018-10-01', '2019-01-30', 1, NOW(), 'INVALID');
+values (1, 1, 'test_timetable', 7, '2018-10-01', '2019-01-30', 1, NOW(), 'INVALID');
 
 insert into enrollment_groups(enrollment_id, user_id, name, ects_sum, semester)
 values (1, 1, 'zapisowa_1', 30, 1);

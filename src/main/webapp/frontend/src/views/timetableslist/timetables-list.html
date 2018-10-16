@@ -281,10 +281,10 @@
                 <template is="dom-repeat" items="[[timetables]]">
                     <div class="timetable">
                         <div class="timetable__rating">
-                            <p class="timetable__score">[[item.semester]]</p>
+                            <p class="timetable__score">{{_setTwoNumberDecimal(item.quality)}} %</p>
                             <p class="timetable__count">
-                                [[item.quality]]
-                                <span>quality</span>
+                                {{_romanize(item.semester)}}
+                                <span> semester</span>
                             </p>
                         </div>
                         <div class="timetable__details">
@@ -326,6 +326,24 @@
 
             _isEmpty(array) {
                 return array.length == 0;
+            }
+
+             _setTwoNumberDecimal(el) {
+                return parseFloat(el).toFixed(2);
+            }
+
+            _romanize (num) {
+                if (isNaN(num))
+                    return NaN;
+                var digits = String(+num).split(""),
+                    key = ["","C","CC","CCC","CD","D","DC","DCC","DCCC","CM",
+                           "","X","XX","XXX","XL","L","LX","LXX","LXXX","XC",
+                           "","I","II","III","IV","V","VI","VII","VIII","IX"],
+                    roman = "",
+                    i = 3;
+                while (i--)
+                    roman = (key[+digits.pop() + (i * 10)] || "") + roman;
+                return Array(+digits.join("") + 1).join("M") + roman;
             }
         }
         customElements.define(TimetableListElement.is, TimetableListElement);
