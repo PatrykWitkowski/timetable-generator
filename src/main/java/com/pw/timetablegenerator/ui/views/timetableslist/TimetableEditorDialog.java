@@ -6,10 +6,13 @@ import com.pw.timetablegenerator.backend.entity.Timetable;
 import com.pw.timetablegenerator.backend.entity.User;
 import com.pw.timetablegenerator.ui.common.AbstractEditorDialog;
 import com.pw.timetablegenerator.ui.components.RatingStarsComponent;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Result;
 import com.vaadin.flow.data.binder.ValueContext;
@@ -17,6 +20,7 @@ import com.vaadin.flow.data.converter.Converter;
 import com.vaadin.flow.data.validator.DateRangeValidator;
 import com.vaadin.flow.data.validator.StringLengthValidator;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Optional;
@@ -31,7 +35,7 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
     private DatePicker startSemesterDataPicker = new DatePicker();
     private DatePicker endSemesterDataPicker = new DatePicker();
     private ComboBox<String> dayTime = new ComboBox<>();
-    private RatingStarsComponent ratingStarsComponentForDayTime = new RatingStarsComponent();
+    private ComboBox<DayOfWeek> freeDay = new ComboBox<>();
 
     protected TimetableEditorDialog(BiConsumer<Timetable, Operation> saveHandler,
                                     Consumer<Timetable> deleteHandler) {
@@ -43,14 +47,32 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
         getFormLayout().add(new H3("Preferences"));
         getFormLayout().add(new Div());
         createDayTimePreference();
+        createFreeDayPreference();
+    }
+
+    private void createFreeDayPreference() {
+        freeDay.setLabel("Free Day");
+        freeDay.setAllowCustomValue(false);
+        freeDay.setItems(DayOfWeek.values());
+        getFormLayout().add(createFieldWithRating(freeDay));
     }
 
     private void createDayTimePreference() {
         dayTime.setLabel("Day time");
         dayTime.setAllowCustomValue(false);
         dayTime.setItems(Stream.of("Morning", "Afternoon", "Evening"));
-        getFormLayout().add(dayTime);
-        getFormLayout().add(ratingStarsComponentForDayTime);
+        getFormLayout().add(createFieldWithRating(dayTime));
+    }
+
+    private HorizontalLayout createFieldWithRating(Component field) {
+        RatingStarsComponent ratingStarsComponentForDayTime = new RatingStarsComponent();
+        HorizontalLayout dayTimeLayout = new HorizontalLayout();
+        dayTimeLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.END);
+        dayTimeLayout.setWidth("100%");
+        dayTimeLayout.expand(field);
+        dayTimeLayout.setFlexGrow(0.5, ratingStarsComponentForDayTime);
+        dayTimeLayout.add(field, ratingStarsComponentForDayTime);
+        return dayTimeLayout;
     }
 
     private void createStartEndSemesterDataPickers() {

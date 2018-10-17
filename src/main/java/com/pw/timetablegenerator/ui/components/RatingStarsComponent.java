@@ -6,6 +6,7 @@ import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
 import java.io.Serializable;
@@ -70,6 +71,9 @@ public class RatingStarsComponent extends Component implements HasComponents, Se
 
         HorizontalLayout ratingStartLayout
                 = new HorizontalLayout(firstStart, secondStart, thirdStart, fourthStart, fifthStart);
+        ratingStartLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
+        ratingStartLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.EVENLY);
+        ratingStartLayout.getStyle().set("margin", "0.6em");
         add(ratingStartLayout);
     }
 
