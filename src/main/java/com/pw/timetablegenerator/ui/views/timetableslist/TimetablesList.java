@@ -69,7 +69,7 @@ public class TimetablesList extends PolymerTemplate<TimetablesList.TimetablesMod
     private H2 header;
 
     private TimetableEditorDialog timetableForm = new TimetableEditorDialog(
-            this::saveUpdate, this::deleteUpdate);
+            this::generateTimetable, null);
 
     private ConfirmationDialog<Timetable> confirmationDialog = new ConfirmationDialog<>();
 
@@ -91,12 +91,12 @@ public class TimetablesList extends PolymerTemplate<TimetablesList.TimetablesMod
         });
     }
 
-    public void saveUpdate(Timetable timetable,
-                           AbstractEditorDialog.Operation operation){
+    public void generateTimetable(Timetable timetable,
+                                  AbstractEditorDialog.Operation operation){
         // generate new timetable for ADD, for EDIT nothing to do
     }
 
-    public void deleteUpdate(Timetable timetable){
+    public void deleteTimetable(Timetable timetable){
         timetableService.delete(timetable);
         updateList();
         Notification.show("Timetable successfully deleted.", 3000,
@@ -132,7 +132,7 @@ public class TimetablesList extends PolymerTemplate<TimetablesList.TimetablesMod
     private void delete(@ModelItem Timetable timetable){
         final Timetable timetableToDelete = timetableService.findByTimetableId(timetable.getTimetableId());
         confirmationDialog.open("Delete timetable", "Do you wanna delete this timetable?", "",
-                "Delete", true, timetableToDelete, this::deleteUpdate, this::updateList);
+                "Delete", true, timetableToDelete, this::deleteTimetable, this::updateList);
     }
 
     private void openForm(Timetable timetable,

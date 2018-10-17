@@ -96,7 +96,7 @@ public abstract class AbstractEditorDialog<T extends Serializable>
 
     private final FormLayout formLayout = new FormLayout();
     private final HorizontalLayout buttonBar = new HorizontalLayout(saveButton,
-            cancelButton, deleteButton);
+            cancelButton);
 
     private Binder<T> binder = new Binder<>();
     private T currentItem;
@@ -166,8 +166,11 @@ public abstract class AbstractEditorDialog<T extends Serializable>
         saveButton.setAutofocus(true);
         saveButton.getElement().setAttribute("theme", "primary");
         cancelButton.addClickListener(e -> cancelClicked());
-        deleteButton.addClickListener(e -> deleteClicked());
-        deleteButton.getElement().setAttribute("theme", "error");
+        if(itemDeleter != null){
+            buttonBar.add(deleteButton);
+            deleteButton.addClickListener(e -> deleteClicked());
+            deleteButton.getElement().setAttribute("theme", "error");
+        }
         buttonBar.setClassName("buttons");
         buttonBar.setSpacing(true);
         add(buttonBar);
@@ -252,8 +255,16 @@ public abstract class AbstractEditorDialog<T extends Serializable>
         binder.readBean(currentItem);
 
         deleteButton.setEnabled(operation.isDeleteEnabled());
+
+        afterDialogOpen();
+
         open();
     }
+
+    /**
+     * Method runs after dialog is opened.
+     */
+    protected abstract void afterDialogOpen();
 
     protected void saveClicked(Operation operation) {
         boolean isValid = binder.writeBeanIfValid(currentItem);

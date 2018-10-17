@@ -1,6 +1,7 @@
 package com.pw.timetablegenerator.backend.entity;
 
-import lombok.Data;
+import com.pw.timetablegenerator.backend.utils.converter.RomanNumber;
+import lombok.*;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -12,6 +13,7 @@ import java.util.List;
 @Entity
 @Table(name = "enrollment_groups")
 @Data
+@EqualsAndHashCode(exclude = {"owner", "classes"})
 public class EnrollmentGroup {
 
     @Id
@@ -35,4 +37,9 @@ public class EnrollmentGroup {
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy="enrollmentGroup")
     private List<Class> classes;
+
+    @Override
+    public String toString(){
+        return String.format("%s (semester: %s)", name, RomanNumber.toRoman(semester.intValue()));
+    }
 }
