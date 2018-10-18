@@ -8,11 +8,12 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.function.ValueProvider;
 
 import java.io.Serializable;
 
 @Tag("rating-stars-component")
-public class RatingStarsComponent extends Component implements HasComponents, Serializable {
+public class RatingStarsComponent extends Component implements HasComponents, Serializable, ValueProvider {
 
     Integer actualStarValue = 1;
 
@@ -89,4 +90,8 @@ public class RatingStarsComponent extends Component implements HasComponents, Se
         secondStart.add(VaadinIcon.STAR.create());
     }
 
+    @Override
+    public Object apply(Object o) {
+        return this;
+    }
 }

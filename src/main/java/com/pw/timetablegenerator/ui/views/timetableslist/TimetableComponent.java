@@ -99,7 +99,7 @@ public class TimetableComponent extends PolymerTemplate<TimetableComponent.Timet
 
     private String addTitle(Course course){
         return String.format("\"title\" : \"%s\\n\\n%s\\n%s\"", course.getClassOwner().getName(),
-                course.getCoursesPlace(), course.getLecturer());
+                course.getCoursesPlace(), course.getLecturer().getName());
     }
 
     private String addStartDateTime(LocalDate startDate, LocalTime startTime){

@@ -1,11 +1,13 @@
 package com.pw.timetablegenerator.ui.views.timetableslist;
 
 import com.google.common.collect.Lists;
+import com.pw.timetablegenerator.backend.entity.Course;
 import com.pw.timetablegenerator.backend.entity.EnrollmentGroup;
 import com.pw.timetablegenerator.backend.entity.Timetable;
 import com.pw.timetablegenerator.backend.entity.User;
 import com.pw.timetablegenerator.ui.common.AbstractEditorDialog;
 import com.pw.timetablegenerator.ui.components.RatingStarsComponent;
+import com.pw.timetablegenerator.ui.components.RatingTableComponent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
@@ -26,6 +28,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
@@ -36,6 +39,7 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
     private DatePicker endSemesterDataPicker = new DatePicker();
     private ComboBox<String> dayTime = new ComboBox<>();
     private ComboBox<DayOfWeek> freeDay = new ComboBox<>();
+    private RatingTableComponent lecturersTable = new RatingTableComponent("Lecturer");
 
     protected TimetableEditorDialog(BiConsumer<Timetable, Operation> saveHandler,
                                     Consumer<Timetable> deleteHandler) {
@@ -48,6 +52,11 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
         getFormLayout().add(new Div());
         createDayTimePreference();
         createFreeDayPreference();
+        createLecturerPreference();
+    }
+
+    private void createLecturerPreference() {
+        getFormLayout().add(lecturersTable);
     }
 
     private void createFreeDayPreference() {
@@ -115,6 +124,13 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
         enrollmentGroupComboBox.setLabel("Enrollment group");
         enrollmentGroupComboBox.setRequired(true);
         enrollmentGroupComboBox.setAllowCustomValue(false);
+        enrollmentGroupComboBox.addValueChangeListener(e -> {
+            if(e.getValue() != null){
+                lecturersTable.updateSearchComboBox(e.getValue().getClasses().stream()
+                .flatMap(c -> c.getCourses().stream()).map(Course::getLecturer)
+                .collect(Collectors.toSet()));
+            }
+        });
         getFormLayout().add(enrollmentGroupComboBox);
 
         getBinder().forField(enrollmentGroupComboBox)

@@ -50,19 +50,26 @@ CREATE TABLE classes (
     CONSTRAINT enrolmmenthasmanyclasses FOREIGN KEY(enrollment_id) REFERENCES enrollment_groups(enrollment_id)
 );
 
+CREATE TABLE lecturers (
+    lecturer_id bigint NOT NULL,
+    name varchar(255) NOT NULL,
+    PRIMARY KEY (lecturer_id)
+);
+
 CREATE TABLE courses (
     course_id bigint NOT NULL AUTO_INCREMENT,
     class_id bigint NOT NULL,
+    lecturer_id bigint NOT NULL,
     group_code varchar(50),
     course_start_time time,
     course_end_time time,
     course_day varchar(9),
     courses_place varchar(255),
-    lecturer varchar(255),
     even_week bit,
     free_places bigint,
     PRIMARY KEY (course_id),
-    CONSTRAINT classhasmanycourses FOREIGN KEY(class_id) REFERENCES classes(class_id)
+    CONSTRAINT classhasmanycourses FOREIGN KEY(class_id) REFERENCES classes(class_id),
+    CONSTRAINT lecturehasmanycourses FOREIGN KEY(lecturer_id) REFERENCES lecturers(lecturer_id)
 );
 
 CREATE TABLE timetable_course (

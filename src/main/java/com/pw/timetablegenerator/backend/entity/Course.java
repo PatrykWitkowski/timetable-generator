@@ -1,11 +1,13 @@
 package com.pw.timetablegenerator.backend.entity;
 
 import lombok.Data;
+import lombok.ToString;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.List;
@@ -13,7 +15,8 @@ import java.util.List;
 @Entity
 @Table(name = "courses")
 @Data
-public class Course {
+@ToString(exclude = {"classOwner", "timetables"})
+public class Course implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +34,11 @@ public class Course {
 
     private String coursesPlace;
 
-    private String lecturer;
+    @NotNull
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @ManyToOne
+    @JoinColumn(name="lecturer_id")
+    private Lecturer lecturer;
 
     private Boolean evenWeek;
 
