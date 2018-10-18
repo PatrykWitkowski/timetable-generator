@@ -11,10 +11,11 @@ import com.pw.timetablegenerator.ui.components.RatingTableComponent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Result;
 import com.vaadin.flow.data.binder.ValueContext;
@@ -40,6 +41,8 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
     private ComboBox<String> dayTime = new ComboBox<>();
     private ComboBox<DayOfWeek> freeDay = new ComboBox<>();
     private RatingTableComponent lecturersTable = new RatingTableComponent("Lecturer");
+    private FormLayout preferenceFormLayout;
+    private Tab tabPreference;
 
     protected TimetableEditorDialog(BiConsumer<Timetable, Operation> saveHandler,
                                     Consumer<Timetable> deleteHandler) {
@@ -48,29 +51,42 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
         createTimetableTitle();
         createEnrollmentGroupChoose();
         createStartEndSemesterDataPickers();
-        getFormLayout().add(new H3("Preferences"));
-        getFormLayout().add(new Div());
+
+        createPreferenceForm();
         createDayTimePreference();
         createFreeDayPreference();
         createLecturerPreference();
+        tabPreference = addNewTab("Preferences", new Div(preferenceFormLayout));
+    }
+
+    private void createPreferenceForm() {
+        preferenceFormLayout = new FormLayout();
+        preferenceFormLayout.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 1),
+                new FormLayout.ResponsiveStep("25em", 2));
+    }
+
+    @Override
+    public void open(Timetable item, Operation operation) {
+        updateTab(tabPreference, new Div(preferenceFormLayout));
+        super.open(item, operation);
     }
 
     private void createLecturerPreference() {
-        getFormLayout().add(lecturersTable);
+        preferenceFormLayout.add(lecturersTable);
     }
 
     private void createFreeDayPreference() {
         freeDay.setLabel("Free Day");
         freeDay.setAllowCustomValue(false);
         freeDay.setItems(DayOfWeek.values());
-        getFormLayout().add(createFieldWithRating(freeDay));
+        preferenceFormLayout.add(createFieldWithRating(freeDay));
     }
 
     private void createDayTimePreference() {
         dayTime.setLabel("Day time");
         dayTime.setAllowCustomValue(false);
         dayTime.setItems(Stream.of("Morning", "Afternoon", "Evening"));
-        getFormLayout().add(createFieldWithRating(dayTime));
+        preferenceFormLayout.add(createFieldWithRating(dayTime));
     }
 
     private HorizontalLayout createFieldWithRating(Component field) {
