@@ -1,6 +1,7 @@
 package com.pw.timetablegenerator.ui.views.timetableslist;
 
 import com.google.common.collect.Lists;
+import com.pw.timetablegenerator.backend.entity.Class;
 import com.pw.timetablegenerator.backend.entity.Course;
 import com.pw.timetablegenerator.backend.entity.EnrollmentGroup;
 import com.pw.timetablegenerator.backend.entity.Timetable;
@@ -25,6 +26,7 @@ import com.vaadin.flow.data.validator.StringLengthValidator;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiConsumer;
@@ -41,6 +43,7 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
     private ComboBox<String> dayTime = new ComboBox<>();
     private ComboBox<DayOfWeek> freeDay = new ComboBox<>();
     private RatingTableComponent lecturersTable = new LecturerRatingTableComponent();
+    private ClassOnDayRatingTableComponent classOnDayTable = new ClassOnDayRatingTableComponent();
     private FormLayout preferenceFormLayout;
     private Tab tabPreference;
 
@@ -56,7 +59,12 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
         createDayTimePreference();
         createFreeDayPreference();
         createLecturerPreference();
+        createClassOnDayPreference();
         tabPreference = addNewTab("Preferences", new Div(preferenceFormLayout));
+    }
+
+    private void createClassOnDayPreference() {
+        preferenceFormLayout.add(classOnDayTable);
     }
 
     private void createPreferenceForm() {
@@ -145,6 +153,8 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
                 lecturersTable.updateSearchComboBox(e.getValue().getClasses().stream()
                 .flatMap(c -> c.getCourses().stream()).map(Course::getLecturer)
                 .collect(Collectors.toSet()));
+
+                classOnDayTable.updateSearchComboBox(new HashSet<>(e.getValue().getClasses()));
             }
         });
         getFormLayout().add(enrollmentGroupComboBox);

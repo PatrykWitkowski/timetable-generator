@@ -8,12 +8,13 @@ import org.hibernate.annotations.LazyCollectionOption;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table(name = "classes")
 @Data
-public class Class {
+public class Class implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,4 +38,9 @@ public class Class {
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy="classOwner")
     private List<Course> courses;
+
+    @Override
+    public String toString(){
+        return String.format("%s (%s)", name, classType);
+    }
 }
