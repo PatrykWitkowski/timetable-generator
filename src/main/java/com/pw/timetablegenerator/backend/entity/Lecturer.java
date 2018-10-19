@@ -6,12 +6,13 @@ import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table(name = "lecturers")
 @Data
-public class Lecturer {
+public class Lecturer implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

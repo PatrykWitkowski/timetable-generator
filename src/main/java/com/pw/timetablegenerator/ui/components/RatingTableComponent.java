@@ -1,7 +1,5 @@
 package com.pw.timetablegenerator.ui.components;
 
-import com.pw.timetablegenerator.backend.entity.Course;
-import com.pw.timetablegenerator.backend.entity.Lecturer;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.Tag;
@@ -15,17 +13,19 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.data.provider.ListDataProvider;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Tag("rating-table-component")
-public class RatingTableComponent extends Component
+public abstract class RatingTableComponent<T extends Serializable> extends Component
         implements Serializable, HasComponents {
 
-    private ComboBox<Lecturer> searchComboBox = new ComboBox<>();
+    private ComboBox<T> searchComboBox = new ComboBox<>();
     private Button addButton = new Button(VaadinIcon.PLUS.create());
     private Button deleteButton = new Button(VaadinIcon.MINUS.create());
-    private Grid<Lecturer> ratingTable = new Grid<>();
+    private Grid<T> ratingTable = new Grid<>();
 
     public RatingTableComponent(String componentName){
         initSearchComboBox(componentName);
@@ -33,9 +33,15 @@ public class RatingTableComponent extends Component
     }
 
     private void initRatingTable() {
-        ratingTable.addColumn(Lecturer::getName).setHeader("Lecturer");
+        addColumns();
         ratingTable.addComponentColumn(l -> new RatingStarsComponent()).setHeader("Priority");
         add(ratingTable);
+    }
+
+    protected abstract void addColumns();
+
+    protected Grid<T> getRatingTable(){
+        return ratingTable;
     }
 
     private void initSearchComboBox(String componentName){
@@ -45,15 +51,15 @@ public class RatingTableComponent extends Component
         ratingTable.setSelectionMode(Grid.SelectionMode.SINGLE);
         addButton.addClickListener(e -> {
            if(searchComboBox.getValue() != null){
-               ListDataProvider<Lecturer> all = (ListDataProvider<Lecturer>) ratingTable.getDataProvider();
+               ListDataProvider<T> all = (ListDataProvider<T>) ratingTable.getDataProvider();
                final boolean alreadyAdded = all.getItems().stream()
                        .anyMatch(lecture -> Objects.equals(lecture, searchComboBox.getValue()));
                if(!alreadyAdded){
-                   List<Lecturer> allItems = all.getItems().stream().collect(Collectors.toList());
+                   List<T> allItems = all.getItems().stream().collect(Collectors.toList());
                    allItems.add(searchComboBox.getValue());
                    ratingTable.setItems(allItems);
                } else {
-                   Notification.show("Lecturer already added to table!", 3000, Notification.Position.MIDDLE);
+                   Notification.show(componentName + " already added to table!", 3000, Notification.Position.MIDDLE);
                }
            }
         });
@@ -69,8 +75,8 @@ public class RatingTableComponent extends Component
         deleteButton.getElement().setAttribute("theme", "error");
         deleteButton.addClickListener(e -> {
             if(!ratingTable.getSelectedItems().isEmpty()){
-                ListDataProvider<Lecturer> all = (ListDataProvider<Lecturer>) ratingTable.getDataProvider();
-                final List<Lecturer> afterDeletion = all.getItems().stream()
+                ListDataProvider<T> all = (ListDataProvider<T>) ratingTable.getDataProvider();
+                final List<T> afterDeletion = all.getItems().stream()
                         .filter(lecture -> !Objects.equals(lecture, ratingTable.getSelectedItems().stream().findFirst().get()))
                         .collect(Collectors.toList());
                 ratingTable.setItems(afterDeletion);
@@ -88,7 +94,7 @@ public class RatingTableComponent extends Component
         add(searchPanel);
     }
 
-    public void updateSearchComboBox(Set<Lecturer> values){
+    public void updateSearchComboBox(Set<T> values){
         searchComboBox.setItems(values);
     }
 

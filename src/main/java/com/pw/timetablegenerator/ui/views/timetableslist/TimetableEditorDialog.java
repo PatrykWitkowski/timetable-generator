@@ -40,7 +40,7 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
     private DatePicker endSemesterDataPicker = new DatePicker();
     private ComboBox<String> dayTime = new ComboBox<>();
     private ComboBox<DayOfWeek> freeDay = new ComboBox<>();
-    private RatingTableComponent lecturersTable = new RatingTableComponent("Lecturer");
+    private RatingTableComponent lecturersTable = new LecturerRatingTableComponent();
     private FormLayout preferenceFormLayout;
     private Tab tabPreference;
 
