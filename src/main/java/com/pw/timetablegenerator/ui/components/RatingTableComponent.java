@@ -98,4 +98,9 @@ public abstract class RatingTableComponent<T extends Serializable> extends Compo
         searchComboBox.setItems(values);
     }
 
+    public boolean isEmpty(){
+        ListDataProvider<T> all = (ListDataProvider<T>) ratingTable.getDataProvider();
+        return all.getItems().isEmpty();
+    }
+
 }

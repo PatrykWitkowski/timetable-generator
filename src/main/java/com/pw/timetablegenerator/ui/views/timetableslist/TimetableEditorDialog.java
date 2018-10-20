@@ -16,6 +16,7 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.tabs.Tab;
@@ -223,5 +224,15 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
     @Override
     protected void confirmDelete() {
         // nothing to do
+    }
+
+    @Override
+    protected void saveClicked(Operation operation) {
+        if(dayTime.isEmpty() && freeDay.isEmpty() && lecturersTable.isEmpty()
+        && classOnDayTable.isEmpty() && classParityWeekRatingTable.isEmpty()){
+            Notification.show("You have to choose at least one preference!", 3000, Notification.Position.MIDDLE);
+            return;
+        }
+        super.saveClicked(operation);
     }
 }
