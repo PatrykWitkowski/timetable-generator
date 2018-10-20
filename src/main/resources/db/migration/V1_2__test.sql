@@ -12,10 +12,12 @@ values (2, 1, 'Analiza matematyczna', 4, 'EXERCISE');
 insert into lecturers (lecturer_id, name)
 values (1, 'Prof. Janusz Zakrzewski');
 
-insert into courses(course_id, class_id, lecturer_id, group_code, course_start_time, course_end_time, course_day, courses_place, even_week, free_places)
-values (1, 1, 1, 'EFG324F', '08:20:00', '10:00:00', 'MONDAY', 'C-14 A1.1', null, 1);
-insert into courses(course_id, class_id, lecturer_id, group_code, course_start_time, course_end_time, course_day, courses_place, even_week, free_places)
-values (2, 2, 1, 'EFG324F', '10:00:00', '13:00:00', 'MONDAY', 'C-14 A1.1', 1, 1);
+insert into courses(course_id, class_id, lecturer_id, group_code, course_start_time, course_end_time, course_day, courses_place, parity_of_the_week, free_places)
+values (1, 1, 1, 'EFG324F', '08:20:00', '10:00:00', 'MONDAY', 'C-14 A1.1', 'WEEKLY', 1);
+insert into courses(course_id, class_id, lecturer_id, group_code, course_start_time, course_end_time, course_day, courses_place, parity_of_the_week, free_places)
+values (2, 2, 1, 'EFG324F', '10:00:00', '13:00:00', 'MONDAY', 'C-14 A1.1', 'ODD', 1);
+insert into courses(course_id, class_id, lecturer_id, group_code, course_start_time, course_end_time, course_day, courses_place, parity_of_the_week, free_places)
+values (3, 2, 1, 'GFD435D', '13:00:00', '15:00:00', 'FRIDAY', 'C-14 A2.1', 'ODD', 1);
 
 insert into timetable_course (timetable_id, course_id)
 values (1, 1);

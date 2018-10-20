@@ -1,5 +1,6 @@
 package com.pw.timetablegenerator.backend.entity;
 
+import com.pw.timetablegenerator.backend.common.ParityOfTheWeek;
 import lombok.Data;
 import lombok.ToString;
 import org.hibernate.annotations.LazyCollection;
@@ -40,7 +41,9 @@ public class Course implements Serializable {
     @JoinColumn(name="lecturer_id")
     private Lecturer lecturer;
 
-    private Boolean evenWeek;
+    @Enumerated(EnumType.STRING)
+    @Column(length = 6)
+    private ParityOfTheWeek parityOfTheWeek;
 
     private Long freePlaces;
 

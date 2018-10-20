@@ -65,7 +65,7 @@ CREATE TABLE courses (
     course_end_time time,
     course_day varchar(9),
     courses_place varchar(255),
-    even_week bit,
+    parity_of_the_week varchar(6),
     free_places bigint,
     PRIMARY KEY (course_id),
     CONSTRAINT classhasmanycourses FOREIGN KEY(class_id) REFERENCES classes(class_id),

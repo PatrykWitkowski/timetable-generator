@@ -1,6 +1,7 @@
 package com.pw.timetablegenerator.ui.views.timetableslist;
 
 import com.google.common.collect.Lists;
+import com.pw.timetablegenerator.backend.common.ParityOfTheWeek;
 import com.pw.timetablegenerator.backend.entity.Class;
 import com.pw.timetablegenerator.backend.entity.Course;
 import com.pw.timetablegenerator.backend.entity.EnrollmentGroup;
@@ -29,6 +30,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -44,6 +46,7 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
     private ComboBox<DayOfWeek> freeDay = new ComboBox<>();
     private RatingTableComponent lecturersTable = new LecturerRatingTableComponent();
     private ClassOnDayRatingTableComponent classOnDayTable = new ClassOnDayRatingTableComponent();
+    private ClassParityWeekRatingTableComponent classParityWeekRatingTable = new ClassParityWeekRatingTableComponent();
     private FormLayout preferenceFormLayout;
     private Tab tabPreference;
 
@@ -60,7 +63,12 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
         createFreeDayPreference();
         createLecturerPreference();
         createClassOnDayPreference();
+        createClassParityWeekPreference();
         tabPreference = addNewTab("Preferences", new Div(preferenceFormLayout));
+    }
+
+    private void createClassParityWeekPreference() {
+        preferenceFormLayout.add(classParityWeekRatingTable);
     }
 
     private void createClassOnDayPreference() {
@@ -155,6 +163,15 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
                 .collect(Collectors.toSet()));
 
                 classOnDayTable.updateSearchComboBox(new HashSet<>(e.getValue().getClasses()));
+                final Set<Class> classesInEvenOrOddWeeks = e.getValue().getClasses().stream()
+                        .filter(c -> c.getCourses().stream()
+                                .noneMatch(course -> course.getParityOfTheWeek() == ParityOfTheWeek.WEEKLY))
+                        .filter(c -> !c.getCourses().stream()
+                                .allMatch(course -> course.getParityOfTheWeek() == ParityOfTheWeek.EVEN))
+                        .filter(c -> !c.getCourses().stream()
+                                .allMatch(course -> course.getParityOfTheWeek() == ParityOfTheWeek.ODD))
+                        .collect(Collectors.toSet());
+                classParityWeekRatingTable.updateSearchComboBox(classesInEvenOrOddWeeks);
             }
         });
         getFormLayout().add(enrollmentGroupComboBox);

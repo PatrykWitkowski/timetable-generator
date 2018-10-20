@@ -1,6 +1,7 @@
 package com.pw.timetablegenerator.ui.views.timetableslist;
 
 import com.google.common.collect.Lists;
+import com.pw.timetablegenerator.backend.common.ParityOfTheWeek;
 import com.pw.timetablegenerator.backend.entity.Course;
 import com.pw.timetablegenerator.backend.entity.Timetable;
 import com.vaadin.flow.component.Tag;
@@ -78,7 +79,7 @@ public class TimetableComponent extends PolymerTemplate<TimetableComponent.Timet
     private void addEvents(List<String> events, List<Course> coursesForSpecificDay, final LocalDate firstDate) {
         TemporalField weekOfYear = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
         events.addAll(coursesForSpecificDay.stream()
-                .filter(c -> c.getEvenWeek() == null
+                .filter(c -> c.getParityOfTheWeek() == ParityOfTheWeek.WEEKLY
                         || actualDateIsInEvenWeek(firstDate, weekOfYear, c)
                         || actualDateIsInOddWeek(firstDate, weekOfYear, c))
                 .map(c -> String.format("{%s, %s, %s, %s}",
@@ -90,11 +91,11 @@ public class TimetableComponent extends PolymerTemplate<TimetableComponent.Timet
     }
 
     private boolean actualDateIsInOddWeek(LocalDate firstDate, TemporalField woy, Course c) {
-        return !c.getEvenWeek() && firstDate.get(woy) % 2 == 1;
+        return c.getParityOfTheWeek() == ParityOfTheWeek.ODD && firstDate.get(woy) % 2 == 1;
     }
 
     private boolean actualDateIsInEvenWeek(LocalDate firstDate, TemporalField woy, Course c) {
-        return c.getEvenWeek() && firstDate.get(woy) % 2 == 0;
+        return c.getParityOfTheWeek() == ParityOfTheWeek.EVEN && firstDate.get(woy) % 2 == 0;
     }
 
     private String addTitle(Course course){
