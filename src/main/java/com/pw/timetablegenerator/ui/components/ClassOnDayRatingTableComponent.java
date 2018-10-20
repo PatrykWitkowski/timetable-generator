@@ -1,8 +1,7 @@
-package com.pw.timetablegenerator.ui.views.timetableslist;
+package com.pw.timetablegenerator.ui.components;
 
 import com.pw.timetablegenerator.backend.entity.Class;
 import com.pw.timetablegenerator.backend.entity.Course;
-import com.pw.timetablegenerator.ui.components.RatingTableComponent;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.data.renderer.TemplateRenderer;
 import com.vaadin.flow.function.ValueProvider;

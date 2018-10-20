@@ -1,7 +1,6 @@
-package com.pw.timetablegenerator.ui.views.timetableslist;
+package com.pw.timetablegenerator.ui.components;
 
 import com.pw.timetablegenerator.backend.entity.Lecturer;
-import com.pw.timetablegenerator.ui.components.RatingTableComponent;
 
 public class LecturerRatingTableComponent extends RatingTableComponent<Lecturer> {
 
