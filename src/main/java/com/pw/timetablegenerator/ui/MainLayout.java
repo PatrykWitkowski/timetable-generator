@@ -1,12 +1,14 @@
 package com.pw.timetablegenerator.ui;
 
 import com.pw.timetablegenerator.backend.entity.properties.App_;
+import com.pw.timetablegenerator.backend.entity.properties.Class_;
+import com.pw.timetablegenerator.backend.entity.properties.Student_;
+import com.pw.timetablegenerator.backend.entity.properties.Timetable_;
 import com.pw.timetablegenerator.backend.utils.security.SecurityUtils;
 import com.pw.timetablegenerator.ui.components.ClickableRouterLink;
 import com.pw.timetablegenerator.ui.views.LoginView;
 import com.pw.timetablegenerator.ui.views.classeslist.ClassesList;
 import com.pw.timetablegenerator.ui.views.studentlist.StudentList;
-import com.pw.timetablegenerator.ui.views.timetableslist.TimetableComponent;
 import com.pw.timetablegenerator.ui.views.timetableslist.TimetablesList;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.dependency.HtmlImport;
@@ -34,9 +36,9 @@ public class MainLayout extends Div
 
     public static final String MAIN_LAYOUT_NAV_ITEM = "main-layout__nav-item";
 
-    private Text timetableText = new Text("Timetables");
-    private Text classText = new Text("Classes");
-    private Text studentText = new Text("Student");
+    private Text timetableText = new Text(getTranslation(Timetable_.TIMETABLE_TITLE));
+    private Text classText = new Text(getTranslation(Class_.CLASS_TITLE));
+    private Text studentText = new Text(getTranslation(Student_.STUDENT_TITLE));
     private Text logoutText = new Text(getTranslation(App_.LOGOUT));
     private H2 title = new H2();
 
@@ -102,10 +104,9 @@ public class MainLayout extends Div
     @Override
     public void localeChange(LocaleChangeEvent localeChangeEvent) {
         title.setText(getTranslation(App_.APP_TITLE));
-//        orderText.setText(getTranslation(Order_.ORDERS_LABEL));
-//        productText.setText(getTranslation(Product_.PRODUCTS_LABEL));
-//        sellerText.setText(getTranslation(Seller_.SELLERS_LABEL));
-//        settingText.setText(getTranslation(Settings_.SETTINGS));
+        timetableText.setText(getTranslation(Timetable_.TIMETABLE_TITLE));
+        classText.setText(getTranslation(Class_.CLASS_TITLE));
+        studentText.setText(getTranslation(Student_.STUDENT_TITLE));
         logoutText.setText(getTranslation(App_.LOGOUT));
     }
 }
