@@ -4,6 +4,9 @@ import com.pw.timetablegenerator.backend.entity.properties.App_;
 import com.pw.timetablegenerator.backend.utils.security.SecurityUtils;
 import com.pw.timetablegenerator.ui.components.ClickableRouterLink;
 import com.pw.timetablegenerator.ui.views.LoginView;
+import com.pw.timetablegenerator.ui.views.classeslist.ClassesList;
+import com.pw.timetablegenerator.ui.views.studentlist.StudentList;
+import com.pw.timetablegenerator.ui.views.timetableslist.TimetableComponent;
 import com.pw.timetablegenerator.ui.views.timetableslist.TimetablesList;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.dependency.HtmlImport;
@@ -31,40 +34,37 @@ public class MainLayout extends Div
 
     public static final String MAIN_LAYOUT_NAV_ITEM = "main-layout__nav-item";
 
-    private Text orderText = new Text("Timetables");
+    private Text timetableText = new Text("Timetables");
+    private Text classText = new Text("Classes");
+    private Text studentText = new Text("Student");
     private Text logoutText = new Text(getTranslation(App_.LOGOUT));
     private H2 title = new H2();
 
     public MainLayout() {
         title.addClassName("main-layout__title");
 
-        RouterLink orders = new RouterLink(null, TimetablesList.class);
-        orders.add(new Icon(VaadinIcon.LIST), orderText);
-        orders.addClassName(MAIN_LAYOUT_NAV_ITEM);
+        RouterLink timetables = new RouterLink(null, TimetablesList.class);
+        timetables.add(new Icon(VaadinIcon.CALENDAR_CLOCK), timetableText);
+        timetables.addClassName(MAIN_LAYOUT_NAV_ITEM);
         // Only show as active for the exact URL, but not for sub paths
-        orders.setHighlightCondition(HighlightConditions.sameLocation());
+        timetables.setHighlightCondition(HighlightConditions.sameLocation());
 
-//        RouterLink products = new RouterLink(null, TimetableComponent.class);
-//        products.add(new Icon(VaadinIcon.STORAGE), new Text("Test"));
-//        products.addClassName(MAIN_LAYOUT_NAV_ITEM);
-//        products.setHighlightCondition(HighlightConditions.sameLocation());
-//
-//        RouterLink sellers = new RouterLink(null, SellersList.class);
-//        sellers.add(new Icon(VaadinIcon.SHOP), sellerText);
-//        sellers.addClassName(MAIN_LAYOUT_NAV_ITEM);
-//        sellers.setHighlightCondition(HighlightConditions.sameLocation());
-//
-//        RouterLink settings = new RouterLink(null, SettingsList.class);
-//        settings.add(new Icon(VaadinIcon.COGS), settingText);
-//        settings.addClassName(MAIN_LAYOUT_NAV_ITEM);
-//        settings.setHighlightCondition(HighlightConditions.sameLocation());
+        RouterLink classes = new RouterLink(null, ClassesList.class);
+        classes.add(new Icon(VaadinIcon.ARCHIVES), classText);
+        classes.addClassName(MAIN_LAYOUT_NAV_ITEM);
+        classes.setHighlightCondition(HighlightConditions.sameLocation());
+
+        RouterLink student = new RouterLink(null, StudentList.class);
+        student.add(new Icon(VaadinIcon.ACADEMY_CAP), studentText);
+        student.addClassName(MAIN_LAYOUT_NAV_ITEM);
+        student.setHighlightCondition(HighlightConditions.sameLocation());
 
         ClickableRouterLink logout = new ClickableRouterLink(null, LoginView.class);
         logout.add(new Icon(VaadinIcon.POWER_OFF), logoutText);
         logout.addClassName(MAIN_LAYOUT_NAV_ITEM);
         logout.addClickListener(e -> onLogout());
 
-        Div navigation = new Div(orders, logout);
+        Div navigation = new Div(timetables, classes, student, logout);
         navigation.addClassName("main-layout__nav");
 
         Div header = new Div(title, navigation);
