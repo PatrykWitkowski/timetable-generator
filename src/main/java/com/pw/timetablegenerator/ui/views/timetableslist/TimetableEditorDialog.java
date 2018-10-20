@@ -11,6 +11,7 @@ import com.pw.timetablegenerator.ui.common.AbstractEditorDialog;
 import com.pw.timetablegenerator.ui.components.RatingStarsComponent;
 import com.pw.timetablegenerator.ui.components.RatingTableComponent;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -47,6 +48,7 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
     private RatingTableComponent lecturersTable = new LecturerRatingTableComponent();
     private ClassOnDayRatingTableComponent classOnDayTable = new ClassOnDayRatingTableComponent();
     private ClassParityWeekRatingTableComponent classParityWeekRatingTable = new ClassParityWeekRatingTableComponent();
+    private Checkbox avoidTimeBreak = new Checkbox();
     private FormLayout preferenceFormLayout;
     private Tab tabPreference;
 
@@ -64,7 +66,13 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
         createLecturerPreference();
         createClassOnDayPreference();
         createClassParityWeekPreference();
+        createAvoidTimeBreakPreference();
         tabPreference = addNewTab("Preferences", new Div(preferenceFormLayout));
+    }
+
+    private void createAvoidTimeBreakPreference() {
+        avoidTimeBreak.setLabel("Avoid time break?");
+        preferenceFormLayout.add(createFieldWithRating(avoidTimeBreak));
     }
 
     private void createClassParityWeekPreference() {
