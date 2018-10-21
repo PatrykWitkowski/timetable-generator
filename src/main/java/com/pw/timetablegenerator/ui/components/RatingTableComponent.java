@@ -1,5 +1,6 @@
 package com.pw.timetablegenerator.ui.components;
 
+import com.pw.timetablegenerator.backend.entity.properties.App_;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.Tag;
@@ -26,15 +27,20 @@ public abstract class RatingTableComponent<T extends Serializable> extends Compo
     private Button addButton = new Button(VaadinIcon.PLUS.create());
     private Button deleteButton = new Button(VaadinIcon.MINUS.create());
     private Grid<T> ratingTable = new Grid<>();
+    private String componentName;
 
-    public RatingTableComponent(String componentName){
-        initSearchComboBox(componentName);
+    public RatingTableComponent(){
+        initSearchComboBox();
         initRatingTable();
+    }
+
+    protected void setComponentName(String componentName){
+        this.componentName = componentName;
     }
 
     private void initRatingTable() {
         addColumns();
-        ratingTable.addComponentColumn(l -> new RatingStarsComponent()).setHeader("Priority");
+        ratingTable.addComponentColumn(l -> new RatingStarsComponent()).setHeader(getTranslation(App_.PRIORITY));
         add(ratingTable);
     }
 
@@ -44,7 +50,7 @@ public abstract class RatingTableComponent<T extends Serializable> extends Compo
         return ratingTable;
     }
 
-    private void initSearchComboBox(String componentName){
+    private void initSearchComboBox(){
         searchComboBox.setLabel(componentName);
         searchComboBox.setAllowCustomValue(false);
 
@@ -59,7 +65,7 @@ public abstract class RatingTableComponent<T extends Serializable> extends Compo
                    allItems.add(searchComboBox.getValue());
                    ratingTable.setItems(allItems);
                } else {
-                   Notification.show(componentName + " already added to table!", 3000, Notification.Position.MIDDLE);
+                   Notification.show(componentName + " " + getTranslation(App_.MSG_ALREADY_ADDED), 3000, Notification.Position.MIDDLE);
                }
            }
         });

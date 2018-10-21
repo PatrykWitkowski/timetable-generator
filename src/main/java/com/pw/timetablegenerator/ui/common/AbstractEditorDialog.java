@@ -15,6 +15,7 @@
  */
 package com.pw.timetablegenerator.ui.common;
 
+import com.pw.timetablegenerator.backend.entity.properties.App_;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -26,6 +27,7 @@ import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.shared.Registration;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -62,7 +64,8 @@ public abstract class AbstractEditorDialog<T extends Serializable>
      * an already existing item.
      */
     public enum Operation {
-        ADD("New", "add", false), EDIT("Edit", "edit", true);
+        ADD(App_.NEW, StringUtils.lowerCase(App_.ADD), false),
+        EDIT(App_.EDIT, StringUtils.lowerCase(App_.EDIT), true);
 
         private final String nameInTitle;
         private final String nameInText;
@@ -89,9 +92,9 @@ public abstract class AbstractEditorDialog<T extends Serializable>
     }
 
     private final H3 titleField = new H3();
-    private final Button saveButton = new Button("Save");
-    private final Button cancelButton = new Button("Cancel");
-    private final Button deleteButton = new Button("Delete");
+    private final Button saveButton = new Button(getTranslation(App_.SAVE));
+    private final Button cancelButton = new Button(getTranslation(App_.CANCEL));
+    private final Button deleteButton = new Button(getTranslation(App_.DELETE));
     private Registration registrationForSave;
 
     private final FormLayout formLayout = new FormLayout();
@@ -103,7 +106,7 @@ public abstract class AbstractEditorDialog<T extends Serializable>
 
     private final ConfirmationDialog<T> confirmationDialog = new ConfirmationDialog<>();
 
-    private final String itemType;
+    private String itemType;
     private final BiConsumer<T, Operation> itemSaver;
     private final Consumer<T> itemDeleter;
 
@@ -135,12 +138,16 @@ public abstract class AbstractEditorDialog<T extends Serializable>
         setCloseOnOutsideClick(false);
     }
 
+    protected void setItemType(String itemType){
+        this.itemType = itemType;
+    }
+
     private void initTitle() {
         add(titleField);
     }
 
     private void initFormLayout() {
-        mainTab = new Tab("Main");
+        mainTab = new Tab(getTranslation(App_.MAIN_TAB));
         formLayout.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 1),
                 new FormLayout.ResponsiveStep("25em", 2));
         Div mainDiv = new Div(formLayout);
@@ -246,7 +253,7 @@ public abstract class AbstractEditorDialog<T extends Serializable>
      */
     public void open(T item, Operation operation) {
         currentItem = item;
-        titleField.setText(operation.getNameInTitle() + " " + itemType);
+        titleField.setText(getTranslation(operation.getNameInTitle()) + " " + itemType);
         if (registrationForSave != null) {
             registrationForSave.remove();
         }
@@ -306,7 +313,7 @@ public abstract class AbstractEditorDialog<T extends Serializable>
     protected final void openConfirmationDialog(String title, String message,
             String additionalMessage) {
         close();
-        confirmationDialog.open(title, message, additionalMessage, "Delete",
+        confirmationDialog.open(title, message, additionalMessage, getTranslation(App_.DELETE),
                 true, getCurrentItem(), this::deleteConfirmed, this::open);
     }
 

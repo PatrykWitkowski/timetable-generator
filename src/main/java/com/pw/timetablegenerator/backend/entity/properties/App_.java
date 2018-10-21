@@ -19,7 +19,8 @@ public class App_ {
     public static final String CANCEL = "app.cancel.label";
     public static final String MSG_MUST_CONTAIN_AT_LEAST = "app.msg.mustContain";
     public static final String MSG_DATE_FORMAT = "app.msg.date.format.label";
-
-
-
+    public static final String PRIORITY = "app.priority.label";
+    public static final String MSG_ALREADY_ADDED = "app.msg.alreadyAdded.label";
+    public static final String SAVE = "app.save.label";
+    public static final String MAIN_TAB = "app.main.label";
 }

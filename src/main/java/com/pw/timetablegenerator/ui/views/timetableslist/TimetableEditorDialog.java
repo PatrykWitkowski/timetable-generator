@@ -24,6 +24,7 @@ import com.vaadin.flow.data.binder.ValueContext;
 import com.vaadin.flow.data.converter.Converter;
 import com.vaadin.flow.data.validator.DateRangeValidator;
 import com.vaadin.flow.data.validator.StringLengthValidator;
+import org.apache.commons.lang3.StringUtils;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -53,7 +54,8 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
 
     protected TimetableEditorDialog(BiConsumer<Timetable, Operation> saveHandler,
                                     Consumer<Timetable> deleteHandler) {
-        super("timetable", saveHandler, deleteHandler);
+        super("", saveHandler, deleteHandler);
+        setItemType(StringUtils.lowerCase(getTranslation(Timetable_.TIMETABLE)));
 
         createTimetableTitle();
         createEnrollmentGroupChoose();
@@ -66,11 +68,11 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
         createClassOnDayPreference();
         createClassParityWeekPreference();
         createAvoidTimeBreakPreference();
-        tabPreference = addNewTab("Preferences", new Div(preferenceFormLayout));
+        tabPreference = addNewTab(getTranslation(Timetable_.PREFERENCES), new Div(preferenceFormLayout));
     }
 
     private void createAvoidTimeBreakPreference() {
-        avoidTimeBreak.setLabel("Avoid time break?");
+        avoidTimeBreak.setLabel(getTranslation(Timetable_.AVOID_TIME_BREAK));
         preferenceFormLayout.add(createFieldWithRating(avoidTimeBreak));
     }
 
@@ -99,16 +101,18 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
     }
 
     private void createFreeDayPreference() {
-        freeDay.setLabel("Free Day");
+        freeDay.setLabel(getTranslation(Timetable_.FREE_DAY));
         freeDay.setAllowCustomValue(false);
         freeDay.setItems(DayOfWeek.values());
         preferenceFormLayout.add(createFieldWithRating(freeDay));
     }
 
     private void createDayTimePreference() {
-        dayTime.setLabel("Day time");
+        dayTime.setLabel(getTranslation(Timetable_.DAY_TIME));
         dayTime.setAllowCustomValue(false);
-        dayTime.setItems(Stream.of("Morning", "Afternoon", "Evening"));
+        dayTime.setItems(Stream.of(getTranslation(Timetable_.DAY_TIME_MORNING),
+                getTranslation(Timetable_.DAY_TIME_AFTERNOON),
+                getTranslation(Timetable_.DAY_TIME_EVENING)));
         preferenceFormLayout.add(createFieldWithRating(dayTime));
     }
 

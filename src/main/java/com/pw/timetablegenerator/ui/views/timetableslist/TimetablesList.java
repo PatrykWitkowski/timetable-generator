@@ -105,7 +105,7 @@ public class TimetablesList extends PolymerTemplate<TimetablesList.TimetablesMod
     private void setTranslationInHtmlFile() {
         getModel().setNewTimetableLabel(getTranslation(Timetable_.NEW));
         getModel().setSemesterLabel(getTranslation(Timetable_.SEMESTER));
-        getModel().setGenerationDateLabel(getTranslation(Timetable_.GENERARION_DATE));
+        getModel().setGenerationDateLabel(getTranslation(Timetable_.GENERATION_DATE));
         getModel().setPreviewLabel(getTranslation(Timetable_.PREVIEW));
         getModel().setDeleteLabel(getTranslation(App_.DELETE));
         getModel().setNoMatchesLabel(getTranslation(App_.NONE_MATCHES));
