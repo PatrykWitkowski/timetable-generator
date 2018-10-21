@@ -15,6 +15,7 @@
  */
 package com.pw.timetablegenerator.ui.common;
 
+import com.pw.timetablegenerator.backend.entity.properties.App_;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
@@ -41,7 +42,7 @@ public class ConfirmationDialog<T extends Serializable>
     private final Div messageLabel = new Div();
     private final Div extraMessageLabel = new Div();
     private final Button confirmButton = new Button();
-    private final Button cancelButton = new Button("Cancel");
+    private final Button cancelButton = new Button(getTranslation(App_.CANCEL));
     private Registration registrationForConfirm;
     private Registration registrationForCancel;
 

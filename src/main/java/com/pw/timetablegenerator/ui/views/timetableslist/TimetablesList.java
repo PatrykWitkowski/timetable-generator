@@ -1,6 +1,8 @@
 package com.pw.timetablegenerator.ui.views.timetableslist;
 
 import com.pw.timetablegenerator.backend.entity.Timetable;
+import com.pw.timetablegenerator.backend.entity.properties.App_;
+import com.pw.timetablegenerator.backend.entity.properties.Timetable_;
 import com.pw.timetablegenerator.backend.service.TimetableService;
 import com.pw.timetablegenerator.backend.utils.security.SecurityUtils;
 import com.pw.timetablegenerator.ui.MainLayout;
@@ -59,6 +61,13 @@ public class TimetablesList extends PolymerTemplate<TimetablesList.TimetablesMod
         @Encode(value = TimetableTypeToStringEncoder.class, path = "timetableType")
         @Exclude({"owner", "courses", "semesterStartDate", "semesterEndDate"})
         void setTimetables(List<Timetable> timetables);
+
+        void setNewTimetableLabel(String newTimetableLabel);
+        void setSemesterLabel(String semesterLabel);
+        void setGenerationDateLabel(String generationDateLabel);
+        void setPreviewLabel(String previewLabel);
+        void setDeleteLabel(String deleteLabel);
+        void setNoMatchesLabel(String noMatchesLabel);
     }
 
     @Id("search")
@@ -81,7 +90,7 @@ public class TimetablesList extends PolymerTemplate<TimetablesList.TimetablesMod
      */
     @PostConstruct
     public void TimetablesList(){
-        search.setPlaceholder("Search timetables");
+        search.setPlaceholder(getTranslation(Timetable_.SEARCH));
         search.addValueChangeListener(e -> updateList());
         search.setValueChangeMode(ValueChangeMode.EAGER);
 
@@ -89,6 +98,17 @@ public class TimetablesList extends PolymerTemplate<TimetablesList.TimetablesMod
             final Timetable newTimetable = new Timetable(SecurityUtils.getCurrentUser().getUser());
             openForm(newTimetable, AbstractEditorDialog.Operation.ADD);
         });
+
+        setTranslationInHtmlFile();
+    }
+
+    private void setTranslationInHtmlFile() {
+        getModel().setNewTimetableLabel(getTranslation(Timetable_.NEW));
+        getModel().setSemesterLabel(getTranslation(Timetable_.SEMESTER));
+        getModel().setGenerationDateLabel(getTranslation(Timetable_.GENERARION_DATE));
+        getModel().setPreviewLabel(getTranslation(Timetable_.PREVIEW));
+        getModel().setDeleteLabel(getTranslation(App_.DELETE));
+        getModel().setNoMatchesLabel(getTranslation(App_.NONE_MATCHES));
     }
 
     public void generateTimetable(Timetable timetable,
@@ -99,7 +119,7 @@ public class TimetablesList extends PolymerTemplate<TimetablesList.TimetablesMod
     public void deleteTimetable(Timetable timetable){
         timetableService.delete(timetable);
         updateList();
-        Notification.show("Timetable successfully deleted.", 3000,
+        Notification.show(getTranslation(Timetable_.MSG_DELETE), 3000,
                 Notification.Position.BOTTOM_START);
     }
 
@@ -107,12 +127,12 @@ public class TimetablesList extends PolymerTemplate<TimetablesList.TimetablesMod
         final List<Timetable> timetables
                 = timetableService.findTimetables(SecurityUtils.getCurrentUser().getUser(), search.getValue());
         if (search.isEmpty()) {
-            header.setText("Timetables");
-            header.add(new Span(timetables.size() + " in total"));
+            header.setText(getTranslation(Timetable_.TIMETABLE_TITLE));
+            header.add(new Span(timetables.size() + " " + getTranslation(App_.MSG_IN_TOTAL)));
         } else {
-            header.setText("Search for “" + search.getValue() + "”");
+            header.setText(getTranslation(App_.MSG_SEARCH_FOR) + " “" + search.getValue() + "”");
             if (!timetables.isEmpty()) {
-                header.add(new Span(timetables.size() + " results"));
+                header.add(new Span(timetables.size() + " " + getTranslation(App_.MSG_RESULTS)));
             }
         }
         getModel().setTimetables(timetables);
@@ -131,8 +151,9 @@ public class TimetablesList extends PolymerTemplate<TimetablesList.TimetablesMod
     @EventHandler
     private void delete(@ModelItem Timetable timetable){
         final Timetable timetableToDelete = timetableService.findByTimetableId(timetable.getTimetableId());
-        confirmationDialog.open("Delete timetable", "Do you wanna delete this timetable?", "",
-                "Delete", true, timetableToDelete, this::deleteTimetable, this::updateList);
+        confirmationDialog.open(getTranslation(Timetable_.MSG_DELETE_TITLE), getTranslation(Timetable_.MSG_DELETE_CONTENT),
+                "", getTranslation(App_.DELETE), true, timetableToDelete,
+                this::deleteTimetable, this::updateList);
     }
 
     private void openForm(Timetable timetable,

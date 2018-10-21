@@ -4,6 +4,8 @@ import com.google.common.collect.Lists;
 import com.pw.timetablegenerator.backend.common.ParityOfTheWeek;
 import com.pw.timetablegenerator.backend.entity.Class;
 import com.pw.timetablegenerator.backend.entity.*;
+import com.pw.timetablegenerator.backend.entity.properties.App_;
+import com.pw.timetablegenerator.backend.entity.properties.Timetable_;
 import com.pw.timetablegenerator.ui.common.AbstractEditorDialog;
 import com.pw.timetablegenerator.ui.components.*;
 import com.vaadin.flow.component.Component;
@@ -122,43 +124,43 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
     }
 
     private void createStartEndSemesterDataPickers() {
-        startSemesterDataPicker.setLabel("Start semester");
+        startSemesterDataPicker.setLabel(getTranslation(Timetable_.SEMESTER_START));
         startSemesterDataPicker.setRequired(true);
         getFormLayout().add(startSemesterDataPicker);
         startSemesterDataPicker.addValueChangeListener(e -> {
            if(e.getValue() != null){
                getBinder().forField(endSemesterDataPicker)
                        .withValidator(Objects::nonNull,
-                               "The date should be in MM/dd/yyyy format.")
+                               getTranslation(App_.MSG_DATE_FORMAT))
                        .withValidator(new DateRangeValidator(
-                               "The date should be after start semester.",
+                               getTranslation(Timetable_.MSG_SEMESTER_END_WARNING),
                                startSemesterDataPicker.getValue().plusDays(1), LocalDate.MAX))
                        .bind(Timetable::getSemesterEndDate, Timetable::setSemesterEndDate);
            } else {
                getBinder().forField(endSemesterDataPicker)
                        .withValidator(Objects::nonNull,
-                               "The date should be in MM/dd/yyyy format.")
+                               getTranslation(App_.MSG_DATE_FORMAT))
                        .bind(Timetable::getSemesterEndDate, Timetable::setSemesterEndDate);
            }
         });
 
         getBinder().forField(startSemesterDataPicker)
                 .withValidator(Objects::nonNull,
-                        "The date should be in MM/dd/yyyy format.")
+                        getTranslation(App_.MSG_DATE_FORMAT))
                 .bind(Timetable::getSemesterStartDate, Timetable::setSemesterStartDate);
 
-        endSemesterDataPicker.setLabel("End semester");
+        endSemesterDataPicker.setLabel(getTranslation(Timetable_.SEMESTER_END));
         endSemesterDataPicker.setRequired(true);
         getFormLayout().add(endSemesterDataPicker);
 
         getBinder().forField(endSemesterDataPicker)
                 .withValidator(Objects::nonNull,
-                        "The date should be in MM/dd/yyyy format.")
+                        getTranslation(App_.MSG_DATE_FORMAT))
                 .bind(Timetable::getSemesterEndDate, Timetable::setSemesterEndDate);
     }
 
     private void createEnrollmentGroupChoose() {
-        enrollmentGroupComboBox.setLabel("Enrollment group");
+        enrollmentGroupComboBox.setLabel(getTranslation(Timetable_.ENROLLMENT));
         enrollmentGroupComboBox.setRequired(true);
         enrollmentGroupComboBox.setAllowCustomValue(false);
         enrollmentGroupComboBox.addValueChangeListener(e -> {
@@ -182,7 +184,7 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
         getFormLayout().add(enrollmentGroupComboBox);
 
         getBinder().forField(enrollmentGroupComboBox)
-                .withValidator(Objects::nonNull, "You have to choose some enrollment group.")
+                .withValidator(Objects::nonNull, getTranslation(Timetable_.MSG_ENROLLMENT_WARNING))
                 .withConverter(new Converter<EnrollmentGroup, Long>() {
                     @Override
                     public Result<Long> convertToModel(EnrollmentGroup enrollmentGroup, ValueContext valueContext) {
@@ -198,14 +200,16 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
     }
 
     private void createTimetableTitle() {
-        timetableTitle.setLabel("Name");
+        final String name = getTranslation(Timetable_.NAME);
+        timetableTitle.setLabel(name);
         timetableTitle.setRequired(true);
         getFormLayout().add(timetableTitle);
 
+        final int minLength = 5;
         getBinder().forField(timetableTitle)
                 .withValidator(new StringLengthValidator(
-                        "Title must contain at least 5 characters",
-                        5, 255))
+                        name + " " + String.format(getTranslation(App_.MSG_MUST_CONTAIN_AT_LEAST), minLength),
+                        minLength, 255))
                 .bind(Timetable::getName, Timetable::setName);
     }
 
@@ -226,7 +230,7 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
     protected void saveClicked(Operation operation) {
         if(dayTime.isEmpty() && freeDay.isEmpty() && lecturersTable.isEmpty()
         && classOnDayTable.isEmpty() && classParityWeekRatingTable.isEmpty()){
-            Notification.show("You have to choose at least one preference!", 3000, Notification.Position.MIDDLE);
+            Notification.show(getTranslation(Timetable_.MSG_PREFERENCE_WARNING), 3000, Notification.Position.MIDDLE);
             return;
         }
         super.saveClicked(operation);

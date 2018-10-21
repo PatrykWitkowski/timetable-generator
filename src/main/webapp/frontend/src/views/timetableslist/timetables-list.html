@@ -157,6 +157,26 @@
                 background-color: var(--lumo-error-color);
             }
 
+             [data-status="ZŁY"] {
+                color: var(--lumo-base-color);
+                background-color: var(--lumo-shade);
+            }
+
+            [data-status="DOBRY"] {
+                color: var(--lumo-base-color);
+                background-color: var(--lumo-primary-color);
+            }
+
+            [data-status="DOSKONAŁY"] {
+                color: var(--lumo-base-color);
+                background-color: var(--lumo-success-color);
+            }
+
+            [data-status="NIEPOPRAWNY"] {
+                color: var(--lumo-base-color);
+                background-color: var(--lumo-error-color);
+            }
+
             .timetable__date {
                 white-space: nowrap;
                 line-height: var(--lumo-line-height-xs);
@@ -271,7 +291,7 @@
             </vaadin-text-field>
             <vaadin-button id="newTimetable" class="view-toolbar__button" theme="primary">
                 <iron-icon icon="lumo:plus" slot="prefix"></iron-icon>
-                <span>New timetable</span>
+                <span>[[newTimetableLabel]]</span>
             </vaadin-button>
         </div>
 
@@ -284,7 +304,7 @@
                             <p class="timetable__score">{{_setTwoNumberDecimal(item.quality)}} %</p>
                             <p class="timetable__count">
                                 {{_romanize(item.semester)}}
-                                <span> semester</span>
+                                <span> [[semesterLabel]]</span>
                             </p>
                         </div>
                         <div class="timetable__details">
@@ -294,17 +314,17 @@
                             </template>
                         </div>
                         <div class="timetable__date">
-                            <h5>Generation date</h5>
+                            <h5>[[generationDateLabel]]</h5>
                             <p>[[item.generationDate]]</p>
                         </div>
                         <div class="tooltip">
                             <vaadin-button on-click="edit" class="timetable__edit" theme="tertiary">
-                                <iron-icon icon="lumo:calendar"></iron-icon><span class="tooltiptext">Preview</span>
+                                <iron-icon icon="lumo:calendar"></iron-icon><span class="tooltiptext">[[previewLabel]]</span>
                             </vaadin-button>
                         </div>
                         <div class="tooltip">
                             <vaadin-button on-click="delete" class="timetable__delete" theme="tertiary">
-                                <iron-icon icon="lumo:cross"></iron-icon><span class="tooltiptext">Delete</span>
+                                <iron-icon icon="lumo:cross"></iron-icon><span class="tooltiptext">[[deleteLabel]]</span>
                             </vaadin-button>
                         </div>
                     </div>
@@ -312,7 +332,7 @@
             </template>
 
             <template is="dom-if" if="{{_isEmpty(timetables)}}">
-                <div class="timetables__no-matches">No matches</div>
+                <div class="timetables__no-matches">[[noMatchesLabel]]</div>
             </template>
         </div>
     </template>

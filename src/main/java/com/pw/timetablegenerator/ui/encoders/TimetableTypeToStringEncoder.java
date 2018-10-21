@@ -10,7 +10,7 @@ public class TimetableTypeToStringEncoder implements ModelEncoder<TimetableType,
         if(timetableType == null){
             return null;
         }
-        return timetableType.name();
+        return timetableType.toString();
     }
 
     @Override
