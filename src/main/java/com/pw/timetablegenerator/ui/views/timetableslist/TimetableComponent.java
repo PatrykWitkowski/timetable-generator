@@ -5,6 +5,7 @@ import com.pw.timetablegenerator.backend.common.ParityOfTheWeek;
 import com.pw.timetablegenerator.backend.entity.Course;
 import com.pw.timetablegenerator.backend.entity.Timetable;
 import com.vaadin.flow.component.Tag;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.HtmlImport;
 import com.vaadin.flow.component.polymertemplate.PolymerTemplate;
 import com.vaadin.flow.templatemodel.TemplateModel;
@@ -25,10 +26,12 @@ public class TimetableComponent extends PolymerTemplate<TimetableComponent.Timet
 
     public interface TimetablesModel extends TemplateModel {
         void setCourses(String courses);
+        void setCurrentLocale(String currentLocale);
     }
 
     public void setTimetable(Timetable timetable){
         getModel().setCourses(formatCoursesToString(timetable));
+        getModel().setCurrentLocale(UI.getCurrent().getLocale().getLanguage());
     }
 
     private String formatCoursesToString(Timetable timetable) {

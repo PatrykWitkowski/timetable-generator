@@ -10,12 +10,14 @@
 
 <link rel="import" href="../../../bower_components/scheduler-component/scheduler-component.html">
 
+<script src='../../../bower_components/fullcalendar/dist/locale-all.js'></script>
 
 <!-- Defines the timetable element -->
 <dom-module id="timetable-component">
     <template>
         <div class="view-container courses">
             <scheduler-component
+                    locale$="[[currentLocale]]"
                     default-view="basicWeek"
                     show-categories
                     max-time="21:00:00" min-time="07:00:00"
