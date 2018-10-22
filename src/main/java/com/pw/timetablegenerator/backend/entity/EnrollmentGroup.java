@@ -40,6 +40,6 @@ public class EnrollmentGroup {
 
     @Override
     public String toString(){
-        return String.format("%s (semester: %s)", name, RomanNumber.toRoman(semester.intValue()));
+        return name;
     }
 }

@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.pw.timetablegenerator.backend.common.ParityOfTheWeek;
 import com.pw.timetablegenerator.backend.entity.Class;
 import com.pw.timetablegenerator.backend.entity.properties.Class_;
+import com.vaadin.flow.component.ItemLabelGenerator;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.data.renderer.TemplateRenderer;
 import com.vaadin.flow.function.ValueProvider;
@@ -29,7 +30,16 @@ public class ClassParityWeekRatingTableComponent extends RatingTableComponent<Cl
         getRatingTable().addComponentColumn(c -> {
             final ComboBox<ParityOfTheWeek> parityOfWeekComboBox = new ComboBox<>();
             parityOfWeekComboBox.setItems(Lists.newArrayList(ParityOfTheWeek.EVEN, ParityOfTheWeek.ODD));
+            parityOfWeekComboBox.setItemLabelGenerator((ItemLabelGenerator<ParityOfTheWeek>) parityOfTheWeek ->
+                    getTranslation(parityOfTheWeek.getProperty()));
             return parityOfWeekComboBox;
         }).setHeader(getTranslation(Class_.WEEK_PARITY));
+    }
+
+
+    @Override
+    protected ItemLabelGenerator<Class> setItemLabelGenerator() {
+        return (ItemLabelGenerator<Class>) cl ->
+                String.format("%s [%s]", cl.getName(), getTranslation(cl.getClassType().getProperty()));
     }
 }

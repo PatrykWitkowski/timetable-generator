@@ -3,6 +3,7 @@ package com.pw.timetablegenerator.ui.components;
 import com.pw.timetablegenerator.backend.entity.properties.App_;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasComponents;
+import com.vaadin.flow.component.ItemLabelGenerator;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -36,6 +37,7 @@ public abstract class RatingTableComponent<T extends Serializable> extends Compo
 
     protected void setComponentName(String componentName){
         this.componentName = componentName;
+        searchComboBox.setLabel(this.componentName);
     }
 
     private void initRatingTable() {
@@ -53,13 +55,14 @@ public abstract class RatingTableComponent<T extends Serializable> extends Compo
     private void initSearchComboBox(){
         searchComboBox.setLabel(componentName);
         searchComboBox.setAllowCustomValue(false);
+        searchComboBox.setItemLabelGenerator(setItemLabelGenerator());
 
         ratingTable.setSelectionMode(Grid.SelectionMode.SINGLE);
         addButton.addClickListener(e -> {
            if(searchComboBox.getValue() != null){
                ListDataProvider<T> all = (ListDataProvider<T>) ratingTable.getDataProvider();
                final boolean alreadyAdded = all.getItems().stream()
-                       .anyMatch(lecture -> Objects.equals(lecture, searchComboBox.getValue()));
+                       .anyMatch(item -> Objects.equals(item, searchComboBox.getValue()));
                if(!alreadyAdded){
                    List<T> allItems = all.getItems().stream().collect(Collectors.toList());
                    allItems.add(searchComboBox.getValue());
@@ -100,6 +103,8 @@ public abstract class RatingTableComponent<T extends Serializable> extends Compo
         add(searchPanel);
     }
 
+    protected abstract ItemLabelGenerator<T> setItemLabelGenerator();
+
     public void updateSearchComboBox(Set<T> values){
         searchComboBox.setItems(values);
     }
@@ -108,5 +113,7 @@ public abstract class RatingTableComponent<T extends Serializable> extends Compo
         ListDataProvider<T> all = (ListDataProvider<T>) ratingTable.getDataProvider();
         return all.getItems().isEmpty();
     }
+    
+    
 
 }

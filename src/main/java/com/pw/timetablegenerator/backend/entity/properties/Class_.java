@@ -8,5 +8,10 @@ public class Class_ {
     public static final String WEEK_PARITY = "classes.parity.label";
     public static final String CLASS_ON_DAY = "class.onDay.label";
     public static final String DAY = "class.day.label";
+    public static final String TYPE_LECTURE = "class.type.lecture.label";
+    public static final String TYPE_EXERCISE = "class.type.exercise.label";
+    public static final String TYPE_LABORATORY = "class.type.laboratory.label";
+    public static final String TYPE_SEMINAR = "class.type.seminar.label";
+    public static final String TYPE_PROJECT = "class.type.project.label";
 
 }

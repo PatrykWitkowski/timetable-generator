@@ -6,9 +6,12 @@ import com.pw.timetablegenerator.backend.entity.Class;
 import com.pw.timetablegenerator.backend.entity.*;
 import com.pw.timetablegenerator.backend.entity.properties.App_;
 import com.pw.timetablegenerator.backend.entity.properties.Timetable_;
+import com.pw.timetablegenerator.backend.utils.converter.RomanNumber;
 import com.pw.timetablegenerator.ui.common.AbstractEditorDialog;
 import com.pw.timetablegenerator.ui.components.*;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.ItemLabelGenerator;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
@@ -28,6 +31,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.format.TextStyle;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
@@ -104,6 +108,8 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
         freeDay.setLabel(getTranslation(Timetable_.FREE_DAY));
         freeDay.setAllowCustomValue(false);
         freeDay.setItems(DayOfWeek.values());
+        freeDay.setItemLabelGenerator((ItemLabelGenerator<DayOfWeek>) dayOfWeek ->
+                dayOfWeek.getDisplayName(TextStyle.FULL, UI.getCurrent().getLocale()));
         preferenceFormLayout.add(createFieldWithRating(freeDay));
     }
 
@@ -187,6 +193,9 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
         });
         getFormLayout().add(enrollmentGroupComboBox);
 
+        enrollmentGroupComboBox.setItemLabelGenerator((ItemLabelGenerator<EnrollmentGroup>) enrollmentGroup ->
+                String.format("%s [%s: %s]", enrollmentGroup.getName(), getTranslation(Timetable_.SEMESTER),
+                RomanNumber.toRoman(enrollmentGroup.getSemester().intValue())));
         getBinder().forField(enrollmentGroupComboBox)
                 .withValidator(Objects::nonNull, getTranslation(Timetable_.MSG_ENROLLMENT_WARNING))
                 .withConverter(new Converter<EnrollmentGroup, Long>() {
