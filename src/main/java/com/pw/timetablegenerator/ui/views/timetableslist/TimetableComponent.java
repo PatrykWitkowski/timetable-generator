@@ -1,9 +1,11 @@
 package com.pw.timetablegenerator.ui.views.timetableslist;
 
 import com.google.common.collect.Lists;
+import com.pw.timetablegenerator.backend.common.ClassType;
 import com.pw.timetablegenerator.backend.common.ParityOfTheWeek;
 import com.pw.timetablegenerator.backend.entity.Course;
 import com.pw.timetablegenerator.backend.entity.Timetable;
+import com.pw.timetablegenerator.backend.entity.properties.Class_;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.HtmlImport;
@@ -27,11 +29,28 @@ public class TimetableComponent extends PolymerTemplate<TimetableComponent.Timet
     public interface TimetablesModel extends TemplateModel {
         void setCourses(String courses);
         void setCurrentLocale(String currentLocale);
+        void setCategories(String categories);
     }
 
     public void setTimetable(Timetable timetable){
         getModel().setCourses(formatCoursesToString(timetable));
         getModel().setCurrentLocale(UI.getCurrent().getLocale().getLanguage());
+        getModel().setCategories(createCategories());
+    }
+
+    private String createCategories(){
+        String result = "[";
+        result += createCategory(getTranslation(Class_.TYPE_LECTURE), "#59B373") + ",";
+        result += createCategory(getTranslation(Class_.TYPE_EXERCISE), "#F4AA4C") + ",";
+        result += createCategory(getTranslation(Class_.TYPE_LABORATORY), "#549EC5") + ",";
+        result += createCategory(getTranslation(Class_.TYPE_PROJECT), "#5ACAF1") + ",";
+        result += createCategory(getTranslation(Class_.TYPE_SEMINAR), "#5BC1BC");
+        result += "]";
+        return result;
+    }
+
+    private String createCategory(String categoryName, String color){
+        return String.format("{ \"label\": \"%s\", \"color\": \"%s\"}", categoryName, color);
     }
 
     private String formatCoursesToString(Timetable timetable) {
@@ -89,7 +108,7 @@ public class TimetableComponent extends PolymerTemplate<TimetableComponent.Timet
                         addTitle(c),
                         addStartDateTime(firstDate, c.getCourseStartTime()),
                         addEndDateTime(firstDate, c.getCourseEndTime()),
-                        addCategory(c.getClassOwner().getClassType().name())))
+                        addCategory(getTranslation(c.getClassOwner().getClassType().getProperty()))))
                 .collect(Collectors.toList()));
     }
 

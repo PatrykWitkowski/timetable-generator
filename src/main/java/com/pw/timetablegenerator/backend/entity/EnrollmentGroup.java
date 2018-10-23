@@ -1,7 +1,7 @@
 package com.pw.timetablegenerator.backend.entity;
 
-import com.pw.timetablegenerator.backend.utils.converter.RomanNumber;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
