@@ -14,7 +14,7 @@ import java.util.List;
 @Table(name = "enrollment_groups")
 @Data
 @EqualsAndHashCode(exclude = {"owner", "classes"})
-public class EnrollmentGroup {
+public class EnrollmentGroup implements Group{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,5 +41,10 @@ public class EnrollmentGroup {
     @Override
     public String toString(){
         return name;
+    }
+
+    @Override
+    public String getType() {
+        return "Enrollment group";
     }
 }
