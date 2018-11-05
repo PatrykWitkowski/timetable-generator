@@ -6,12 +6,12 @@ values (2, 1, 'test_timetable_2', 7, '2018-10-01', '2019-01-30', 5, NOW(), 'INVA
 insert into enrollment_groups(enrollment_id, user_id, name, ects_sum, semester)
 values (1, 1, 'zapisowa_1', 30, 1);
 
-insert into classes(class_id, enrollment_id, name, ects, class_type)
-values (1, 1, 'Analiza matematyczna', 12, 'LECTURE');
-insert into classes(class_id, enrollment_id, name, ects, class_type)
-values (2, 1, 'Analiza matematyczna', 4, 'EXERCISE');
-insert into classes(class_id, enrollment_id, name, ects, class_type)
-values (3, 1, 'Programowanie obiektowe', 4, 'LABORATORY');
+insert into classes(class_id, enrollment_id, user_id, name, ects, class_type)
+values (1, 1, 1, 'Analiza matematyczna', 12, 'LECTURE');
+insert into classes(class_id, enrollment_id, user_id, name, ects, class_type)
+values (2, 1, 1, 'Analiza matematyczna', 4, 'EXERCISE');
+insert into classes(class_id, enrollment_id, user_id, name, ects, class_type)
+values (3, 1, 1, 'Programowanie obiektowe', 4, 'LABORATORY');
 
 insert into lecturers (lecturer_id, name)
 values (1, 'Prof. Janusz Zakrzewski');

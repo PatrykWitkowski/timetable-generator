@@ -21,7 +21,6 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,6 +35,8 @@ public class ClassesList extends AbstractList implements BeforeEnterObserver {
 
     private final GroupEditorDialog form = new GroupEditorDialog(
             this::saveGroup, this::deleteGroup);
+
+    private final GroupSelectorDialog selectorDialog = new GroupSelectorDialog(this::saveGroup, this::deleteGroup);
 
     protected ClassesList() {
         super(Class_.CLASS);
@@ -69,12 +70,14 @@ public class ClassesList extends AbstractList implements BeforeEnterObserver {
 
     @Override
     protected void openEditorDialog() {
-
+        selectorDialog.open();
     }
 
     @Override
     protected void updateView() {
-        final List<EnrollmentGroup> enrollmentGroups = enrollmentGroupService.findEnrollmentGroups(SecurityUtils.getCurrentUser().getUser(), getSearchField().getValue());
+        final List<EnrollmentGroup> enrollmentGroups
+                = enrollmentGroupService.findEnrollmentGroups(SecurityUtils.getCurrentUser().getUser(),
+                getSearchField().getValue());
         final List<Group> groups = enrollmentGroups.stream()
                 .map(e -> (Group) e)
                 .collect(Collectors.toList());

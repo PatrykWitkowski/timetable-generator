@@ -68,6 +68,10 @@ public class User implements Serializable {
     @OneToMany(mappedBy="owner")
     private List<EnrollmentGroup> enrollmentGroups;
 
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy="owner")
+    private List<Class> ownerClasses;
+
     public User(String username, String password, UserType type){
         this.username = username;
         this.password = password;

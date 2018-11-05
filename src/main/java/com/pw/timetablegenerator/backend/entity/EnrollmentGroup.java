@@ -8,13 +8,15 @@ import org.hibernate.annotations.LazyCollectionOption;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "enrollment_groups")
 @Data
 @EqualsAndHashCode(exclude = {"owner", "classes"})
-public class EnrollmentGroup implements Group{
+public class EnrollmentGroup implements Group, Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,6 +39,18 @@ public class EnrollmentGroup implements Group{
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy="enrollmentGroup")
     private List<Class> classes;
+
+    public EnrollmentGroup(){
+        this.classes = new ArrayList<>();
+        this.name = "";
+        this.ectsSum = 30L;
+        this.semester = 1L;
+    }
+
+    public EnrollmentGroup(User user) {
+        this();
+        this.owner = user;
+    }
 
     @Override
     public String toString(){

@@ -39,6 +39,12 @@ public class Class implements Serializable {
     @OneToMany(mappedBy="classOwner")
     private List<Course> courses;
 
+    @NotNull
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private User owner;
+
     @Override
     public String toString(){
         return String.format("%s (%s)", name, classType);
