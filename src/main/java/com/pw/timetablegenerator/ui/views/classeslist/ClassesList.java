@@ -57,13 +57,30 @@ public class ClassesList extends AbstractList implements BeforeEnterObserver {
         container.setAlignItems(Alignment.STRETCH);
         grid = new Grid<>();
 
-        grid.addColumn(Group::getName).setHeader(getTranslation(Group_.NAME)).setWidth("50%");
-        grid.addColumn(g -> getTranslation(g.getType().getProperty())).setHeader(getTranslation(Group_.TYPE)).setWidth("35%");
+        grid.addColumn(Group::getName, "name")
+                .setHeader(getTranslation(Group_.NAME))
+                .setWidth("50%");
+        grid.addColumn(g -> getTranslation(g.getType().getProperty()), "type")
+                .setHeader(getTranslation(Group_.TYPE))
+                .setWidth("35%");
         grid.addColumn(new ComponentRenderer<>(this::createEditButton));
         grid.setSelectionMode(Grid.SelectionMode.NONE);
+        addSorting();
 
         container.add(getHeader(), grid);
         add(container);
+    }
+
+    private void addSorting() {
+        grid.addSortListener(e -> {
+            grid.getDataCommunicator()
+                    .getBackEndSorting().stream()
+                    .map(querySortOrder -> String.format(
+                            "{sort property: %s, direction: %s}",
+                            querySortOrder.getSorted(),
+                            querySortOrder.getDirection()))
+                    .collect(Collectors.joining(", "));
+        });
     }
 
     private Button createEditButton(Group group) {
