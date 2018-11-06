@@ -10,4 +10,7 @@ public class Group_ {
     public static final String MSG_DELETE_ENROLLMENT_GROUP_TITLE = "group.msg.delete.enrollment.label";
     public static final String MSG_DELETE_ENROLLMENT_GROUP_CONFIRMATION = "group.msg.delete.enrollment.confirmation.label";
     public static final String MSG_INVALID_ECTS_SUM_FOR_ENROLLMENT_GROUP = "group.msg.invalidEctsSum.label";
+    public static final String NEW = "group.new.label";
+    public static final String SEARCH = "group.search.label";
+    public static final String GROUPS = "groups.label";
 }

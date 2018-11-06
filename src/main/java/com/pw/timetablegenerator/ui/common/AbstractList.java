@@ -1,29 +1,29 @@
 package com.pw.timetablegenerator.ui.common;
 
-import com.pw.timetablegenerator.backend.entity.properties.App_;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.IronIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import lombok.AccessLevel;
 import lombok.Getter;
-import org.apache.commons.lang3.StringUtils;
 
 @Getter(AccessLevel.PROTECTED)
 public abstract class AbstractList extends VerticalLayout {
 
     private final TextField searchField;
     private final H2 header;
-    private String listName;
+    private String searchLabel;
+    private String newLabel;
 
-    protected AbstractList(String listName){
-        final String listNameTranslation = getTranslation(listName);
-        this.listName = listNameTranslation;
-        searchField = new TextField("", getTranslation(App_.MSG_SEARCH) + " " + StringUtils.lowerCase(listNameTranslation));
-        header = new H2(listNameTranslation);
+    protected AbstractList(String listName, String searchLabel, String newLabel){
+        this.searchLabel = getTranslation(searchLabel);
+        this.newLabel = getTranslation(newLabel);
+        searchField = new TextField("", this.searchLabel);
+        header = new H2(getTranslation(listName));
 
         initView();
 
@@ -47,7 +47,9 @@ public abstract class AbstractList extends VerticalLayout {
         searchField.addValueChangeListener(e -> updateView());
         searchField.setValueChangeMode(ValueChangeMode.EAGER);
 
-        Button newButton = new Button(getTranslation(App_.NEW) + " " + StringUtils.lowerCase(listName) , new Icon("lumo", "plus"));
+        final IronIcon icon = new IronIcon("lumo", "plus");
+        icon.getElement().setAttribute("slot", "prefix");
+        Button newButton = new Button(newLabel, icon);
         newButton.getElement().setAttribute("theme", "primary");
         newButton.addClassName("view-toolbar__button");
         newButton.addClickListener(e -> openEditorDialog());

@@ -19,6 +19,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.data.renderer.TemplateRenderer;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
@@ -46,7 +47,7 @@ public class ClassesList extends AbstractList implements BeforeEnterObserver {
     private final GroupSelectorDialog selectorDialog = new GroupSelectorDialog(this::saveGroup, this::deleteGroup);
 
     protected ClassesList() {
-        super(Class_.CLASS);
+        super(Group_.GROUPS, Group_.SEARCH, Group_.NEW);
     }
 
     @Override
@@ -56,10 +57,9 @@ public class ClassesList extends AbstractList implements BeforeEnterObserver {
         container.setAlignItems(Alignment.STRETCH);
         grid = new Grid<>();
 
-        grid.addColumn(Group::getName).setHeader(getTranslation(Group_.NAME));
-        grid.addColumn(Group::getType).setHeader(getTranslation(Group_.TYPE));
-        grid.addColumn(new ComponentRenderer<>(this::createEditButton))
-                .setFlexGrow(0);
+        grid.addColumn(Group::getName).setHeader(getTranslation(Group_.NAME)).setWidth("50%");
+        grid.addColumn(g -> getTranslation(g.getType().getProperty())).setHeader(getTranslation(Group_.TYPE)).setWidth("35%");
+        grid.addColumn(new ComponentRenderer<>(this::createEditButton));
         grid.setSelectionMode(Grid.SelectionMode.NONE);
 
         container.add(getHeader(), grid);

@@ -1,5 +1,6 @@
 package com.pw.timetablegenerator.backend.entity;
 
+import com.pw.timetablegenerator.backend.common.GroupType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.LazyCollection;
@@ -63,7 +64,7 @@ public class EnrollmentGroup implements Group, Serializable {
     }
 
     @Override
-    public String getType() {
-        return "Enrollment group";
+    public GroupType getType() {
+        return GroupType.ENROLLMENT_GROUP;
     }
 }
