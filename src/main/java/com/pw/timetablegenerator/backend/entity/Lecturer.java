@@ -1,6 +1,7 @@
 package com.pw.timetablegenerator.backend.entity;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -12,6 +13,7 @@ import java.util.List;
 @Entity
 @Table(name = "lecturers")
 @Data
+@NoArgsConstructor
 public class Lecturer implements Serializable {
 
     @Id
@@ -28,5 +30,9 @@ public class Lecturer implements Serializable {
     @Override
     public String toString(){
         return this.name;
+    }
+
+    public Lecturer(String name){
+        this.name = name;
     }
 }

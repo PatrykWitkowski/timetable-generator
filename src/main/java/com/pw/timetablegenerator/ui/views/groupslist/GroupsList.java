@@ -43,7 +43,9 @@ public class GroupsList extends AbstractList implements BeforeEnterObserver {
 
     private Grid<Group> grid;
 
-    private final GroupSelectorDialog selectorDialog = new GroupSelectorDialog(this::saveGroup, this::deleteGroup);
+    private final GroupSelectorDialog selectorDialog
+            = new GroupSelectorDialog(this::saveEnrollmentGroup, this::deleteEnrollmentGroup,
+            this::saveCourse, this::deleteCourse);
 
     protected GroupsList() {
         super(Group_.GROUPS, Group_.SEARCH, Group_.NEW);
@@ -114,8 +116,8 @@ public class GroupsList extends AbstractList implements BeforeEnterObserver {
         }
     }
 
-    private void saveGroup(Group group,
-                            AbstractEditorDialog.Operation operation){
+    private void saveEnrollmentGroup(Group group,
+                                     AbstractEditorDialog.Operation operation){
         selectorDialog.close();
         enrollmentGroupService.saveEnrollmentGroup((EnrollmentGroup) group);
         updateClasses((EnrollmentGroup) group);
@@ -140,7 +142,7 @@ public class GroupsList extends AbstractList implements BeforeEnterObserver {
         enrollmentGroup.getClasses().forEach(c -> classService.saveClass(c));
     }
 
-    private void deleteGroup(Group group) {
+    private void deleteEnrollmentGroup(Group group) {
         enrollmentGroupService.deleteEnrollmentGroup((EnrollmentGroup) group);
         userService.refreshUserData();
 
@@ -148,5 +150,14 @@ public class GroupsList extends AbstractList implements BeforeEnterObserver {
                 3000,
                 Notification.Position.BOTTOM_START);
         updateView();
+    }
+
+    private void saveCourse(Group group,
+                            AbstractEditorDialog.Operation operation){
+
+    }
+
+    private void deleteCourse(Group group){
+
     }
 }

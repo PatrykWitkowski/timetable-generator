@@ -1,5 +1,6 @@
 package com.pw.timetablegenerator.backend.entity;
 
+import com.pw.timetablegenerator.backend.common.GroupType;
 import com.pw.timetablegenerator.backend.common.ParityOfTheWeek;
 import lombok.Data;
 import lombok.ToString;
@@ -11,13 +12,14 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "courses")
 @Data
 @ToString(exclude = {"classOwner", "timetables"})
-public class Course implements Serializable {
+public class Course implements Serializable, Group {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,4 +58,18 @@ public class Course implements Serializable {
     @LazyCollection(LazyCollectionOption.FALSE)
     @ManyToMany(mappedBy = "courses")
     private List<Timetable> timetables;
+
+    @Override
+    public String getName() {
+        return getGroupCode();
+    }
+
+    @Override
+    public GroupType getType() {
+        return GroupType.COURSE;
+    }
+
+    public Course(){
+        this.timetables = new ArrayList<>();
+    }
 }
