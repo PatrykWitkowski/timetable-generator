@@ -23,4 +23,6 @@ public class App_ {
     public static final String MSG_ALREADY_ADDED = "app.msg.alreadyAdded.label";
     public static final String SAVE = "app.save.label";
     public static final String MAIN_TAB = "app.main.label";
+    public static final String MSG_NOT_BLANK = "app.msg.notBlank.label";
+    public static final String MSG_NUMERIC = "app.msg.numeric.label";
 }

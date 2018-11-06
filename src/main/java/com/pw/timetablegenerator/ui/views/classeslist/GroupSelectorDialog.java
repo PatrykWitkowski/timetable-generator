@@ -1,7 +1,6 @@
 package com.pw.timetablegenerator.ui.views.classeslist;
 
 import com.pw.timetablegenerator.backend.entity.EnrollmentGroup;
-import com.pw.timetablegenerator.backend.entity.Group;
 import com.pw.timetablegenerator.backend.entity.properties.Class_;
 import com.pw.timetablegenerator.backend.entity.properties.Course_;
 import com.pw.timetablegenerator.backend.entity.properties.Group_;

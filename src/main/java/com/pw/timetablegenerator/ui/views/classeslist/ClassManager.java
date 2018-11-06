@@ -2,7 +2,9 @@ package com.pw.timetablegenerator.ui.views.classeslist;
 
 import com.pw.timetablegenerator.backend.entity.Class;
 import com.pw.timetablegenerator.backend.entity.EnrollmentGroup;
+import com.pw.timetablegenerator.backend.entity.properties.App_;
 import com.pw.timetablegenerator.backend.entity.properties.Class_;
+import com.pw.timetablegenerator.backend.entity.properties.Group_;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.Tag;
@@ -23,10 +25,11 @@ import java.util.stream.Collectors;
 @Tag("class-manager")
 public class ClassManager extends Component implements HasComponents {
 
+    public static final String ECTS_SUM = "ectsSum";
     private ComboBox<Class> classComboBox = new ComboBox<>();
     private Grid<Class> selectedClasses = new Grid<>();
-    private Button addClass = new Button("Add");
-    private Button deleteClass = new Button("Delete");
+    private Button addClass = new Button(getTranslation(App_.ADD));
+    private Button deleteClass = new Button(getTranslation(App_.DELETE));
     @Getter
     private EnrollmentGroup currentEnrollmentGroup;
     private Grid.Column<Class> ectsColumn;
@@ -54,9 +57,9 @@ public class ClassManager extends Component implements HasComponents {
     }
 
     private void createClassTable() {
-        selectedClasses.addColumn(Class::getName).setHeader("Name");
-        selectedClasses.addColumn(Class::getClassType).setHeader("Type");
-        ectsColumn = selectedClasses.addColumn(Class::getEcts).setHeader("ECTS").setKey("ectsSum");
+        selectedClasses.addColumn(Class::getName).setHeader(getTranslation(Group_.NAME)).setWidth("40%");
+        selectedClasses.addColumn(Class::getClassType).setHeader(getTranslation(Group_.TYPE)).setWidth("30%");
+        ectsColumn = selectedClasses.addColumn(Class::getEcts).setHeader(getTranslation(Group_.ECTS)).setKey(ECTS_SUM);
 
         selectedClasses.addSelectionListener(e -> deleteClass.setEnabled(!e.getAllSelectedItems().isEmpty()));
         selectedClasses.setItems(getCurrentEnrollmentGroup().getClasses());
@@ -73,7 +76,9 @@ public class ClassManager extends Component implements HasComponents {
                     selectedClasses.setItems(getCurrentEnrollmentGroup().getClasses());
                     calculateTotalPoints(ectsColumn);
                 } else {
-                    Notification.show("Already added!", 3000, Notification.Position.MIDDLE);
+                    Notification.show(getTranslation(Class_.MSG_CLASS_ALREADY_ADDED),
+                            3000,
+                            Notification.Position.MIDDLE);
                 }
             }
         });
@@ -105,11 +110,11 @@ public class ClassManager extends Component implements HasComponents {
                 .sum();
         String totalEctsPoints = Long.toString(ectsSum);
         if(selectedClasses.getFooterRows().isEmpty()){
-            selectedClasses.appendFooterRow().getCell(enrollmentGroupColumn).setText("Total: " + totalEctsPoints);
+            selectedClasses.appendFooterRow().getCell(enrollmentGroupColumn).setText(getTranslation(Group_.ECTS_TOTAL) + totalEctsPoints);
         } else {
             selectedClasses.getFooterRows().stream().findFirst().ifPresent(footer ->
                     footer.getCell(selectedClasses.getColumnByKey("ectsSum"))
-                            .setText("Total: " + totalEctsPoints));
+                            .setText(getTranslation(Group_.ECTS_TOTAL) + totalEctsPoints));
         }
     }
 }

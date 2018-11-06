@@ -43,9 +43,6 @@ public class ClassesList extends AbstractList implements BeforeEnterObserver {
 
     private Grid<Group> grid;
 
-    private final GroupEditorDialog form = new GroupEditorDialog(
-            this::saveGroup, this::deleteGroup);
-
     private final GroupSelectorDialog selectorDialog = new GroupSelectorDialog(this::saveGroup, this::deleteGroup);
 
     protected ClassesList() {
@@ -109,7 +106,9 @@ public class ClassesList extends AbstractList implements BeforeEnterObserver {
         userService.refreshUserData();
 
         Notification.show(
-                getTranslation("") + (operation == AbstractEditorDialog.Operation.ADD ? getTranslation(App_.ADDED) : getTranslation(App_.EDITED)) + ".", 3000, Notification.Position.BOTTOM_START);
+                getTranslation(Class_.MSG_CLASS_ADDED_EDITED) + (operation == AbstractEditorDialog.Operation.ADD ? getTranslation(App_.ADDED) : getTranslation(App_.EDITED)) + ".",
+                3000,
+                Notification.Position.BOTTOM_START);
         updateView();
     }
 
@@ -129,7 +128,9 @@ public class ClassesList extends AbstractList implements BeforeEnterObserver {
         enrollmentGroupService.deleteEnrollmentGroup((EnrollmentGroup) group);
         userService.refreshUserData();
 
-        //Notification.show(getTranslation(Seller_.MSG_SUCCESS) + getTranslation(Seller_.MSG_SELLER_DELETED), 3000, Notification.Position.BOTTOM_START);
+        Notification.show(getTranslation(Class_.MSG_SUCCESS) + getTranslation(Class_.MSG_CLASS_DELETED),
+                3000,
+                Notification.Position.BOTTOM_START);
         updateView();
     }
 }

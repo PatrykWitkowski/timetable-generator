@@ -13,5 +13,8 @@ public class Class_ {
     public static final String TYPE_LABORATORY = "class.type.laboratory.label";
     public static final String TYPE_SEMINAR = "class.type.seminar.label";
     public static final String TYPE_PROJECT = "class.type.project.label";
-
+    public static final String MSG_CLASS_ADDED_EDITED= "class.msg.added.label";
+    public static final String MSG_SUCCESS = "class.msg.success.label";
+    public static final String MSG_CLASS_DELETED = "class.msg.deleted.label";
+    public static final String MSG_CLASS_ALREADY_ADDED = "class.msg.alreadyAdded.label";
 }

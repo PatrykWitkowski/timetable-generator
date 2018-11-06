@@ -1,6 +1,7 @@
 package com.pw.timetablegenerator.ui.views.classeslist;
 
 import com.pw.timetablegenerator.backend.entity.EnrollmentGroup;
+import com.pw.timetablegenerator.backend.entity.properties.App_;
 import com.pw.timetablegenerator.backend.entity.properties.Class_;
 import com.pw.timetablegenerator.backend.entity.properties.Group_;
 import com.pw.timetablegenerator.backend.entity.properties.Timetable_;
@@ -23,6 +24,7 @@ import java.util.function.Consumer;
 
 public class EnrollmentGroupEditorDialog extends AbstractEditorDialog<EnrollmentGroup> {
 
+    private static final String[] SEMESTERS = {"I", "II", "III", "IV", "V", "VI", "VII"};
     private TextField enrollmentGroupName = new TextField();
     private ComboBox<String> semester = new ComboBox<>();
     private TextField ectsField = new TextField();
@@ -33,7 +35,8 @@ public class EnrollmentGroupEditorDialog extends AbstractEditorDialog<Enrollment
 
     protected EnrollmentGroupEditorDialog(BiConsumer<EnrollmentGroup, Operation> itemSaver,
                                           Consumer<EnrollmentGroup> itemDeleter) {
-        super("", itemSaver, itemDeleter);
+        super(StringUtils.EMPTY, itemSaver, itemDeleter);
+        setItemType(StringUtils.lowerCase(getTranslation(Timetable_.ENROLLMENT)));
 
         createNameField();
         createSemesterField();
@@ -48,19 +51,19 @@ public class EnrollmentGroupEditorDialog extends AbstractEditorDialog<Enrollment
         getFormLayout().add(ectsField);
 
         getBinder().forField(ectsField)
-                .withValidator(StringUtils::isNotBlank, "msg")
-                .withConverter(new StringToLongConverter("msg"))
+                .withValidator(StringUtils::isNotBlank, getTranslation(App_.MSG_NOT_BLANK))
+                .withConverter(new StringToLongConverter(getTranslation(App_.MSG_NUMERIC)))
                 .bind(EnrollmentGroup::getEctsSum, EnrollmentGroup::setEctsSum);
     }
 
     private void createSemesterField() {
         semester.setRequired(true);
         semester.setLabel(getTranslation(Timetable_.SEMESTER));
-        semester.setItems("I", "II", "III", "IV", "V", "VI", "VII");
+        semester.setItems(SEMESTERS);
         getFormLayout().add(semester);
 
         getBinder().forField(semester)
-                .withValidator(Objects::nonNull, "msg")
+                .withValidator(Objects::nonNull, getTranslation(App_.MSG_NOT_BLANK))
                 .withConverter(new Converter<String, Long>() {
                     @Override
                     public Result<Long> convertToModel(String s, ValueContext valueContext) {
@@ -72,7 +75,7 @@ public class EnrollmentGroupEditorDialog extends AbstractEditorDialog<Enrollment
                         if(aLong != null){
                             return RomanNumber.toRoman(aLong.intValue());
                         }
-                        return "I";
+                        return SEMESTERS[0];
                     }
                 })
                 .bind(EnrollmentGroup::getSemester, EnrollmentGroup::setSemester);
@@ -84,18 +87,20 @@ public class EnrollmentGroupEditorDialog extends AbstractEditorDialog<Enrollment
         getFormLayout().add(enrollmentGroupName);
 
         getBinder().forField(enrollmentGroupName)
-                .withValidator(StringUtils::isNotBlank, "msg")
+                .withValidator(StringUtils::isNotBlank, getTranslation(App_.MSG_NOT_BLANK))
                 .bind(EnrollmentGroup::getName, EnrollmentGroup::setName);
     }
 
     @Override
     protected void afterDialogOpen() {
-
+        //nothing to do
     }
 
     @Override
     protected void confirmDelete() {
-
+        openConfirmationDialog(getTranslation(Group_.MSG_DELETE_ENROLLMENT_GROUP_TITLE),
+                getTranslation(Group_.MSG_DELETE_ENROLLMENT_GROUP_CONFIRMATION) + getCurrentItem().getName() + "”?",
+                "");
     }
 
     @Override
@@ -118,7 +123,9 @@ public class EnrollmentGroupEditorDialog extends AbstractEditorDialog<Enrollment
     @Override
     protected void saveClicked(Operation operation) {
         if(classManager.getEctsSum() != Long.parseLong(ectsField.getValue())){
-            Notification.show("Bad ects point sum!", 3000, Notification.Position.MIDDLE);
+            Notification.show(getTranslation(Group_.MSG_INVALID_ECTS_SUM_FOR_ENROLLMENT_GROUP),
+                    3000,
+                    Notification.Position.MIDDLE);
             return;
         }
         super.saveClicked(operation);
