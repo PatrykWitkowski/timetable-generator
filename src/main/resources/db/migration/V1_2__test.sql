@@ -4,7 +4,7 @@ insert into timetables(timetable_id, user_id, name, semester, semester_start_dat
 values (2, 1, 'test_timetable_2', 7, '2018-10-01', '2019-01-30', 5, NOW(), 'INVALID');
 
 insert into enrollment_groups(enrollment_id, user_id, name, ects_sum, semester)
-values (1, 1, 'zapisowa_1', 30, 2);
+values (1, 1, 'zapisowa_1', 20, 2);
 
 insert into classes(class_id, user_id, name, ects, class_type)
 values (1, 1, 'Analiza matematyczna', 12, 'LECTURE');

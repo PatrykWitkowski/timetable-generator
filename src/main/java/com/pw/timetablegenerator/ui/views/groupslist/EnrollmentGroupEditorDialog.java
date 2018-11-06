@@ -1,4 +1,4 @@
-package com.pw.timetablegenerator.ui.views.classeslist;
+package com.pw.timetablegenerator.ui.views.groupslist;
 
 import com.pw.timetablegenerator.backend.entity.EnrollmentGroup;
 import com.pw.timetablegenerator.backend.entity.properties.App_;
@@ -99,7 +99,7 @@ public class EnrollmentGroupEditorDialog extends AbstractEditorDialog<Enrollment
     @Override
     protected void confirmDelete() {
         openConfirmationDialog(getTranslation(Group_.MSG_DELETE_ENROLLMENT_GROUP_TITLE),
-                getTranslation(Group_.MSG_DELETE_ENROLLMENT_GROUP_CONFIRMATION) + getCurrentItem().getName() + "”?",
+                getTranslation(Group_.MSG_DELETE_ENROLLMENT_GROUP_CONFIRMATION) + "”"+ getCurrentItem().getName() + "”?",
                 "");
     }
 

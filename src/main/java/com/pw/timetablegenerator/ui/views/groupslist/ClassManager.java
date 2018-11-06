@@ -1,4 +1,4 @@
-package com.pw.timetablegenerator.ui.views.classeslist;
+package com.pw.timetablegenerator.ui.views.groupslist;
 
 import com.pw.timetablegenerator.backend.entity.Class;
 import com.pw.timetablegenerator.backend.entity.EnrollmentGroup;

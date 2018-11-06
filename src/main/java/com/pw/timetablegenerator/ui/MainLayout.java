@@ -7,7 +7,7 @@ import com.pw.timetablegenerator.backend.entity.properties.Timetable_;
 import com.pw.timetablegenerator.backend.utils.security.SecurityUtils;
 import com.pw.timetablegenerator.ui.components.ClickableRouterLink;
 import com.pw.timetablegenerator.ui.views.LoginView;
-import com.pw.timetablegenerator.ui.views.classeslist.ClassesList;
+import com.pw.timetablegenerator.ui.views.groupslist.GroupsList;
 import com.pw.timetablegenerator.ui.views.studentlist.StudentList;
 import com.pw.timetablegenerator.ui.views.timetableslist.TimetablesList;
 import com.vaadin.flow.component.Text;
@@ -51,7 +51,7 @@ public class MainLayout extends Div
         // Only show as active for the exact URL, but not for sub paths
         timetables.setHighlightCondition(HighlightConditions.sameLocation());
 
-        RouterLink classes = new RouterLink(null, ClassesList.class);
+        RouterLink classes = new RouterLink(null, GroupsList.class);
         classes.add(new Icon(VaadinIcon.ARCHIVES), classText);
         classes.addClassName(MAIN_LAYOUT_NAV_ITEM);
         classes.setHighlightCondition(HighlightConditions.sameLocation());
