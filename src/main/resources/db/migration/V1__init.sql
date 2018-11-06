@@ -42,14 +42,12 @@ CREATE TABLE enrollment_groups (
 
 CREATE TABLE classes (
     class_id bigint NOT NULL AUTO_INCREMENT,
-    enrollment_id bigint NOT NULL,
     user_id bigint NOT NULL,
     name varchar(255) NOT NULL,
     ects bigint,
     class_type varchar(10),
     PRIMARY KEY (class_id),
-    CONSTRAINT userhasmanyclasses FOREIGN KEY(user_id) REFERENCES users(user_id),
-    CONSTRAINT enrolmmenthasmanyclasses FOREIGN KEY(enrollment_id) REFERENCES enrollment_groups(enrollment_id)
+    CONSTRAINT userhasmanyclasses FOREIGN KEY(user_id) REFERENCES users(user_id)
 );
 
 CREATE TABLE lecturers (
@@ -80,4 +78,12 @@ CREATE TABLE timetable_course (
     PRIMARY KEY (timetable_id, course_id),
     CONSTRAINT timetableshasmanycourses FOREIGN KEY(timetable_id) REFERENCES timetables(timetable_id),
     CONSTRAINT coursehasmanytimetables FOREIGN KEY(course_id) REFERENCES courses(course_id)
+);
+
+CREATE TABLE enrollment_class (
+    enrollment_id bigint NOT NULL,
+    class_id bigint NOT NULL,
+    PRIMARY KEY (enrollment_id, class_id),
+    CONSTRAINT enrollmenthasmanyclasses FOREIGN KEY(enrollment_id) REFERENCES enrollment_groups(enrollment_id),
+    CONSTRAINT classhasmanyenrollments FOREIGN KEY(class_id) REFERENCES classes(class_id)
 );

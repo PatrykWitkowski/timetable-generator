@@ -12,6 +12,7 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import lombok.Getter;
 
 import java.util.Collections;
@@ -28,6 +29,9 @@ public class ClassManager extends Component implements HasComponents {
     private Button deleteClass = new Button("Delete");
     @Getter
     private EnrollmentGroup currentEnrollmentGroup;
+    private Grid.Column<Class> ectsColumn;
+    @Getter
+    private long ectsSum;
 
     public ClassManager(EnrollmentGroup currentItem){
         currentEnrollmentGroup = currentItem;
@@ -35,6 +39,7 @@ public class ClassManager extends Component implements HasComponents {
         createClassComboBox();
         createButtons();
         createClassTable();
+        calculateTotalPoints(ectsColumn);
 
         HorizontalLayout buttonBar = new HorizontalLayout(addClass, deleteClass);
         buttonBar.setClassName("buttons");
@@ -51,9 +56,10 @@ public class ClassManager extends Component implements HasComponents {
     private void createClassTable() {
         selectedClasses.addColumn(Class::getName).setHeader("Name");
         selectedClasses.addColumn(Class::getClassType).setHeader("Type");
-        selectedClasses.addColumn(Class::getEcts).setHeader("ECTS");
+        ectsColumn = selectedClasses.addColumn(Class::getEcts).setHeader("ECTS").setKey("ectsSum");
 
         selectedClasses.addSelectionListener(e -> deleteClass.setEnabled(!e.getAllSelectedItems().isEmpty()));
+        selectedClasses.setItems(getCurrentEnrollmentGroup().getClasses());
     }
 
     private void createButtons() {
@@ -63,9 +69,9 @@ public class ClassManager extends Component implements HasComponents {
             if(!classComboBox.isEmpty()){
                 if(getCurrentEnrollmentGroup().getClasses().stream()
                         .noneMatch(c -> Objects.equals(c , classComboBox.getValue()))){
-                    // check if ects sum <
                     getCurrentEnrollmentGroup().getClasses().add(classComboBox.getValue());
                     selectedClasses.setItems(getCurrentEnrollmentGroup().getClasses());
+                    calculateTotalPoints(ectsColumn);
                 } else {
                     Notification.show("Already added!", 3000, Notification.Position.MIDDLE);
                 }
@@ -80,6 +86,7 @@ public class ClassManager extends Component implements HasComponents {
                     .collect(Collectors.toList());
             getCurrentEnrollmentGroup().setClasses(classes);
             selectedClasses.setItems(classes);
+            calculateTotalPoints(ectsColumn);
         });
     }
 
@@ -88,5 +95,21 @@ public class ClassManager extends Component implements HasComponents {
         final List<Class> ownerClasses = currentEnrollmentGroup.getOwner().getOwnerClasses();
         classComboBox.setItems(ownerClasses != null ? ownerClasses : Collections.emptyList());
         classComboBox.addValueChangeListener(e -> addClass.setEnabled(e.getValue() != null));
+    }
+
+    private void calculateTotalPoints(Grid.Column<Class> enrollmentGroupColumn) {
+        ListDataProvider<Class> dataProvider
+                = (ListDataProvider<Class>)selectedClasses.getDataProvider();
+        ectsSum = dataProvider.getItems().stream()
+                .mapToLong(Class::getEcts)
+                .sum();
+        String totalEctsPoints = Long.toString(ectsSum);
+        if(selectedClasses.getFooterRows().isEmpty()){
+            selectedClasses.appendFooterRow().getCell(enrollmentGroupColumn).setText("Total: " + totalEctsPoints);
+        } else {
+            selectedClasses.getFooterRows().stream().findFirst().ifPresent(footer ->
+                    footer.getCell(selectedClasses.getColumnByKey("ectsSum"))
+                            .setText("Total: " + totalEctsPoints));
+        }
     }
 }

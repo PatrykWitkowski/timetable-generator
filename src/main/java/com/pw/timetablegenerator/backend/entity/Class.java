@@ -2,6 +2,7 @@ package com.pw.timetablegenerator.backend.entity;
 
 import com.pw.timetablegenerator.backend.common.ClassType;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -14,6 +15,7 @@ import java.util.List;
 @Entity
 @Table(name = "classes")
 @Data
+@EqualsAndHashCode(exclude = {"owner", "enrollmentGroups", "courses"})
 public class Class implements Serializable {
 
     @Id
@@ -29,11 +31,9 @@ public class Class implements Serializable {
     @Column(length = 10)
     private ClassType classType;
 
-    @NotNull
     @LazyCollection(LazyCollectionOption.FALSE)
-    @ManyToOne
-    @JoinColumn(name="enrollment_id")
-    private EnrollmentGroup enrollmentGroup;
+    @ManyToMany(mappedBy = "classes")
+    private List<EnrollmentGroup> enrollmentGroups;
 
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy="classOwner")

@@ -7,8 +7,8 @@ import com.pw.timetablegenerator.backend.entity.properties.Timetable_;
 import com.pw.timetablegenerator.backend.utils.converter.RomanNumber;
 import com.pw.timetablegenerator.ui.common.AbstractEditorDialog;
 import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Result;
@@ -26,10 +26,9 @@ public class EnrollmentGroupEditorDialog extends AbstractEditorDialog<Enrollment
     private TextField enrollmentGroupName = new TextField();
     private ComboBox<String> semester = new ComboBox<>();
     private TextField ectsField = new TextField();
-    private FormLayout classesFormLayout;
     private Tab tabClasses;
-    private ClassManager classManager;
     private boolean classManagerAlreadyAdded = false;
+    private ClassManager classManager;
 
 
     protected EnrollmentGroupEditorDialog(BiConsumer<EnrollmentGroup, Operation> itemSaver,
@@ -46,7 +45,6 @@ public class EnrollmentGroupEditorDialog extends AbstractEditorDialog<Enrollment
         ectsField.setLabel("ects");
         ectsField.setPreventInvalidInput(true);
         ectsField.setPattern("^[0-9]+$");
-        ectsField.setValue("30");
         getFormLayout().add(ectsField);
 
         getBinder().forField(ectsField)
@@ -59,7 +57,6 @@ public class EnrollmentGroupEditorDialog extends AbstractEditorDialog<Enrollment
         semester.setRequired(true);
         semester.setLabel(getTranslation(Timetable_.SEMESTER));
         semester.setItems("I", "II", "III", "IV", "V", "VI", "VII");
-        semester.setValue("I");
         getFormLayout().add(semester);
 
         getBinder().forField(semester)
@@ -72,7 +69,10 @@ public class EnrollmentGroupEditorDialog extends AbstractEditorDialog<Enrollment
 
                     @Override
                     public String convertToPresentation(Long aLong, ValueContext valueContext) {
-                        return RomanNumber.toRoman(aLong.intValue());
+                        if(aLong != null){
+                            return RomanNumber.toRoman(aLong.intValue());
+                        }
+                        return "I";
                     }
                 })
                 .bind(EnrollmentGroup::getSemester, EnrollmentGroup::setSemester);
@@ -105,7 +105,6 @@ public class EnrollmentGroupEditorDialog extends AbstractEditorDialog<Enrollment
     }
 
     private void createClassManager(EnrollmentGroup item) {
-        ClassManager classManager;
         if(!classManagerAlreadyAdded){
             classManager = new ClassManager(item);
             tabClasses = addNewTab(getTranslation(Class_.CLASS), new Div(classManager));
@@ -114,5 +113,14 @@ public class EnrollmentGroupEditorDialog extends AbstractEditorDialog<Enrollment
             classManager = new ClassManager(item);
             updateTab(tabClasses, new Div(classManager));
         }
+    }
+
+    @Override
+    protected void saveClicked(Operation operation) {
+        if(classManager.getEctsSum() != Long.parseLong(ectsField.getValue())){
+            Notification.show("Bad ects point sum!", 3000, Notification.Position.MIDDLE);
+            return;
+        }
+        super.saveClicked(operation);
     }
 }

@@ -42,4 +42,8 @@ public class GroupSelectorDialog extends Dialog {
         });
     }
 
+    public void editEnrollmentGroup(EnrollmentGroup item){
+        enrollmentGroupEditorDialog.open(item, AbstractEditorDialog.Operation.EDIT);
+    }
+
 }

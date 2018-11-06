@@ -37,7 +37,12 @@ public class EnrollmentGroup implements Group, Serializable {
     private User owner;
 
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(mappedBy="enrollmentGroup")
+    @ManyToMany(cascade = { CascadeType.MERGE })
+    @JoinTable(
+            name = "Enrollment_Class",
+            joinColumns = { @JoinColumn(name = "enrollment_id") },
+            inverseJoinColumns = { @JoinColumn(name = "class_id") }
+    )
     private List<Class> classes;
 
     public EnrollmentGroup(){

@@ -11,4 +11,11 @@ public interface EnrollmentGroupService extends Serializable {
 
     List<EnrollmentGroup> findEnrollmentGroups(@NonNull User user, String value);
 
+    EnrollmentGroup saveEnrollmentGroup(@NonNull EnrollmentGroup enrollmentGroup);
+
+    void deleteEnrollmentGroup(@NonNull EnrollmentGroup enrollmentGroup);
+
+    EnrollmentGroup findEnrollmentGroupById(@NonNull Long id);
+
+
 }
