@@ -74,7 +74,6 @@ public class ClassEditorDialog extends AbstractEditorDialog<Class> {
 
     @Override
     protected void afterDialogOpen(Operation operation) {
-
     }
 
     @Override
@@ -97,5 +96,9 @@ public class ClassEditorDialog extends AbstractEditorDialog<Class> {
             coursesManager = new CoursesManager(item, itemSaver, itemDeleter);
             updateTab(tabCourses, new Div(coursesManager));
         }
+    }
+
+    public void refreshCourseManager(Course course){
+        coursesManager.refreshCoursesTable(course);
     }
 }

@@ -154,4 +154,9 @@ public class CoursesManager extends Component implements HasComponents {
         String style="width: 45em;touch-action: none;margin-top: 2em;";
         courses.getElement().setAttribute("style", style);
     }
+
+    public void refreshCoursesTable(Course course){
+        currentClass.getCourses().add(course);
+        courses.setItems(currentClass.getCourses());
+    }
 }

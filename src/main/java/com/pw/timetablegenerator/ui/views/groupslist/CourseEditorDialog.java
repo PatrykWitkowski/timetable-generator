@@ -184,6 +184,7 @@ public class CourseEditorDialog extends AbstractEditorDialog<Course> {
     @Override
     protected void afterDialogOpen(Operation operation) {
         alignParityCheckboxes();
+        getCurrentItem().setParityOfTheWeek(ParityOfTheWeek.WEEKLY);
         oldParityOfTheWeek  = getCurrentItem().getParityOfTheWeek();
         if(operation == Operation.EDIT){
             resetFields();

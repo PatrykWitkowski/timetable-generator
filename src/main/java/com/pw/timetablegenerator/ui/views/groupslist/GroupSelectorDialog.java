@@ -84,4 +84,8 @@ public class GroupSelectorDialog extends Dialog {
     private void editClass(Class item){
         classEditorDialog.open(item, AbstractEditorDialog.Operation.EDIT);
     }
+
+    public void refreshClassEditorDialog(Course course){
+        classEditorDialog.refreshCourseManager(course);
+    }
 }

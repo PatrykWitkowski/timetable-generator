@@ -173,6 +173,7 @@ public class GroupsList extends AbstractList implements BeforeEnterObserver {
         }
         courseService.saveCourse(course);
         userService.refreshUserData();
+        selectorDialog.refreshClassEditorDialog(course);
 
         Notification.show(
                 getTranslation(Course_.MSG_COURSE_ADDED_EDITED) + (operation == AbstractEditorDialog.Operation.ADD ? getTranslation(App_.ADDED) : getTranslation(App_.EDITED)) + ".",
