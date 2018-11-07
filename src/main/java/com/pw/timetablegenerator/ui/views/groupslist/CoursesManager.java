@@ -10,6 +10,7 @@ import com.pw.timetablegenerator.ui.common.AbstractEditorDialog;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.Tag;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
@@ -21,7 +22,9 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 
+import java.time.format.TextStyle;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -81,6 +84,7 @@ public class CoursesManager extends Component implements HasComponents {
             courseEditorDialog.open(newCourse, AbstractEditorDialog.Operation.ADD);
         });
         addCourse.setSizeFull();
+        addCourse.getElement().setAttribute("theme", "primary");
         deleteCourse.setEnabled(false);
         courses.addSelectionListener(e -> deleteCourse.setEnabled(e.getFirstSelectedItem().isPresent()));
         deleteCourse.addClickListener(e -> {
@@ -91,6 +95,7 @@ public class CoursesManager extends Component implements HasComponents {
             this.courses.setItems(courses);
         });
         deleteCourse.setSizeFull();
+        deleteCourse.getElement().setAttribute("theme", "error");
     }
 
     private void createDetails() {
@@ -112,12 +117,38 @@ public class CoursesManager extends Component implements HasComponents {
         detailsForm.add(freePlaces);
         numberOfTimetables.setEnabled(false);
         detailsForm.add(numberOfTimetables);
+
+        courses.addSelectionListener(e -> {
+            final Optional<Course> firstSelectedItem = e.getFirstSelectedItem();
+            if(firstSelectedItem.isPresent()){
+                final Course course = firstSelectedItem.get();
+                courseCode.setValue(course.getGroupCode());
+                courseDay.setValue(course.getCourseDay()
+                        .getDisplayName(TextStyle.FULL, UI.getCurrent().getLocale()));
+                lecturer.setValue(course.getLecturer().getName());
+                location.setValue(course.getCoursesPlace());
+                startTime.setValue(course.getCourseStartTime().toString());
+                endTime.setValue(course.getCourseEndTime().toString());
+                freePlaces.setValue(course.getFreePlaces().toString());
+                numberOfTimetables.setValue(Integer.toString(course.getTimetables().size()));
+            } else {
+                courseCode.clear();
+                courseDay.clear();
+                lecturer.clear();
+                location.clear();
+                startTime.clear();
+                endTime.clear();
+                freePlaces.clear();
+                numberOfTimetables.clear();
+            }
+        });
     }
 
     private void createCoursesTable(Class currentClass) {
         courses.addColumn(Course::getName).setHeader(getTranslation(Course_.GROUP_CODE));
-        courses.addColumn(Course::getCourseDay).setHeader(getTranslation(Class_.DAY));
-        courses.addColumn(Course::getParityOfTheWeek).setHeader(getTranslation(Class_.WEEK_PARITY));
+        courses.addColumn(c -> c.getCourseDay().getDisplayName(TextStyle.FULL, UI.getCurrent().getLocale()))
+                .setHeader(getTranslation(Class_.DAY));
+        courses.addColumn(c -> getTranslation(c.getParityOfTheWeek().getProperty())).setHeader(getTranslation(Class_.WEEK_PARITY));
         courses.addColumn(Course::getLecturer).setHeader(getTranslation(Lecturer_.LECTURER));
         courses.setItems(currentClass.getCourses());
         String style="width: 45em;touch-action: none;margin-top: 2em;";

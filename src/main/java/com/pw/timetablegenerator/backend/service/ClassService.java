@@ -11,6 +11,8 @@ public interface ClassService extends Serializable {
 
     List<Class> findByOwner(@NonNull User owner);
 
+    List<Class> findClasses(@NonNull User user, String value);
+
     Class saveClass(@NonNull Class c);
 
     void deleteClass(@NonNull Class c);

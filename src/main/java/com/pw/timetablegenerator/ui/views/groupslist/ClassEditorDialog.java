@@ -5,6 +5,7 @@ import com.pw.timetablegenerator.backend.entity.Class;
 import com.pw.timetablegenerator.backend.entity.Course;
 import com.pw.timetablegenerator.backend.entity.properties.*;
 import com.pw.timetablegenerator.ui.common.AbstractEditorDialog;
+import com.vaadin.flow.component.ItemLabelGenerator;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.tabs.Tab;
@@ -42,6 +43,7 @@ public class ClassEditorDialog extends AbstractEditorDialog<Class> {
     private void createClassTypeField() {
         classType.setRequired(true);
         classType.setItems(ClassType.values());
+        classType.setItemLabelGenerator((ItemLabelGenerator<ClassType>) classType -> getTranslation(classType.getProperty()));
         classType.setAllowCustomValue(false);
         classType.setPreventInvalidInput(true);
         getFormLayout().add(classType);

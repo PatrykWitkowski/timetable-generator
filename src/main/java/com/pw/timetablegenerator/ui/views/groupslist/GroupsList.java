@@ -108,11 +108,13 @@ public class GroupsList extends AbstractList implements BeforeEnterObserver {
         final List<EnrollmentGroup> enrollmentGroups
                 = enrollmentGroupService.findEnrollmentGroups(currentUser, getSearchField().getValue());
         final List<Course> courses = courseService.findCourses(currentUser, getSearchField().getValue());
+        final List<Class> classes = classService.findClasses(currentUser, getSearchField().getValue());
 
         final List<Group> groups = enrollmentGroups.stream()
                 .map(e -> (Group) e)
                 .collect(Collectors.toList());
         groups.addAll(courses);
+        groups.addAll(classes);
 
         grid.setItems(groups);
     }
