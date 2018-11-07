@@ -1,13 +1,11 @@
 package com.pw.timetablegenerator.backend.entity.properties;
 
-import com.pw.timetablegenerator.backend.entity.Course;
-
 public class Course_ {
 
     public static final String PARITY_EVEN = "courses.parity.even.label";
     public static final String PARITY_ODD = "courses.parity.odd.label";
     public static final String PARITY_WEEKLY = "courses.parity.weekly.label";
-    public static final String COURSE = "courses.label";
+    public static final String COURSE = "course.label";
     public static final String GROUP_CODE = "courses.group.code.label";
     public static final String START_TIME = "courses.time.start.label";
     public static final String MSG_INVALID_TIME_FORMAT = "courses.time.invalid.label";
@@ -18,4 +16,7 @@ public class Course_ {
     public static final String MSG_COURSE_ADDED_EDITED = "courses.msg.added.label";
     public static final String MSG_COURSE_SUCCESS = "courses.msg.success.label";
     public static final String MSG_COURSE_DELETED = "courses.msg.deleted.label";
+    public static final String COURSES = "courses.label";
+    public static final String USED_IN_TIMETABLES = "courses.timetables.label";
+
 }

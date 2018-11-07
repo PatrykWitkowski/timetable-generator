@@ -56,7 +56,7 @@ public class GroupSelectorDialog extends Dialog {
             courseEditorDialog.open(newCourse, AbstractEditorDialog.Operation.ADD);
         });
 
-        classEditorDialog = new ClassEditorDialog(classSaver, classDeleter);
+        classEditorDialog = new ClassEditorDialog(classSaver, classDeleter, courseSaver, courseDeleter);
         classButton.addClickListener(e -> {
             final Class newClass = new Class(SecurityUtils.getCurrentUser().getUser());
             classEditorDialog.open(newClass, AbstractEditorDialog.Operation.ADD);

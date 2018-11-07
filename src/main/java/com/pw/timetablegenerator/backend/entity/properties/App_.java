@@ -25,4 +25,5 @@ public class App_ {
     public static final String MAIN_TAB = "app.main.label";
     public static final String MSG_NOT_BLANK = "app.msg.notBlank.label";
     public static final String MSG_NUMERIC = "app.msg.numeric.label";
+    public static final String DETAILS = "app.details.label";
 }
