@@ -165,8 +165,10 @@ public class GroupsList extends AbstractList implements BeforeEnterObserver {
         selectorDialog.close();
         final Course course = (Course) group;
         final Lecturer lecturer = course.getLecturer();
-        lecturer.getCourses().add(course);
-        lecturerService.saveLecturer(lecturer);
+        if(!lecturer.getCourses().contains(course)){
+            lecturer.getCourses().add(course);
+            lecturerService.saveLecturer(lecturer);
+        }
         courseService.saveCourse(course);
         userService.refreshUserData();
 
@@ -178,11 +180,19 @@ public class GroupsList extends AbstractList implements BeforeEnterObserver {
     }
 
     private void deleteCourse(Group group){
-        courseService.deleteCourse((Course) group);
+        final Course course = (Course) group;
+        courseService.deleteCourse(course);
+        deleteLecturer(course);
 
         Notification.show(getTranslation(Course_.MSG_COURSE_SUCCESS) + getTranslation(Course_.MSG_COURSE_DELETED),
                 3000,
                 Notification.Position.BOTTOM_START);
         updateView();
+    }
+
+    private void deleteLecturer(Course course) {
+        if(course.getLecturer().getCourses().isEmpty()){
+            lecturerService.deleteLecturer(course.getLecturer());
+        }
     }
 }
