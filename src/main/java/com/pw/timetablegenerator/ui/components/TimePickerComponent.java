@@ -1,11 +1,16 @@
 package com.pw.timetablegenerator.ui.components;
 
 import com.pw.timetablegenerator.backend.entity.properties.Course_;
+import com.pw.timetablegenerator.ui.converters.StringToLocalTimeConverter;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.textfield.TextField;
 import org.apache.commons.lang3.StringUtils;
+
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 @Tag("time-picker-component")
 public class TimePickerComponent extends Component implements HasComponents {
@@ -42,6 +47,14 @@ public class TimePickerComponent extends Component implements HasComponents {
 
     public TextField getTextField(){
         return timePicker;
+    }
+
+    public LocalTime getTime(){
+        String time = timePicker.getValue();
+        if(time.matches("[0-9]:[0-5][0-9]")){
+            time = "0" + time;
+        }
+        return LocalTime.parse(time, DateTimeFormatter.ISO_TIME);
     }
 
 }

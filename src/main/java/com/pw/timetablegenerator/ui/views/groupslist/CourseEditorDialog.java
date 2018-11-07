@@ -11,6 +11,7 @@ import com.pw.timetablegenerator.backend.entity.properties.Lecturer_;
 import com.pw.timetablegenerator.backend.utils.security.SecurityUtils;
 import com.pw.timetablegenerator.ui.common.AbstractEditorDialog;
 import com.pw.timetablegenerator.ui.components.TimePickerComponent;
+import com.pw.timetablegenerator.ui.converters.StringToLocalTimeConverter;
 import com.vaadin.flow.component.ItemLabelGenerator;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.checkbox.Checkbox;
@@ -19,8 +20,12 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Result;
+import com.vaadin.flow.data.binder.ValidationResult;
+import com.vaadin.flow.data.binder.Validator;
 import com.vaadin.flow.data.binder.ValueContext;
 import com.vaadin.flow.data.converter.Converter;
+import com.vaadin.flow.data.converter.StringToLongConverter;
+import com.vaadin.flow.data.validator.RegexpValidator;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.DayOfWeek;
@@ -43,7 +48,10 @@ public class CourseEditorDialog extends AbstractEditorDialog<Course> {
     private Checkbox oddWeek = new Checkbox(getTranslation(Course_.PARITY_ODD));
     private ComboBox<Lecturer> lecturer = new ComboBox<>(getTranslation(Lecturer_.LECTURER));
     private TimePickerComponent startTime = new TimePickerComponent(getTranslation(Course_.START_TIME));
-
+    private TimePickerComponent endTime = new TimePickerComponent(getTranslation(Course_.END_TIME));
+    private TextField location = new TextField(getTranslation(Course_.LOCALIZATION));
+    private TextField places = new TextField(getTranslation(Course_.MAX_PLACES));
+    private HorizontalLayout dayWithWeekParityLayout;
 
     protected CourseEditorDialog(BiConsumer<Course, Operation> itemSaver, Consumer<Course> itemDeleter) {
         super(StringUtils.EMPTY, itemSaver, itemDeleter);
@@ -54,28 +62,50 @@ public class CourseEditorDialog extends AbstractEditorDialog<Course> {
         createCoursesDayField();
         createLecturerField();
         createStartTimeField();
+        createEndTimeField();
+        createLocalizationField();
+        createPlacesField();
+    }
+
+    private void createPlacesField() {
+        getFormLayout().add(places);
+
+        getBinder().forField(places)
+                .withValidator(StringUtils::isNotBlank, getTranslation(App_.MSG_NOT_BLANK))
+                .withConverter(new StringToLongConverter(getTranslation(App_.MSG_NUMERIC)))
+                .bind(Course::getFreePlaces, Course::setFreePlaces);
+    }
+
+    private void createLocalizationField() {
+        getFormLayout().add(location);
+
+        getBinder().forField(location)
+                .bind(Course::getCoursesPlace, Course::setCoursesPlace);
+    }
+
+    private void createEndTimeField() {
+        getFormLayout().add(endTime);
+
+        getBinder().forField(endTime.getTextField())
+                .withValidator(Objects::nonNull, getTranslation(App_.MSG_NOT_BLANK))
+                .withConverter(new StringToLocalTimeConverter(getTranslation(Course_.MSG_INVALID_TIME_FORMAT)))
+                .withValidator((Validator<LocalTime>) (localTime, valueContext) -> {
+                    if(startTime.getTime() != null){
+                        if(startTime.getTime().isBefore(localTime)){
+                            return ValidationResult.ok();
+                        }
+                    }
+                    return ValidationResult.error(getTranslation(Course_.MSG_INVALID_END_TIME));
+                })
+                .bind(Course::getCourseEndTime, Course::setCourseEndTime);
     }
 
     private void createStartTimeField() {
         getFormLayout().add(startTime);
 
         getBinder().forField(startTime.getTextField())
-                .withConverter(new Converter<String, LocalTime>() {
-                    @Override
-                    public Result<LocalTime> convertToModel(String s, ValueContext valueContext) {
-                        try {
-                            final LocalTime localTime = LocalTime.parse(s, DateTimeFormatter.ISO_TIME);
-                            return Result.ok(localTime);
-                        } catch (DateTimeParseException e) {
-                            return Result.error(getTranslation(Course_.MSG_INVALID_TIME_FORMAT));
-                        }
-                    }
-
-                    @Override
-                    public String convertToPresentation(LocalTime o, ValueContext valueContext) {
-                        return o != null ? o.toString() : "7:00";
-                    }
-                })
+                .withValidator(Objects::nonNull, getTranslation(App_.MSG_NOT_BLANK))
+                .withConverter(new StringToLocalTimeConverter(getTranslation(Course_.MSG_INVALID_TIME_FORMAT)))
                 .bind(Course::getCourseStartTime, Course::setCourseStartTime);
     }
 
@@ -127,9 +157,21 @@ public class CourseEditorDialog extends AbstractEditorDialog<Course> {
             setParityOfWeek();
         });
 
-        HorizontalLayout dayWithWeekParityLayout = new HorizontalLayout(coursesDay, evenWeek, oddWeek);
+        dayWithWeekParityLayout = new HorizontalLayout(coursesDay, evenWeek, oddWeek);
         dayWithWeekParityLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.END);
+
+        coursesDay.addValueChangeListener(e -> alignParityCheckboxes());
+        coursesDay.addBlurListener(e -> alignParityCheckboxes());
+
         getFormLayout().add(dayWithWeekParityLayout);
+    }
+
+    private void alignParityCheckboxes() {
+        if(coursesDay.isInvalid()){
+            dayWithWeekParityLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
+        } else {
+            dayWithWeekParityLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.END);
+        }
     }
 
     private void setParityOfWeek() {
@@ -164,7 +206,7 @@ public class CourseEditorDialog extends AbstractEditorDialog<Course> {
 
     @Override
     protected void afterDialogOpen() {
-
+        alignParityCheckboxes();
     }
 
     @Override
@@ -172,4 +214,9 @@ public class CourseEditorDialog extends AbstractEditorDialog<Course> {
 
     }
 
+    @Override
+    protected void saveClicked(Operation operation) {
+        super.saveClicked(operation);
+        alignParityCheckboxes();
+    }
 }

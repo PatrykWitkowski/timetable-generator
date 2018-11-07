@@ -9,4 +9,8 @@ public class Course_ {
     public static final String GROUP_CODE = "courses.group.code.label";
     public static final String START_TIME = "courses.time.start.label";
     public static final String MSG_INVALID_TIME_FORMAT = "courses.time.invalid.label";
+    public static final String END_TIME = "courses.time.end.label";
+    public static final String MSG_INVALID_END_TIME = "courses.msg.time.invalid.endTime.label";
+    public static final String LOCALIZATION = "courses.location.label";
+    public static final String MAX_PLACES = "courses.places.max.label";
 }

@@ -71,5 +71,6 @@ public class Course implements Serializable, Group {
 
     public Course(){
         this.timetables = new ArrayList<>();
+        this.freePlaces = 30L;
     }
 }
