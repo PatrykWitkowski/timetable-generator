@@ -92,6 +92,7 @@ public class CoursesManager extends Component implements HasComponents {
                     .filter(item -> !this.courses.getSelectedItems().contains(item))
                     .collect(Collectors.toList());
             currentClass.setCourses(courses);
+            itemDeleter.accept(this.courses.getSelectedItems().stream().findFirst().get());
             this.courses.setItems(courses);
         });
         deleteCourse.setSizeFull();
