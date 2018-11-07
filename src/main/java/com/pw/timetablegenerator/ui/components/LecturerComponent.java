@@ -28,7 +28,7 @@ public class LecturerComponent extends Component implements HasComponents, HasVa
         lecturer.setRequired(true);
         lecturer.setItems(findAllUserLecturers());
         lecturer.setSizeFull();
-        newLecturerField.setPlaceholder("Name of the new lecturer");
+        newLecturerField.setPlaceholder(getTranslation(Lecturer_.NEW_LECTURER));
         newLecturerField.setSizeFull();
 
         add(lecturer, newLecturerField);
@@ -87,5 +87,11 @@ public class LecturerComponent extends Component implements HasComponents, HasVa
     @Override
     public boolean isRequiredIndicatorVisible() {
         return this.lecturer.isRequiredIndicatorVisible();
+    }
+
+    @Override
+    public void clear() {
+        lecturer.clear();
+        newLecturerField.clear();
     }
 }

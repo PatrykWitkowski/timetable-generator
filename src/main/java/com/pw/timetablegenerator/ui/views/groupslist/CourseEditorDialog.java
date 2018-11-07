@@ -3,8 +3,10 @@ package com.pw.timetablegenerator.ui.views.groupslist;
 import com.pw.timetablegenerator.backend.common.ParityOfTheWeek;
 import com.pw.timetablegenerator.backend.entity.Class;
 import com.pw.timetablegenerator.backend.entity.Course;
-import com.pw.timetablegenerator.backend.entity.Lecturer;
-import com.pw.timetablegenerator.backend.entity.properties.*;
+import com.pw.timetablegenerator.backend.entity.properties.App_;
+import com.pw.timetablegenerator.backend.entity.properties.Class_;
+import com.pw.timetablegenerator.backend.entity.properties.Course_;
+import com.pw.timetablegenerator.backend.entity.properties.Group_;
 import com.pw.timetablegenerator.backend.utils.security.SecurityUtils;
 import com.pw.timetablegenerator.ui.common.AbstractEditorDialog;
 import com.pw.timetablegenerator.ui.components.LecturerComponent;
@@ -26,10 +28,8 @@ import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.time.format.TextStyle;
 import java.util.Objects;
-import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 public class CourseEditorDialog extends AbstractEditorDialog<Course> {
 
@@ -44,6 +44,7 @@ public class CourseEditorDialog extends AbstractEditorDialog<Course> {
     private TextField places = new TextField(getTranslation(Course_.MAX_PLACES));
     private HorizontalLayout dayWithWeekParityLayout;
     private LecturerComponent lecturer = new LecturerComponent();
+    private ParityOfTheWeek oldParityOfTheWeek;
 
     protected CourseEditorDialog(BiConsumer<Course, Operation> itemSaver, Consumer<Course> itemDeleter) {
         super(StringUtils.EMPTY, itemSaver, itemDeleter);
@@ -183,6 +184,8 @@ public class CourseEditorDialog extends AbstractEditorDialog<Course> {
     @Override
     protected void afterDialogOpen() {
         alignParityCheckboxes();
+        oldParityOfTheWeek  = getCurrentItem().getParityOfTheWeek();
+        resetFields();
     }
 
     @Override
@@ -196,5 +199,28 @@ public class CourseEditorDialog extends AbstractEditorDialog<Course> {
     protected void saveClicked(Operation operation) {
         super.saveClicked(operation);
         alignParityCheckboxes();
+    }
+
+    @Override
+    protected void cancelClicked() {
+        resetParityCheckBoxes();
+        super.cancelClicked();
+    }
+
+    private void resetFields() {
+        classOwner.clear();
+        classOwner.setValue(getCurrentItem().getClassOwner());
+        coursesDay.clear();
+        coursesDay.setValue(getCurrentItem().getCourseDay());
+        lecturer.clear();
+        lecturer.setValue(getCurrentItem().getLecturer());
+        resetParityCheckBoxes();
+    }
+
+    private void resetParityCheckBoxes() {
+        evenWeek.setValue(oldParityOfTheWeek == ParityOfTheWeek.EVEN
+                || oldParityOfTheWeek == ParityOfTheWeek.WEEKLY);
+        oddWeek.setValue(oldParityOfTheWeek == ParityOfTheWeek.ODD
+                || oldParityOfTheWeek == ParityOfTheWeek.WEEKLY);
     }
 }
