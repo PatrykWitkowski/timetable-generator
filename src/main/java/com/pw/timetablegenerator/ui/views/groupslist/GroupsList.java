@@ -186,6 +186,7 @@ public class GroupsList extends AbstractList implements BeforeEnterObserver {
         final Course course = (Course) group;
         courseService.deleteCourse(course);
         deleteLecturer(course);
+        userService.refreshUserData();
 
         Notification.show(getTranslation(Course_.MSG_COURSE_SUCCESS) + getTranslation(Course_.MSG_COURSE_DELETED),
                 3000,
