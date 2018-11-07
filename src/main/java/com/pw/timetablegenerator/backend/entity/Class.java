@@ -49,4 +49,8 @@ public class Class implements Serializable {
     public String toString(){
         return String.format("%s (%s)", name, classType);
     }
+
+    public void dismissChild(Course child) {
+        this.courses.remove(child);
+    }
 }

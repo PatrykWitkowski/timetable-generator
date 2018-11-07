@@ -1,5 +1,7 @@
 package com.pw.timetablegenerator.backend.entity.properties;
 
+import com.pw.timetablegenerator.backend.entity.Course;
+
 public class Course_ {
 
     public static final String PARITY_EVEN = "courses.parity.even.label";
@@ -13,4 +15,7 @@ public class Course_ {
     public static final String MSG_INVALID_END_TIME = "courses.msg.time.invalid.endTime.label";
     public static final String LOCALIZATION = "courses.location.label";
     public static final String MAX_PLACES = "courses.places.max.label";
+    public static final String MSG_COURSE_ADDED_EDITED = "courses.msg.added.label";
+    public static final String MSG_COURSE_SUCCESS = "courses.msg.success.label";
+    public static final String MSG_COURSE_DELETED = "courses.msg.deleted.label";
 }

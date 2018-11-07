@@ -9,6 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "lecturers")
@@ -34,5 +35,18 @@ public class Lecturer implements Serializable {
 
     public Lecturer(String name){
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Lecturer lecturer = (Lecturer) o;
+        return Objects.equals(lecturerId, lecturer.lecturerId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(lecturerId);
     }
 }

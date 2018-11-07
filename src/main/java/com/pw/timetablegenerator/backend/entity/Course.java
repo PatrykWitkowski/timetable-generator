@@ -14,6 +14,7 @@ import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "courses")
@@ -37,7 +38,6 @@ public class Course implements Serializable, Group {
 
     private String coursesPlace;
 
-    @NotNull
     @LazyCollection(LazyCollectionOption.FALSE)
     @ManyToOne
     @JoinColumn(name="lecturer_id")
@@ -49,7 +49,6 @@ public class Course implements Serializable, Group {
 
     private Long freePlaces;
 
-    @NotNull
     @LazyCollection(LazyCollectionOption.FALSE)
     @ManyToOne
     @JoinColumn(name="class_id")
@@ -72,5 +71,30 @@ public class Course implements Serializable, Group {
     public Course(){
         this.timetables = new ArrayList<>();
         this.freePlaces = 30L;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Course course = (Course) o;
+        return Objects.equals(courseId, course.courseId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(courseId);
+    }
+
+    @PreRemove
+    private void prepareToRemove(){
+        this.classOwner.dismissChild(this);
+        this.timetables.stream().forEach(t -> {
+            t.getCourses().remove(this);
+        });
+        this.lecturer.getCourses().remove(this);
+        this.setClassOwner(null);
+        this.setLecturer(null);
+        this.setTimetables(null);
     }
 }

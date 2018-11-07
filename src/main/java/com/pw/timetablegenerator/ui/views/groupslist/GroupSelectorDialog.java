@@ -2,6 +2,7 @@ package com.pw.timetablegenerator.ui.views.groupslist;
 
 import com.pw.timetablegenerator.backend.entity.Course;
 import com.pw.timetablegenerator.backend.entity.EnrollmentGroup;
+import com.pw.timetablegenerator.backend.entity.Group;
 import com.pw.timetablegenerator.backend.entity.properties.Class_;
 import com.pw.timetablegenerator.backend.entity.properties.Course_;
 import com.pw.timetablegenerator.backend.entity.properties.Group_;
@@ -51,11 +52,19 @@ public class GroupSelectorDialog extends Dialog {
         });
     }
 
-    public void editEnrollmentGroup(EnrollmentGroup item){
+    public void edit(Group group){
+        if(group instanceof EnrollmentGroup){
+            editEnrollmentGroup((EnrollmentGroup) group);
+        } else if(group instanceof Course){
+            editCourse((Course) group);
+        }
+    }
+
+    private void editEnrollmentGroup(EnrollmentGroup item){
         enrollmentGroupEditorDialog.open(item, AbstractEditorDialog.Operation.EDIT);
     }
 
-    public void editCourse(Course item){
+    private void editCourse(Course item){
         courseEditorDialog.open(item, AbstractEditorDialog.Operation.EDIT);
     }
 

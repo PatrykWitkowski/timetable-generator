@@ -58,8 +58,8 @@ CREATE TABLE lecturers (
 
 CREATE TABLE courses (
     course_id bigint NOT NULL AUTO_INCREMENT,
-    class_id bigint NOT NULL,
-    lecturer_id bigint NOT NULL,
+    class_id bigint,
+    lecturer_id bigint,
     group_code varchar(50),
     course_start_time time,
     course_end_time time,

@@ -1,12 +1,13 @@
 package com.pw.timetablegenerator.ui.views.groupslist;
 
+import com.pw.timetablegenerator.backend.entity.*;
 import com.pw.timetablegenerator.backend.entity.Class;
-import com.pw.timetablegenerator.backend.entity.EnrollmentGroup;
-import com.pw.timetablegenerator.backend.entity.Group;
 import com.pw.timetablegenerator.backend.entity.properties.App_;
 import com.pw.timetablegenerator.backend.entity.properties.Class_;
+import com.pw.timetablegenerator.backend.entity.properties.Course_;
 import com.pw.timetablegenerator.backend.entity.properties.Group_;
 import com.pw.timetablegenerator.backend.service.ClassService;
+import com.pw.timetablegenerator.backend.service.CourseService;
 import com.pw.timetablegenerator.backend.service.EnrollmentGroupService;
 import com.pw.timetablegenerator.backend.service.UserService;
 import com.pw.timetablegenerator.backend.utils.security.SecurityUtils;
@@ -25,7 +26,9 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Route(value = "classes", layout = MainLayout.class)
@@ -37,6 +40,9 @@ public class GroupsList extends AbstractList implements BeforeEnterObserver {
 
     @Autowired
     private ClassService classService;
+
+    @Autowired
+    private CourseService courseService;
 
     @Autowired
     private UserService userService;
@@ -86,7 +92,7 @@ public class GroupsList extends AbstractList implements BeforeEnterObserver {
 
     private Button createEditButton(Group group) {
         Button edit = new Button(getTranslation(App_.EDIT),
-                event -> selectorDialog.editEnrollmentGroup((EnrollmentGroup) group));
+                event -> selectorDialog.edit(group));
         edit.setIcon(new Icon("lumo", "edit"));
         edit.addClassName("review__edit");
         edit.getElement().setAttribute("theme", "tertiary");
@@ -100,12 +106,16 @@ public class GroupsList extends AbstractList implements BeforeEnterObserver {
 
     @Override
     protected void updateView() {
+        final User currentUser = SecurityUtils.getCurrentUser().getUser();
         final List<EnrollmentGroup> enrollmentGroups
-                = enrollmentGroupService.findEnrollmentGroups(SecurityUtils.getCurrentUser().getUser(),
-                getSearchField().getValue());
+                = enrollmentGroupService.findEnrollmentGroups(currentUser, getSearchField().getValue());
+        final List<Course> courses = courseService.findCourses(currentUser, getSearchField().getValue());
+
         final List<Group> groups = enrollmentGroups.stream()
                 .map(e -> (Group) e)
                 .collect(Collectors.toList());
+        groups.addAll(courses);
+
         grid.setItems(groups);
     }
 
@@ -154,10 +164,22 @@ public class GroupsList extends AbstractList implements BeforeEnterObserver {
 
     private void saveCourse(Group group,
                             AbstractEditorDialog.Operation operation){
+        selectorDialog.close();
+        courseService.saveCourse((Course) group);
 
+        Notification.show(
+                getTranslation(Course_.MSG_COURSE_ADDED_EDITED) + (operation == AbstractEditorDialog.Operation.ADD ? getTranslation(App_.ADDED) : getTranslation(App_.EDITED)) + ".",
+                3000,
+                Notification.Position.BOTTOM_START);
+        updateView();
     }
 
     private void deleteCourse(Group group){
+        courseService.deleteCourse((Course) group);
 
+        Notification.show(getTranslation(Course_.MSG_COURSE_SUCCESS) + getTranslation(Course_.MSG_COURSE_DELETED),
+                3000,
+                Notification.Position.BOTTOM_START);
+        updateView();
     }
 }

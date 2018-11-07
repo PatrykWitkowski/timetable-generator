@@ -13,4 +13,6 @@ public class Group_ {
     public static final String NEW = "group.new.label";
     public static final String SEARCH = "group.search.label";
     public static final String GROUPS = "groups.label";
+    public static final String MSG_DELETE_COURSE_GROUP_TITLE = "group.msg.delete.course.label";
+    public static final String MSG_DELETE_COURSE_GROUP_CONFIRMATION = "group.msg.delete.course.confirmation.label";
 }

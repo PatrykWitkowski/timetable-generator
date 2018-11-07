@@ -4,10 +4,7 @@ import com.pw.timetablegenerator.backend.common.ParityOfTheWeek;
 import com.pw.timetablegenerator.backend.entity.Class;
 import com.pw.timetablegenerator.backend.entity.Course;
 import com.pw.timetablegenerator.backend.entity.Lecturer;
-import com.pw.timetablegenerator.backend.entity.properties.App_;
-import com.pw.timetablegenerator.backend.entity.properties.Class_;
-import com.pw.timetablegenerator.backend.entity.properties.Course_;
-import com.pw.timetablegenerator.backend.entity.properties.Lecturer_;
+import com.pw.timetablegenerator.backend.entity.properties.*;
 import com.pw.timetablegenerator.backend.utils.security.SecurityUtils;
 import com.pw.timetablegenerator.ui.common.AbstractEditorDialog;
 import com.pw.timetablegenerator.ui.components.TimePickerComponent;
@@ -197,6 +194,8 @@ public class CourseEditorDialog extends AbstractEditorDialog<Course> {
         classOwner.setRequired(true);
         classOwner.setAllowCustomValue(false);
         classOwner.setItems(SecurityUtils.getCurrentUser().getUser().getOwnerClasses());
+        classOwner.setItemLabelGenerator((ItemLabelGenerator<Class>) cl ->
+                String.format("%s [%s]", cl.getName(), getTranslation(cl.getClassType().getProperty())));
         getFormLayout().add(classOwner);
 
         getBinder().forField(classOwner)
@@ -211,7 +210,9 @@ public class CourseEditorDialog extends AbstractEditorDialog<Course> {
 
     @Override
     protected void confirmDelete() {
-
+        openConfirmationDialog(getTranslation(Group_.MSG_DELETE_COURSE_GROUP_TITLE),
+                getTranslation(Group_.MSG_DELETE_COURSE_GROUP_CONFIRMATION) + "”"+ getCurrentItem().getName() + "”?",
+                "");
     }
 
     @Override
