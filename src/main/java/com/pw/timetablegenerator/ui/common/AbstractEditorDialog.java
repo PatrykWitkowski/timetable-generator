@@ -263,15 +263,16 @@ public abstract class AbstractEditorDialog<T extends Serializable>
 
         deleteButton.setEnabled(operation.isDeleteEnabled());
 
-        afterDialogOpen();
+        afterDialogOpen(operation);
 
         open();
     }
 
     /**
      * Method runs after dialog is opened.
+     * @param operation
      */
-    protected abstract void afterDialogOpen();
+    protected abstract void afterDialogOpen(Operation operation);
 
     protected void saveClicked(Operation operation) {
         boolean isValid = binder.writeBeanIfValid(currentItem);

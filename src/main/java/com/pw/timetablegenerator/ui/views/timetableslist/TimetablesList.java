@@ -117,6 +117,8 @@ public class TimetablesList extends PolymerTemplate<TimetablesList.TimetablesMod
     }
 
     public void deleteTimetable(Timetable timetable){
+        timetable.getCourses().stream().forEach(c -> c.getTimetables().remove(timetable));
+        timetable.setCourses(null);
         timetableService.delete(timetable);
         updateList();
         Notification.show(getTranslation(Timetable_.MSG_DELETE), 3000,

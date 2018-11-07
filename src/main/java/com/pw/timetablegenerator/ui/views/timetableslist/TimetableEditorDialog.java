@@ -228,7 +228,7 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
 
 
     @Override
-    protected void afterDialogOpen() {
+    protected void afterDialogOpen(Operation operation) {
         enrollmentGroupComboBox.setItems(Optional.ofNullable(getCurrentItem().getOwner())
                 .map(User::getEnrollmentGroups)
                 .orElse(Lists.newArrayList()));

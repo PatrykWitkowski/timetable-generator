@@ -49,7 +49,7 @@ public class GroupsList extends AbstractList implements BeforeEnterObserver {
 
     private final GroupSelectorDialog selectorDialog
             = new GroupSelectorDialog(this::saveEnrollmentGroup, this::deleteEnrollmentGroup,
-            this::saveCourse, this::deleteCourse);
+            this::saveCourse, this::deleteCourse, this::saveClass, this::deleteClass);
 
     protected GroupsList() {
         super(Group_.GROUPS, Group_.SEARCH, Group_.NEW);
@@ -195,4 +195,14 @@ public class GroupsList extends AbstractList implements BeforeEnterObserver {
             lecturerService.deleteLecturer(course.getLecturer());
         }
     }
+
+    private void saveClass(Class c,
+                            AbstractEditorDialog.Operation operation){
+
+    }
+
+    private void deleteClass(Class c){
+
+    }
+
 }

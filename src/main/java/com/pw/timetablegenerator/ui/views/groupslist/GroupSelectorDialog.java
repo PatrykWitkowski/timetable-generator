@@ -1,5 +1,6 @@
 package com.pw.timetablegenerator.ui.views.groupslist;
 
+import com.pw.timetablegenerator.backend.entity.Class;
 import com.pw.timetablegenerator.backend.entity.Course;
 import com.pw.timetablegenerator.backend.entity.EnrollmentGroup;
 import com.pw.timetablegenerator.backend.entity.Group;
@@ -28,11 +29,14 @@ public class GroupSelectorDialog extends Dialog {
 
     private final EnrollmentGroupEditorDialog enrollmentGroupEditorDialog;
     private final CourseEditorDialog courseEditorDialog;
+    private final ClassEditorDialog classEditorDialog;
 
     public GroupSelectorDialog(BiConsumer<EnrollmentGroup, AbstractEditorDialog.Operation> enrollmentGroupSaver,
                                Consumer<EnrollmentGroup> enrollmentGroupDeleter,
                                BiConsumer<Course, AbstractEditorDialog.Operation> courseSaver,
-                               Consumer<Course> courseDeleter) {
+                               Consumer<Course> courseDeleter,
+                               BiConsumer<Class, AbstractEditorDialog.Operation> classSaver,
+                               Consumer<Class> classDeleter) {
         HorizontalLayout titleLayout = new HorizontalLayout(titleField);
         titleLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
         add(titleLayout);
@@ -51,6 +55,12 @@ public class GroupSelectorDialog extends Dialog {
             final Course newCourse = new Course();
             courseEditorDialog.open(newCourse, AbstractEditorDialog.Operation.ADD);
         });
+
+        classEditorDialog = new ClassEditorDialog(classSaver, classDeleter);
+        classButton.addClickListener(e -> {
+            final Class newClass = new Class(SecurityUtils.getCurrentUser().getUser());
+            classEditorDialog.open(newClass, AbstractEditorDialog.Operation.ADD);
+        });
     }
 
     public void edit(Group group){
@@ -58,6 +68,8 @@ public class GroupSelectorDialog extends Dialog {
             editEnrollmentGroup((EnrollmentGroup) group);
         } else if(group instanceof Course){
             editCourse((Course) group);
+        } else if(group instanceof Class){
+            editClass((Class) group);
         }
     }
 
@@ -69,4 +81,7 @@ public class GroupSelectorDialog extends Dialog {
         courseEditorDialog.open(item, AbstractEditorDialog.Operation.EDIT);
     }
 
+    private void editClass(Class item){
+        classEditorDialog.open(item, AbstractEditorDialog.Operation.EDIT);
+    }
 }

@@ -7,6 +7,7 @@ import com.pw.timetablegenerator.backend.entity.properties.Class_;
 import com.pw.timetablegenerator.backend.entity.properties.Group_;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasComponents;
+import com.vaadin.flow.component.ItemLabelGenerator;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -58,7 +59,7 @@ public class ClassManager extends Component implements HasComponents {
 
     private void createClassTable() {
         selectedClasses.addColumn(Class::getName).setHeader(getTranslation(Group_.NAME)).setWidth("40%");
-        selectedClasses.addColumn(Class::getClassType).setHeader(getTranslation(Group_.TYPE)).setWidth("30%");
+        selectedClasses.addColumn(c -> getTranslation(c.getClassType().getProperty())).setHeader(getTranslation(Group_.TYPE)).setWidth("30%");
         ectsColumn = selectedClasses.addColumn(Class::getEcts).setHeader(getTranslation(Group_.ECTS)).setKey(ECTS_SUM);
 
         selectedClasses.addSelectionListener(e -> deleteClass.setEnabled(!e.getAllSelectedItems().isEmpty()));
@@ -100,6 +101,7 @@ public class ClassManager extends Component implements HasComponents {
         final List<Class> ownerClasses = currentEnrollmentGroup.getOwner().getOwnerClasses();
         classComboBox.setItems(ownerClasses != null ? ownerClasses : Collections.emptyList());
         classComboBox.addValueChangeListener(e -> addClass.setEnabled(e.getValue() != null));
+        classComboBox.setItemLabelGenerator((ItemLabelGenerator<Class>) aClass -> String.format("%s [%s]", aClass.getName(), getTranslation(aClass.getClassType().getProperty())));
     }
 
     private void calculateTotalPoints(Grid.Column<Class> enrollmentGroupColumn) {

@@ -17,4 +17,5 @@ public class Class_ {
     public static final String MSG_SUCCESS = "class.msg.success.label";
     public static final String MSG_CLASS_DELETED = "class.msg.deleted.label";
     public static final String MSG_CLASS_ALREADY_ADDED = "class.msg.alreadyAdded.label";
+    public static final String CLASS_TYPE = "class.type.label";
 }

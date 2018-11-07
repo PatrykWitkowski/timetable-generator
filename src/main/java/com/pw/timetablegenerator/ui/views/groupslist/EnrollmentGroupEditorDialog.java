@@ -92,7 +92,7 @@ public class EnrollmentGroupEditorDialog extends AbstractEditorDialog<Enrollment
     }
 
     @Override
-    protected void afterDialogOpen() {
+    protected void afterDialogOpen(Operation operation) {
         //nothing to do
     }
 
