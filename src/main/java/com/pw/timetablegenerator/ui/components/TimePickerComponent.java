@@ -1,7 +1,6 @@
 package com.pw.timetablegenerator.ui.components;
 
 import com.pw.timetablegenerator.backend.entity.properties.Course_;
-import com.pw.timetablegenerator.ui.converters.StringToLocalTimeConverter;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.Tag;
@@ -10,7 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 
 @Tag("time-picker-component")
 public class TimePickerComponent extends Component implements HasComponents {

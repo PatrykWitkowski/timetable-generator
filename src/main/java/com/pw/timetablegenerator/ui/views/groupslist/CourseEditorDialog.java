@@ -7,6 +7,7 @@ import com.pw.timetablegenerator.backend.entity.Lecturer;
 import com.pw.timetablegenerator.backend.entity.properties.*;
 import com.pw.timetablegenerator.backend.utils.security.SecurityUtils;
 import com.pw.timetablegenerator.ui.common.AbstractEditorDialog;
+import com.pw.timetablegenerator.ui.components.LecturerComponent;
 import com.pw.timetablegenerator.ui.components.TimePickerComponent;
 import com.pw.timetablegenerator.ui.converters.StringToLocalTimeConverter;
 import com.vaadin.flow.component.ItemLabelGenerator;
@@ -16,19 +17,13 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.binder.Result;
 import com.vaadin.flow.data.binder.ValidationResult;
 import com.vaadin.flow.data.binder.Validator;
-import com.vaadin.flow.data.binder.ValueContext;
-import com.vaadin.flow.data.converter.Converter;
 import com.vaadin.flow.data.converter.StringToLongConverter;
-import com.vaadin.flow.data.validator.RegexpValidator;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.time.format.TextStyle;
 import java.util.Objects;
 import java.util.Set;
@@ -43,12 +38,12 @@ public class CourseEditorDialog extends AbstractEditorDialog<Course> {
     private ComboBox<DayOfWeek> coursesDay = new ComboBox<>(getTranslation(Class_.DAY));
     private Checkbox evenWeek = new Checkbox(getTranslation(Course_.PARITY_EVEN));
     private Checkbox oddWeek = new Checkbox(getTranslation(Course_.PARITY_ODD));
-    private ComboBox<Lecturer> lecturer = new ComboBox<>(getTranslation(Lecturer_.LECTURER));
     private TimePickerComponent startTime = new TimePickerComponent(getTranslation(Course_.START_TIME));
     private TimePickerComponent endTime = new TimePickerComponent(getTranslation(Course_.END_TIME));
     private TextField location = new TextField(getTranslation(Course_.LOCALIZATION));
     private TextField places = new TextField(getTranslation(Course_.MAX_PLACES));
     private HorizontalLayout dayWithWeekParityLayout;
+    private LecturerComponent lecturer = new LecturerComponent();
 
     protected CourseEditorDialog(BiConsumer<Course, Operation> itemSaver, Consumer<Course> itemDeleter) {
         super(StringUtils.EMPTY, itemSaver, itemDeleter);
@@ -107,29 +102,11 @@ public class CourseEditorDialog extends AbstractEditorDialog<Course> {
     }
 
     private void createLecturerField() {
-        lecturer.setRequired(true);
-        //check if no contains duplications
-        final Set<Lecturer> allUserLectures = findAllUserLecturers();
-        lecturer.setItems(allUserLectures);
-        lecturer.setAllowCustomValue(true);
-        lecturer.addCustomValueSetListener(e -> {
-            Lecturer newLecturer = new Lecturer(e.getDetail());
-            Set<Lecturer> lecturers = findAllUserLecturers();
-            lecturers.add(newLecturer);
-            lecturer.setItems(lecturers);
-        });
         getFormLayout().add(lecturer);
 
         getBinder().forField(lecturer)
                 .withValidator(Objects::nonNull, getTranslation(App_.MSG_NOT_BLANK))
                 .bind(Course::getLecturer, Course::setLecturer);
-    }
-
-    private Set<Lecturer> findAllUserLecturers() {
-        return SecurityUtils.getCurrentUser().getUser().getOwnerClasses().stream()
-                    .flatMap(c -> c.getCourses().stream())
-                    .map(Course::getLecturer)
-                    .collect(Collectors.toSet());
     }
 
     private void createCoursesDayField() {

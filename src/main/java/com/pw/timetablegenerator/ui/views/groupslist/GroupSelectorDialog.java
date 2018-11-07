@@ -3,6 +3,7 @@ package com.pw.timetablegenerator.ui.views.groupslist;
 import com.pw.timetablegenerator.backend.entity.Course;
 import com.pw.timetablegenerator.backend.entity.EnrollmentGroup;
 import com.pw.timetablegenerator.backend.entity.Group;
+import com.pw.timetablegenerator.backend.entity.Lecturer;
 import com.pw.timetablegenerator.backend.entity.properties.Class_;
 import com.pw.timetablegenerator.backend.entity.properties.Course_;
 import com.pw.timetablegenerator.backend.entity.properties.Group_;

@@ -8,13 +8,13 @@ import org.hibernate.annotations.LazyCollectionOption;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "lecturers")
 @Data
-@NoArgsConstructor
 public class Lecturer implements Serializable {
 
     @Id
@@ -33,7 +33,12 @@ public class Lecturer implements Serializable {
         return this.name;
     }
 
+    public Lecturer(){
+        this.courses = new ArrayList<>();
+    }
+
     public Lecturer(String name){
+        this();
         this.name = name;
     }
 

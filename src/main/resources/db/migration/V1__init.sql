@@ -51,7 +51,7 @@ CREATE TABLE classes (
 );
 
 CREATE TABLE lecturers (
-    lecturer_id bigint NOT NULL,
+    lecturer_id bigint NOT NULL AUTO_INCREMENT,
     name varchar(255) NOT NULL,
     PRIMARY KEY (lecturer_id)
 );

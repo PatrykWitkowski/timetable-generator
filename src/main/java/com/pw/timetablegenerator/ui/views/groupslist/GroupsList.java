@@ -1,15 +1,12 @@
 package com.pw.timetablegenerator.ui.views.groupslist;
 
-import com.pw.timetablegenerator.backend.entity.*;
 import com.pw.timetablegenerator.backend.entity.Class;
+import com.pw.timetablegenerator.backend.entity.*;
 import com.pw.timetablegenerator.backend.entity.properties.App_;
 import com.pw.timetablegenerator.backend.entity.properties.Class_;
 import com.pw.timetablegenerator.backend.entity.properties.Course_;
 import com.pw.timetablegenerator.backend.entity.properties.Group_;
-import com.pw.timetablegenerator.backend.service.ClassService;
-import com.pw.timetablegenerator.backend.service.CourseService;
-import com.pw.timetablegenerator.backend.service.EnrollmentGroupService;
-import com.pw.timetablegenerator.backend.service.UserService;
+import com.pw.timetablegenerator.backend.service.*;
 import com.pw.timetablegenerator.backend.utils.security.SecurityUtils;
 import com.pw.timetablegenerator.ui.MainLayout;
 import com.pw.timetablegenerator.ui.common.AbstractEditorDialog;
@@ -26,9 +23,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Route(value = "classes", layout = MainLayout.class)
@@ -43,6 +38,9 @@ public class GroupsList extends AbstractList implements BeforeEnterObserver {
 
     @Autowired
     private CourseService courseService;
+
+    @Autowired
+    private LecturerService lecturerService;
 
     @Autowired
     private UserService userService;
@@ -165,7 +163,12 @@ public class GroupsList extends AbstractList implements BeforeEnterObserver {
     private void saveCourse(Group group,
                             AbstractEditorDialog.Operation operation){
         selectorDialog.close();
-        courseService.saveCourse((Course) group);
+        final Course course = (Course) group;
+        final Lecturer lecturer = course.getLecturer();
+        lecturer.getCourses().add(course);
+        lecturerService.saveLecturer(lecturer);
+        courseService.saveCourse(course);
+        userService.refreshUserData();
 
         Notification.show(
                 getTranslation(Course_.MSG_COURSE_ADDED_EDITED) + (operation == AbstractEditorDialog.Operation.ADD ? getTranslation(App_.ADDED) : getTranslation(App_.EDITED)) + ".",
