@@ -93,7 +93,7 @@ public class EnrollmentGroupEditorDialog extends AbstractEditorDialog<Enrollment
 
     @Override
     protected void afterDialogOpen(Operation operation) {
-        //nothing to do
+        classManager.setInitialTableContent(getCurrentItem().getClasses());
     }
 
     @Override
@@ -129,5 +129,13 @@ public class EnrollmentGroupEditorDialog extends AbstractEditorDialog<Enrollment
             return;
         }
         super.saveClicked(operation);
+    }
+
+    @Override
+    protected void cancelClicked() {
+        semester.clear();
+        semester.setValue(RomanNumber.toRoman(getCurrentItem().getSemester().intValue()));
+        classManager.resetTableContent();
+        super.cancelClicked();
     }
 }

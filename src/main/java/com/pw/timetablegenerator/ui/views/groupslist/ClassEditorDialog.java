@@ -104,4 +104,11 @@ public class ClassEditorDialog extends AbstractEditorDialog<Class> {
     public void refreshCourseManager(Course course){
         coursesManager.refreshCoursesTable(course);
     }
+
+    @Override
+    protected void cancelClicked() {
+        classType.clear();
+        classType.setValue(getCurrentItem().getClassType());
+        super.cancelClicked();
+    }
 }

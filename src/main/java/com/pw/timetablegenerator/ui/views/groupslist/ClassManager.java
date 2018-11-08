@@ -1,5 +1,6 @@
 package com.pw.timetablegenerator.ui.views.groupslist;
 
+import com.google.common.collect.Lists;
 import com.pw.timetablegenerator.backend.entity.Class;
 import com.pw.timetablegenerator.backend.entity.EnrollmentGroup;
 import com.pw.timetablegenerator.backend.entity.properties.App_;
@@ -18,6 +19,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -36,6 +38,7 @@ public class ClassManager extends Component implements HasComponents {
     private Grid.Column<Class> ectsColumn;
     @Getter
     private long ectsSum;
+    private List<Class> initialTableContent;
 
     public ClassManager(EnrollmentGroup currentItem){
         currentEnrollmentGroup = currentItem;
@@ -118,5 +121,13 @@ public class ClassManager extends Component implements HasComponents {
                     footer.getCell(selectedClasses.getColumnByKey("ectsSum"))
                             .setText(getTranslation(Group_.ECTS_TOTAL) + totalEctsPoints));
         }
+    }
+
+    public void setInitialTableContent(List<Class> classes){
+        initialTableContent = Lists.newArrayList(classes);
+    }
+
+    public void resetTableContent(){
+        getCurrentEnrollmentGroup().setClasses(initialTableContent);
     }
 }
