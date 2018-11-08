@@ -200,13 +200,26 @@ public class GroupsList extends AbstractList implements BeforeEnterObserver {
         }
     }
 
-    private void saveClass(Class c,
-                            AbstractEditorDialog.Operation operation){
+    private void saveClass(Class c, AbstractEditorDialog.Operation operation){
+        selectorDialog.close();
+        classService.saveClass(c);
+        userService.refreshUserData();
 
+        Notification.show(
+                getTranslation(Class_.MSG_CLASS_ADDED_EDITED) + (operation == AbstractEditorDialog.Operation.ADD ? getTranslation(App_.ADDED) : getTranslation(App_.EDITED)) + ".",
+                3000,
+                Notification.Position.BOTTOM_START);
+        updateView();
     }
 
     private void deleteClass(Class c){
+        classService.deleteClass(c);
+        userService.refreshUserData();
 
+        Notification.show(getTranslation(Class_.MSG_SUCCESS) + getTranslation(Class_.MSG_CLASS_DELETED),
+                3000,
+                Notification.Position.BOTTOM_START);
+        updateView();
     }
 
 }

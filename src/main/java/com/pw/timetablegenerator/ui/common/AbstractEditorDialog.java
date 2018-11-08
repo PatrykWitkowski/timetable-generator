@@ -254,16 +254,16 @@ public abstract class AbstractEditorDialog<T extends Serializable>
     public void open(T item, Operation operation) {
         currentItem = item;
         titleField.setText(getTranslation(operation.getNameInTitle()) + " " + itemType);
+
+        afterDialogOpen(operation);
+
         if (registrationForSave != null) {
             registrationForSave.remove();
         }
         registrationForSave = saveButton
                 .addClickListener(e -> saveClicked(operation));
         binder.readBean(currentItem);
-
         deleteButton.setEnabled(operation.isDeleteEnabled());
-
-        afterDialogOpen(operation);
 
         open();
     }

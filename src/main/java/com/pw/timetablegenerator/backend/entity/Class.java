@@ -74,4 +74,14 @@ public class Class implements Serializable, Group {
     public GroupType getType() {
         return GroupType.CLASS;
     }
+
+    @PreRemove
+    private void prepareToRemove(){
+        this.enrollmentGroups.stream().forEach(enrollmentGroup -> enrollmentGroup.getClasses().remove(this));
+        this.courses.stream().forEach(c -> c.setClassOwner(null));
+        this.owner.getOwnerClasses().remove(this);
+        this.setEnrollmentGroups(null);
+        this.setCourses(null);
+        this.setOwner(null);
+    }
 }

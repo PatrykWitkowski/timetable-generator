@@ -74,11 +74,14 @@ public class ClassEditorDialog extends AbstractEditorDialog<Class> {
 
     @Override
     protected void afterDialogOpen(Operation operation) {
+        // nothing to do
     }
 
     @Override
     protected void confirmDelete() {
-
+        openConfirmationDialog(getTranslation(Group_.MSG_DELETE_CLASS_GROUP_TITLE),
+                getTranslation(Group_.MSG_DELETE_CLASS_GROUP_CONFIRMATION) + "”"+ getCurrentItem().getName() + "”?",
+                "");
     }
 
     @Override

@@ -45,19 +45,11 @@ public class CourseEditorDialog extends AbstractEditorDialog<Course> {
     private HorizontalLayout dayWithWeekParityLayout;
     private LecturerComponent lecturer = new LecturerComponent();
     private ParityOfTheWeek oldParityOfTheWeek;
+    private boolean firstOpen = true;
 
     protected CourseEditorDialog(BiConsumer<Course, Operation> itemSaver, Consumer<Course> itemDeleter) {
         super(StringUtils.EMPTY, itemSaver, itemDeleter);
         setItemType(StringUtils.lowerCase(getTranslation(Course_.COURSE)));
-
-        createClassField();
-        createGroupCodeField();
-        createCoursesDayField();
-        createLecturerField();
-        createStartTimeField();
-        createEndTimeField();
-        createLocalizationField();
-        createPlacesField();
     }
 
     private void createPlacesField() {
@@ -183,6 +175,20 @@ public class CourseEditorDialog extends AbstractEditorDialog<Course> {
 
     @Override
     protected void afterDialogOpen(Operation operation) {
+        if(firstOpen){
+            createClassField();
+            createGroupCodeField();
+            createCoursesDayField();
+            createLecturerField();
+            createStartTimeField();
+            createEndTimeField();
+            createLocalizationField();
+            createPlacesField();
+
+            firstOpen = false;
+        }
+        classOwner.setItems(SecurityUtils.getCurrentUser().getUser().getOwnerClasses());
+
         alignParityCheckboxes();
         getCurrentItem().setParityOfTheWeek(ParityOfTheWeek.WEEKLY);
         oldParityOfTheWeek  = getCurrentItem().getParityOfTheWeek();
