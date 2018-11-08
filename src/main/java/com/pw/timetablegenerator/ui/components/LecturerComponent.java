@@ -14,6 +14,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.shared.Registration;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -35,10 +36,13 @@ public class LecturerComponent extends Component implements HasComponents, HasVa
     }
 
     private Set<Lecturer> findAllUserLecturers() {
-        return SecurityUtils.getCurrentUser().getUser().getOwnerClasses().stream()
-                .flatMap(c -> c.getCourses().stream())
-                .map(Course::getLecturer)
-                .collect(Collectors.toSet());
+        if(SecurityUtils.getCurrentUser() != null){
+            return SecurityUtils.getCurrentUser().getUser().getOwnerClasses().stream()
+                    .flatMap(c -> c.getCourses().stream())
+                    .map(Course::getLecturer)
+                    .collect(Collectors.toSet());
+        }
+        return Collections.emptySet();
     }
 
     @Override
