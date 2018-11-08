@@ -1,5 +1,6 @@
 package com.pw.timetablegenerator.ui.views.groupslist;
 
+import com.pw.timetablegenerator.backend.common.GroupType;
 import com.pw.timetablegenerator.backend.entity.Class;
 import com.pw.timetablegenerator.backend.entity.*;
 import com.pw.timetablegenerator.backend.entity.properties.App_;
@@ -11,18 +12,24 @@ import com.pw.timetablegenerator.backend.utils.security.SecurityUtils;
 import com.pw.timetablegenerator.ui.MainLayout;
 import com.pw.timetablegenerator.ui.common.AbstractEditorDialog;
 import com.pw.timetablegenerator.ui.common.AbstractList;
+import com.vaadin.flow.component.ItemLabelGenerator;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.HeaderRow;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,6 +58,8 @@ public class GroupsList extends AbstractList implements BeforeEnterObserver {
             = new GroupSelectorDialog(this::saveEnrollmentGroup, this::deleteEnrollmentGroup,
             this::saveCourse, this::deleteCourse, this::saveClass, this::deleteClass);
 
+    private GroupType groupType = null;
+
     protected GroupsList() {
         super(Group_.GROUPS, Group_.SEARCH, Group_.NEW);
     }
@@ -65,15 +74,30 @@ public class GroupsList extends AbstractList implements BeforeEnterObserver {
         grid.addColumn(Group::getName, "name")
                 .setHeader(getTranslation(Group_.NAME))
                 .setWidth("50%");
-        grid.addColumn(g -> getTranslation(g.getType().getProperty()), "type")
+        final Grid.Column<Group> groupTypeColumn = grid.addColumn(g -> getTranslation(g.getType().getProperty()), "type")
                 .setHeader(getTranslation(Group_.TYPE))
                 .setWidth("35%");
         grid.addColumn(new ComponentRenderer<>(this::createEditButton));
         grid.setSelectionMode(Grid.SelectionMode.NONE);
         addSorting();
+        addFiltering(groupTypeColumn);
 
         container.add(getHeader(), grid);
         add(container);
+    }
+
+    private void addFiltering(Grid.Column<Group> groupTypeColumn) {
+        HeaderRow filterRow = grid.appendHeaderRow();
+        ComboBox<GroupType> filteringTypes = new ComboBox<>();
+        filteringTypes.setItems(GroupType.values());
+        filteringTypes.setItemLabelGenerator((ItemLabelGenerator<GroupType>) groupType ->
+                getTranslation(groupType.getProperty()));
+        filteringTypes.addValueChangeListener(e -> {
+            groupType = e.getValue();
+            updateView();
+        });
+        filterRow.getCell(groupTypeColumn).setComponent(filteringTypes);
+        filteringTypes.setSizeFull();
     }
 
     private void addSorting() {
@@ -110,11 +134,24 @@ public class GroupsList extends AbstractList implements BeforeEnterObserver {
         final List<Course> courses = courseService.findCourses(currentUser, getSearchField().getValue());
         final List<Class> classes = classService.findClasses(currentUser, getSearchField().getValue());
 
-        final List<Group> groups = enrollmentGroups.stream()
-                .map(e -> (Group) e)
-                .collect(Collectors.toList());
-        groups.addAll(courses);
-        groups.addAll(classes);
+        List<Group> groups = new ArrayList<>();
+        if(groupType == null){
+            groups.addAll(enrollmentGroups);
+            groups.addAll(classes);
+            groups.addAll(courses);
+        } else {
+            switch (groupType){
+                case ENROLLMENT_GROUP:
+                    groups.addAll(enrollmentGroups);
+                    break;
+                case CLASS:
+                    groups.addAll(classes);
+                    break;
+                case COURSE:
+                    groups.addAll(courses);
+                    break;
+            }
+        }
 
         grid.setItems(groups);
     }
