@@ -33,7 +33,7 @@ public class ClassEditorDialog extends AbstractEditorDialog<Class> {
         super(StringUtils.EMPTY, itemSaver, itemDeleter);
         this.itemSaver = courseSaver;
         this.itemDeleter = courseDeleter;
-        setItemType(StringUtils.lowerCase(getTranslation(Class_.CLASS)));
+        setItemType(Class_.NEW_CLASS, Class_.EDIT_CLASS);
 
         createNameField();
         createEctsField();

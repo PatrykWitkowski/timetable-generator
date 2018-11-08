@@ -1,10 +1,7 @@
 package com.pw.timetablegenerator.ui.views.groupslist;
 
 import com.pw.timetablegenerator.backend.entity.EnrollmentGroup;
-import com.pw.timetablegenerator.backend.entity.properties.App_;
-import com.pw.timetablegenerator.backend.entity.properties.Class_;
-import com.pw.timetablegenerator.backend.entity.properties.Group_;
-import com.pw.timetablegenerator.backend.entity.properties.Timetable_;
+import com.pw.timetablegenerator.backend.entity.properties.*;
 import com.pw.timetablegenerator.backend.utils.converter.RomanNumber;
 import com.pw.timetablegenerator.ui.common.AbstractEditorDialog;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -36,7 +33,7 @@ public class EnrollmentGroupEditorDialog extends AbstractEditorDialog<Enrollment
     protected EnrollmentGroupEditorDialog(BiConsumer<EnrollmentGroup, Operation> itemSaver,
                                           Consumer<EnrollmentGroup> itemDeleter) {
         super(StringUtils.EMPTY, itemSaver, itemDeleter);
-        setItemType(StringUtils.lowerCase(getTranslation(Timetable_.ENROLLMENT)));
+        setItemType(Group_.NEW_ENROLLMENT_GROUP, Group_.EDIT_ENROLLMENT_GROUP);
 
         createNameField();
         createSemesterField();
@@ -45,7 +42,8 @@ public class EnrollmentGroupEditorDialog extends AbstractEditorDialog<Enrollment
 
     private void createEctsField() {
         ectsField.setRequired(true);
-        ectsField.setLabel("ects");
+        ectsField.setLabel(getTranslation(Group_.ECTS_TOTAL).replace(":"," ")
+                + getTranslation(Group_.ECTS));
         ectsField.setPreventInvalidInput(true);
         ectsField.setPattern("^[0-9]+$");
         getFormLayout().add(ectsField);

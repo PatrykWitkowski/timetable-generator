@@ -59,7 +59,7 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
     protected TimetableEditorDialog(BiConsumer<Timetable, Operation> saveHandler,
                                     Consumer<Timetable> deleteHandler) {
         super("", saveHandler, deleteHandler);
-        setItemType(StringUtils.lowerCase(getTranslation(Timetable_.TIMETABLE)));
+        setItemType(Timetable_.NEW, Timetable_.EDIT);
 
         createTimetableTitle();
         createEnrollmentGroupChoose();

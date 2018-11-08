@@ -26,5 +26,5 @@ public class Timetable_ {
     public static final String AVOID_TIME_BREAK = "timetables.avoid.label";
     public static final String PREFERENCES = "timetables.preferences.label";
     public static final String TIMETABLE = "timetables.label";
-
+    public static final String EDIT = "timetables.edit.label";
 }

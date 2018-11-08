@@ -58,6 +58,7 @@ public abstract class AbstractEditorDialog<T extends Serializable>
         extends Dialog {
 
     public static final String HAS_PADDING_CLASS_NAME = "has-padding";
+    private String editLabel;
 
     /**
      * The operations supported by this dialog. Delete is enabled when editing
@@ -106,7 +107,7 @@ public abstract class AbstractEditorDialog<T extends Serializable>
 
     private final ConfirmationDialog<T> confirmationDialog = new ConfirmationDialog<>();
 
-    private String itemType;
+    private String newLabel;
     private final BiConsumer<T, Operation> itemSaver;
     private final Consumer<T> itemDeleter;
 
@@ -127,7 +128,7 @@ public abstract class AbstractEditorDialog<T extends Serializable>
      */
     protected AbstractEditorDialog(String itemType,
                                    BiConsumer<T, Operation> itemSaver, Consumer<T> itemDeleter) {
-        this.itemType = itemType;
+        this.newLabel = itemType;
         this.itemSaver = itemSaver;
         this.itemDeleter = itemDeleter;
 
@@ -138,8 +139,9 @@ public abstract class AbstractEditorDialog<T extends Serializable>
         setCloseOnOutsideClick(false);
     }
 
-    protected void setItemType(String itemType){
-        this.itemType = itemType;
+    protected void setItemType(String newLabel, String editLabel){
+        this.newLabel = newLabel;
+        this.editLabel = editLabel;
     }
 
     private void initTitle() {
@@ -253,7 +255,7 @@ public abstract class AbstractEditorDialog<T extends Serializable>
      */
     public void open(T item, Operation operation) {
         currentItem = item;
-        titleField.setText(getTranslation(operation.getNameInTitle()) + " " + itemType);
+        titleField.setText(operation == Operation.ADD ? getTranslation(newLabel) : getTranslation(editLabel));
 
         afterDialogOpen(operation);
 

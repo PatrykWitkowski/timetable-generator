@@ -49,7 +49,7 @@ public class CourseEditorDialog extends AbstractEditorDialog<Course> {
 
     protected CourseEditorDialog(BiConsumer<Course, Operation> itemSaver, Consumer<Course> itemDeleter) {
         super(StringUtils.EMPTY, itemSaver, itemDeleter);
-        setItemType(StringUtils.lowerCase(getTranslation(Course_.COURSE)));
+        setItemType(Course_.NEW_COURSE, Course_.EDIT_COURSE);
     }
 
     private void createPlacesField() {

@@ -18,4 +18,6 @@ public class Class_ {
     public static final String MSG_CLASS_DELETED = "class.msg.deleted.label";
     public static final String MSG_CLASS_ALREADY_ADDED = "class.msg.alreadyAdded.label";
     public static final String CLASS_TYPE = "class.type.label";
+    public static final String NEW_CLASS = "class.new.label";
+    public static final String EDIT_CLASS = "class.edit.label";
 }

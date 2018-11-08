@@ -18,5 +18,6 @@ public class Course_ {
     public static final String MSG_COURSE_DELETED = "courses.msg.deleted.label";
     public static final String COURSES = "courses.label";
     public static final String USED_IN_TIMETABLES = "courses.timetables.label";
-
+    public static final String NEW_COURSE = "courses.new.label";
+    public static final String EDIT_COURSE = "courses.edit.label";
 }

@@ -17,5 +17,6 @@ public class Group_ {
     public static final String MSG_DELETE_COURSE_GROUP_CONFIRMATION = "group.msg.delete.course.confirmation.label";
     public static final String MSG_DELETE_CLASS_GROUP_TITLE = "group.msg.delete.class.label";
     public static final String MSG_DELETE_CLASS_GROUP_CONFIRMATION = "group.msg.delete.class.confirmation.label";
-
+    public static final String NEW_ENROLLMENT_GROUP = "group.new.enrollment.label";
+    public static final String EDIT_ENROLLMENT_GROUP = "group.edit.enrollment.label";
 }
