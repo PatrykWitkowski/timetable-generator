@@ -26,4 +26,7 @@ public class App_ {
     public static final String MSG_NOT_BLANK = "app.msg.notBlank.label";
     public static final String MSG_NUMERIC = "app.msg.numeric.label";
     public static final String DETAILS = "app.details.label";
+    public static final String UNDEFINED = "app.undefined.label";
+    public static final String YES = "app.yes.label";
+    public static final String NO = "app.no.label";
 }
