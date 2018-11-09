@@ -55,4 +55,9 @@ public class TimetableServiceImpl implements TimetableService {
     public void delete(Timetable timetable) {
         timetableRepository.delete(timetable);
     }
+
+    @Override
+    public void save(Timetable timetable) {
+        timetableRepository.save(timetable);
+    }
 }

@@ -3,15 +3,13 @@ package com.pw.timetablegenerator.ui.views.groupslist;
 import com.pw.timetablegenerator.backend.common.GroupType;
 import com.pw.timetablegenerator.backend.entity.Class;
 import com.pw.timetablegenerator.backend.entity.*;
-import com.pw.timetablegenerator.backend.entity.properties.App_;
-import com.pw.timetablegenerator.backend.entity.properties.Class_;
-import com.pw.timetablegenerator.backend.entity.properties.Course_;
-import com.pw.timetablegenerator.backend.entity.properties.Group_;
+import com.pw.timetablegenerator.backend.entity.properties.*;
 import com.pw.timetablegenerator.backend.service.*;
 import com.pw.timetablegenerator.backend.utils.security.SecurityUtils;
 import com.pw.timetablegenerator.ui.MainLayout;
 import com.pw.timetablegenerator.ui.common.AbstractEditorDialog;
 import com.pw.timetablegenerator.ui.common.AbstractList;
+import com.pw.timetablegenerator.ui.components.DeleteCourseConfirmationDialog;
 import com.vaadin.flow.component.ItemLabelGenerator;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -27,6 +25,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,11 +49,14 @@ public class GroupsList extends AbstractList implements BeforeEnterObserver {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private TimetableService timetableService;
+
     private Grid<Group> grid;
 
     private final GroupSelectorDialog selectorDialog
             = new GroupSelectorDialog(this::saveEnrollmentGroup, this::deleteEnrollmentGroup,
-            this::saveCourse, this::deleteCourse, this::saveClass, this::deleteClass);
+            this::saveCourse, this::deleteCourseConfirmation, this::saveClass, this::deleteClass);
 
     private GroupType groupType = null;
 
@@ -215,6 +217,29 @@ public class GroupsList extends AbstractList implements BeforeEnterObserver {
                 3000,
                 Notification.Position.BOTTOM_START);
         updateView();
+    }
+
+    private void deleteCourseConfirmation(Group group){
+        Course course = (Course)group;
+        DeleteCourseConfirmationDialog deleteCourseConfirmationDialog = new DeleteCourseConfirmationDialog();
+        if(course.getTimetables().isEmpty()){
+            deleteCourse(course);
+        } else {
+            deleteCourseConfirmationDialog.open(course, this::saveTimetable, this::deleteTimetable, this::deleteCourse);
+        }
+    }
+
+    private void saveTimetable(Timetable timetable){
+        timetableService.save(timetable);
+    }
+
+    private void deleteTimetable(Timetable timetable){
+        timetable.getCourses().stream().forEach(c -> c.getTimetables().remove(timetable));
+        timetable.setCourses(null);
+        timetableService.delete(timetable);
+
+        Notification.show(getTranslation(Timetable_.MSG_DELETE), 3000,
+                Notification.Position.BOTTOM_START);
     }
 
     private void deleteCourse(Group group){

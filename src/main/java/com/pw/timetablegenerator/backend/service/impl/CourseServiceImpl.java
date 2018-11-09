@@ -31,7 +31,7 @@ public class CourseServiceImpl implements CourseService {
                 .flatMap(c -> courseRepository.findByClassOwner(c).stream())
                 .collect(Collectors.toSet());
 
-        if(StringUtils.isNotBlank(value)){
+        if (StringUtils.isNotBlank(value)) {
             return courses.stream()
                     .filter(e -> StringUtils.containsIgnoreCase(e.getName(), value))
                     .collect(Collectors.toList());

@@ -87,12 +87,16 @@ public class Course implements Serializable, Group {
     }
 
     @PreRemove
-    private void prepareToRemove(){
-        this.classOwner.dismissChild(this);
-        this.timetables.stream().forEach(t -> {
-            t.getCourses().remove(this);
-        });
-        this.lecturer.getCourses().remove(this);
+    public void prepareToRemove(){
+        if(this.classOwner != null){
+            this.classOwner.dismissChild(this);
+        }
+        if(this.timetables != null){
+            this.timetables.stream().forEach(t -> t.getCourses().remove(this));
+        }
+        if(this.lecturer != null){
+            this.lecturer.getCourses().remove(this);
+        }
         this.setClassOwner(null);
         this.setLecturer(null);
         this.setTimetables(null);

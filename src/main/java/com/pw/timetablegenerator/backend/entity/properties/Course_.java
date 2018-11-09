@@ -20,4 +20,8 @@ public class Course_ {
     public static final String USED_IN_TIMETABLES = "courses.timetables.label";
     public static final String NEW_COURSE = "courses.new.label";
     public static final String EDIT_COURSE = "courses.edit.label";
+    public static final String MSG_DELETE_CONFIRMATION_TITLE = "courses.msg.delete.confirmation.title.label";
+    public static final String MSG_DELETE_CONFIRMATION_MESSAGE = "courses.msg.delete.confirmation.label";
+    public static final String MSG_DELETE_TIMETABLES = "courses.msg.delete.timetables.label";
+    public static final String MSG_DELETE_COURSES_FROM_TIMETABLES = "courses.msg.delete.coursesFromTimetables.label";
 }

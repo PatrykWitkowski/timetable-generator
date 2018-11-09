@@ -16,4 +16,5 @@ public interface CourseService {
     Course saveCourse(@NonNull Course course);
 
     void deleteCourse(@NonNull Course course);
+
 }

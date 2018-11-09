@@ -102,7 +102,9 @@ public class ClassEditorDialog extends AbstractEditorDialog<Class> {
     }
 
     public void refreshCourseManager(Course course){
-        coursesManager.refreshCoursesTable(course);
+        if(coursesManager != null){
+            coursesManager.refreshCoursesTable(course);
+        }
     }
 
     @Override

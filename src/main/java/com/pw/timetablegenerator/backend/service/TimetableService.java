@@ -14,4 +14,7 @@ public interface TimetableService extends Serializable {
     Timetable findByTimetableId(long id);
 
     void delete(@NonNull Timetable timetable);
+
+    void save(@NonNull Timetable timetable);
+
 }
