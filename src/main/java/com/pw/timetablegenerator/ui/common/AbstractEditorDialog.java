@@ -317,7 +317,7 @@ public abstract class AbstractEditorDialog<T extends Serializable>
             String additionalMessage) {
         close();
         confirmationDialog.open(title, message, additionalMessage, getTranslation(App_.DELETE),
-                true, getCurrentItem(), this::deleteConfirmed, this::open);
+                true, getCurrentItem(), this::deleteConfirmed, this::close);
     }
 
     /**
