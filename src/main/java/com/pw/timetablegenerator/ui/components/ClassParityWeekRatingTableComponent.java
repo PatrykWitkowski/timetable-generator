@@ -2,6 +2,7 @@ package com.pw.timetablegenerator.ui.components;
 
 import com.google.common.collect.Lists;
 import com.pw.timetablegenerator.backend.common.ParityOfTheWeek;
+import com.pw.timetablegenerator.backend.dts.ClassParityWeekPreferenceDts;
 import com.pw.timetablegenerator.backend.dts.PreferenceDts;
 import com.pw.timetablegenerator.backend.entity.Class;
 import com.pw.timetablegenerator.backend.entity.properties.Class_;
@@ -11,9 +12,14 @@ import com.vaadin.flow.data.renderer.TemplateRenderer;
 import com.vaadin.flow.function.ValueProvider;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ClassParityWeekRatingTableComponent extends RatingTableComponent<Class> {
+
+    private Map<Class, ComboBox<ParityOfTheWeek>> parityForClass = new HashMap<>();
 
     public ClassParityWeekRatingTableComponent() {
         super();
@@ -35,6 +41,7 @@ public class ClassParityWeekRatingTableComponent extends RatingTableComponent<Cl
             parityOfWeekComboBox.setItems(Lists.newArrayList(ParityOfTheWeek.EVEN, ParityOfTheWeek.ODD));
             parityOfWeekComboBox.setItemLabelGenerator((ItemLabelGenerator<ParityOfTheWeek>) parityOfTheWeek ->
                     getTranslation(parityOfTheWeek.getProperty()));
+            parityForClass.put(c, parityOfWeekComboBox);
             return parityOfWeekComboBox;
         }).setHeader(getTranslation(Class_.WEEK_PARITY));
     }
@@ -48,6 +55,14 @@ public class ClassParityWeekRatingTableComponent extends RatingTableComponent<Cl
 
     @Override
     public List<PreferenceDts> getPreferences() {
-        return null;
+        List<PreferenceDts> classParityWeekePreferencesDts = new ArrayList<>();
+        getRatingStarsComponents().keySet().stream()
+                .forEach(c -> {
+                    ClassParityWeekPreferenceDts classParityWeekPreferenceDts
+                            = new ClassParityWeekPreferenceDts(c, parityForClass.get(c).getValue(),
+                            getRatingStarsComponents().get(c).getStarValue());
+                    classParityWeekePreferencesDts.add(classParityWeekPreferenceDts);
+                });
+        return classParityWeekePreferencesDts;
     }
 }

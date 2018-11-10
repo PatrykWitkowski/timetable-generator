@@ -250,12 +250,16 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
             Notification.show(getTranslation(Timetable_.MSG_PREFERENCE_WARNING), 3000, Notification.Position.MIDDLE);
             return;
         }
+        addPreferences();
 
+        super.saveClicked(operation);
+    }
+
+    private void addPreferences() {
         preferences.add(new DayTimePreferenceDts(dayTime.getValue(), dayTimeRating.getStarValue()));
         preferences.add(new FreeDayPreferenceDts(freeDay.getValue(), freeDayRating.getStarValue()));
         preferences.addAll(lecturersTable.getPreferences());
         preferences.addAll(classOnDayTable.getPreferences());
-
-        super.saveClicked(operation);
+        preferences.addAll(classParityWeekRatingTable.getPreferences());
     }
 }
