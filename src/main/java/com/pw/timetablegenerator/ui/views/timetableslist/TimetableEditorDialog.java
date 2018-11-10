@@ -3,6 +3,7 @@ package com.pw.timetablegenerator.ui.views.timetableslist;
 import com.google.common.collect.Lists;
 import com.pw.timetablegenerator.backend.common.DayTime;
 import com.pw.timetablegenerator.backend.common.ParityOfTheWeek;
+import com.pw.timetablegenerator.backend.dts.AvoidBreakPreferenceDts;
 import com.pw.timetablegenerator.backend.dts.DayTimePreferenceDts;
 import com.pw.timetablegenerator.backend.dts.FreeDayPreferenceDts;
 import com.pw.timetablegenerator.backend.dts.PreferenceDts;
@@ -55,6 +56,7 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
     private ClassOnDayRatingTableComponent classOnDayTable = new ClassOnDayRatingTableComponent();
     private ClassParityWeekRatingTableComponent classParityWeekRatingTable = new ClassParityWeekRatingTableComponent();
     private Checkbox avoidTimeBreak = new Checkbox();
+    private RatingStarsComponent avoidTimeBreakRating;
     private FormLayout preferenceFormLayout;
     private Tab tabPreference;
     @Getter
@@ -81,7 +83,7 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
 
     private void createAvoidTimeBreakPreference() {
         avoidTimeBreak.setLabel(getTranslation(Timetable_.AVOID_TIME_BREAK));
-        createFieldWithRating(avoidTimeBreak);
+        avoidTimeBreakRating = createFieldWithRating(avoidTimeBreak);
     }
 
     private void createClassParityWeekPreference() {
@@ -261,5 +263,8 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
         preferences.addAll(lecturersTable.getPreferences());
         preferences.addAll(classOnDayTable.getPreferences());
         preferences.addAll(classParityWeekRatingTable.getPreferences());
+        if(avoidTimeBreak.getValue()){
+            preferences.add(new AvoidBreakPreferenceDts(avoidTimeBreakRating.getStarValue()));
+        }
     }
 }
