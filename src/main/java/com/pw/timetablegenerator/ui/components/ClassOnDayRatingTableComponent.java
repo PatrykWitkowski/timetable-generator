@@ -1,5 +1,6 @@
 package com.pw.timetablegenerator.ui.components;
 
+import com.pw.timetablegenerator.backend.dts.ClassOnDayPreferenceDts;
 import com.pw.timetablegenerator.backend.dts.PreferenceDts;
 import com.pw.timetablegenerator.backend.entity.Class;
 import com.pw.timetablegenerator.backend.entity.Course;
@@ -13,10 +14,15 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.time.DayOfWeek;
 import java.time.format.TextStyle;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ClassOnDayRatingTableComponent extends RatingTableComponent<Class> {
+
+    private Map<Class, ComboBox<DayOfWeek>> dayForClass = new HashMap<>();
 
     public ClassOnDayRatingTableComponent() {
         super();
@@ -41,6 +47,7 @@ public class ClassOnDayRatingTableComponent extends RatingTableComponent<Class> 
             dayOfWeekComboBox.setItems(classDays);
             dayOfWeekComboBox.setItemLabelGenerator((ItemLabelGenerator<DayOfWeek>) dayOfWeek ->
                     dayOfWeek.getDisplayName(TextStyle.FULL, UI.getCurrent().getLocale()));
+            dayForClass.put(c, dayOfWeekComboBox);
             return dayOfWeekComboBox;
         }).setHeader(getTranslation(Class_.DAY));
     }
@@ -53,6 +60,13 @@ public class ClassOnDayRatingTableComponent extends RatingTableComponent<Class> 
 
     @Override
     public List<PreferenceDts> getPreferences() {
-        return null;
+        List<PreferenceDts> classOnDayPreferencesDts = new ArrayList<>();
+        getRatingStarsComponents().keySet().forEach(c -> {
+            ClassOnDayPreferenceDts classOnDayPreferenceDts = new ClassOnDayPreferenceDts(c, dayForClass.get(c).getValue(),
+                    getRatingStarsComponents().get(c).getStarValue());
+            classOnDayPreferencesDts.add(classOnDayPreferenceDts);
+        });
+
+        return  classOnDayPreferencesDts;
     }
 }

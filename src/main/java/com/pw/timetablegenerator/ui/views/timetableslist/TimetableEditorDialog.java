@@ -254,6 +254,7 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
         preferences.add(new DayTimePreferenceDts(dayTime.getValue(), dayTimeRating.getStarValue()));
         preferences.add(new FreeDayPreferenceDts(freeDay.getValue(), freeDayRating.getStarValue()));
         preferences.addAll(lecturersTable.getPreferences());
+        preferences.addAll(classOnDayTable.getPreferences());
 
         super.saveClicked(operation);
     }
