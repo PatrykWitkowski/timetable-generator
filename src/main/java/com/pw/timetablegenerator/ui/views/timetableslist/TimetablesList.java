@@ -1,5 +1,6 @@
 package com.pw.timetablegenerator.ui.views.timetableslist;
 
+import com.pw.timetablegenerator.backend.dts.PreferenceDts;
 import com.pw.timetablegenerator.backend.entity.Timetable;
 import com.pw.timetablegenerator.backend.entity.properties.App_;
 import com.pw.timetablegenerator.backend.entity.properties.Timetable_;
@@ -114,6 +115,7 @@ public class TimetablesList extends PolymerTemplate<TimetablesList.TimetablesMod
     public void generateTimetable(Timetable timetable,
                                   AbstractEditorDialog.Operation operation){
         // generate new timetable for ADD, for EDIT nothing to do
+        final List<PreferenceDts> preferences = timetableForm.getPreferences();
     }
 
     public void deleteTimetable(Timetable timetable){

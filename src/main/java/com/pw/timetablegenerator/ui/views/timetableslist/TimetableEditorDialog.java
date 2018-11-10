@@ -1,7 +1,10 @@
 package com.pw.timetablegenerator.ui.views.timetableslist;
 
 import com.google.common.collect.Lists;
+import com.pw.timetablegenerator.backend.common.DayTime;
 import com.pw.timetablegenerator.backend.common.ParityOfTheWeek;
+import com.pw.timetablegenerator.backend.dts.DayTimePreferenceDts;
+import com.pw.timetablegenerator.backend.dts.PreferenceDts;
 import com.pw.timetablegenerator.backend.entity.Class;
 import com.pw.timetablegenerator.backend.entity.*;
 import com.pw.timetablegenerator.backend.entity.properties.App_;
@@ -27,19 +30,15 @@ import com.vaadin.flow.data.binder.ValueContext;
 import com.vaadin.flow.data.converter.Converter;
 import com.vaadin.flow.data.validator.DateRangeValidator;
 import com.vaadin.flow.data.validator.StringLengthValidator;
-import org.apache.commons.lang3.StringUtils;
+import lombok.Getter;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
 
@@ -47,7 +46,8 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
     private ComboBox<EnrollmentGroup> enrollmentGroupComboBox = new ComboBox<>();
     private DatePicker startSemesterDataPicker = new DatePicker();
     private DatePicker endSemesterDataPicker = new DatePicker();
-    private ComboBox<String> dayTime = new ComboBox<>();
+    private ComboBox<DayTime> dayTime = new ComboBox<>();
+    private RatingStarsComponent dayTimeRating;
     private ComboBox<DayOfWeek> freeDay = new ComboBox<>();
     private RatingTableComponent lecturersTable = new LecturerRatingTableComponent();
     private ClassOnDayRatingTableComponent classOnDayTable = new ClassOnDayRatingTableComponent();
@@ -55,6 +55,8 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
     private Checkbox avoidTimeBreak = new Checkbox();
     private FormLayout preferenceFormLayout;
     private Tab tabPreference;
+    @Getter
+    private List<PreferenceDts> preferences = new ArrayList<>();
 
     protected TimetableEditorDialog(BiConsumer<Timetable, Operation> saveHandler,
                                     Consumer<Timetable> deleteHandler) {
@@ -77,7 +79,7 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
 
     private void createAvoidTimeBreakPreference() {
         avoidTimeBreak.setLabel(getTranslation(Timetable_.AVOID_TIME_BREAK));
-        preferenceFormLayout.add(createFieldWithRating(avoidTimeBreak));
+        createFieldWithRating(avoidTimeBreak);
     }
 
     private void createClassParityWeekPreference() {
@@ -110,19 +112,18 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
         freeDay.setItems(DayOfWeek.values());
         freeDay.setItemLabelGenerator((ItemLabelGenerator<DayOfWeek>) dayOfWeek ->
                 dayOfWeek.getDisplayName(TextStyle.FULL, UI.getCurrent().getLocale()));
-        preferenceFormLayout.add(createFieldWithRating(freeDay));
+        createFieldWithRating(freeDay);
     }
 
     private void createDayTimePreference() {
         dayTime.setLabel(getTranslation(Timetable_.DAY_TIME));
         dayTime.setAllowCustomValue(false);
-        dayTime.setItems(Stream.of(getTranslation(Timetable_.DAY_TIME_MORNING),
-                getTranslation(Timetable_.DAY_TIME_AFTERNOON),
-                getTranslation(Timetable_.DAY_TIME_EVENING)));
-        preferenceFormLayout.add(createFieldWithRating(dayTime));
+        dayTime.setItems(DayTime.values());
+        dayTime.setItemLabelGenerator((ItemLabelGenerator<DayTime>) dayTime -> getTranslation(dayTime.getProperty()));
+        dayTimeRating = createFieldWithRating(dayTime);
     }
 
-    private HorizontalLayout createFieldWithRating(Component field) {
+    private RatingStarsComponent createFieldWithRating(Component field) {
         RatingStarsComponent ratingStarsComponentForDayTime = new RatingStarsComponent();
         HorizontalLayout dayTimeLayout = new HorizontalLayout();
         dayTimeLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.END);
@@ -130,7 +131,8 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
         dayTimeLayout.expand(field);
         dayTimeLayout.setFlexGrow(0.5, ratingStarsComponentForDayTime);
         dayTimeLayout.add(field, ratingStarsComponentForDayTime);
-        return dayTimeLayout;
+        preferenceFormLayout.add(dayTimeLayout);
+        return ratingStarsComponentForDayTime;
     }
 
     private void createStartEndSemesterDataPickers() {
@@ -246,6 +248,9 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
             Notification.show(getTranslation(Timetable_.MSG_PREFERENCE_WARNING), 3000, Notification.Position.MIDDLE);
             return;
         }
+
+        preferences.add(new DayTimePreferenceDts(dayTime.getValue(), dayTimeRating.getStarValue()));
+
         super.saveClicked(operation);
     }
 }
