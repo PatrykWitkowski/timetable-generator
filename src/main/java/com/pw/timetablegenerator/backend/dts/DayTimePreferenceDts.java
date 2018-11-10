@@ -13,11 +13,8 @@ public class DayTimePreferenceDts extends PreferenceDts {
     }
 
     @Override
-    public Integer calculatePreferenceForce(Course course){
+    protected boolean preferencePreconditions(Course course) {
         final DayTime actualDayTime = DayTime.getDayTime(course.getCourseStartTime());
-        if(actualDayTime == preferenceDayTime){
-            return getForce();
-        }
-        return getNoForce();
+        return actualDayTime == preferenceDayTime;
     }
 }

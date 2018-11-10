@@ -1,5 +1,7 @@
 package com.pw.timetablegenerator.ui.components;
 
+import com.pw.timetablegenerator.backend.dts.LecturerPreferenceDts;
+import com.pw.timetablegenerator.backend.dts.PreferenceDts;
 import com.pw.timetablegenerator.backend.entity.properties.App_;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasComponents;
@@ -13,11 +15,10 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.data.provider.ListDataProvider;
+import lombok.Getter;
 
 import java.io.Serializable;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Tag("rating-table-component")
@@ -29,6 +30,8 @@ public abstract class RatingTableComponent<T extends Serializable> extends Compo
     private Button deleteButton = new Button(VaadinIcon.MINUS.create());
     private Grid<T> ratingTable = new Grid<>();
     private String componentName;
+    @Getter
+    private Map<T, RatingStarsComponent> ratingStarsComponents = new HashMap<>();
 
     public RatingTableComponent(){
         initSearchComboBox();
@@ -42,7 +45,11 @@ public abstract class RatingTableComponent<T extends Serializable> extends Compo
 
     private void initRatingTable() {
         addColumns();
-        ratingTable.addComponentColumn(l -> new RatingStarsComponent()).setHeader(getTranslation(App_.PRIORITY));
+        ratingTable.addComponentColumn(l -> {
+            final RatingStarsComponent ratingStarsComponent = new RatingStarsComponent();
+            ratingStarsComponents.put(l, ratingStarsComponent);
+            return ratingStarsComponent;
+        }).setHeader(getTranslation(App_.PRIORITY));
         add(ratingTable);
     }
 
@@ -113,7 +120,7 @@ public abstract class RatingTableComponent<T extends Serializable> extends Compo
         ListDataProvider<T> all = (ListDataProvider<T>) ratingTable.getDataProvider();
         return all.getItems().isEmpty();
     }
-    
-    
+
+    public abstract List<PreferenceDts> getPreferences();
 
 }

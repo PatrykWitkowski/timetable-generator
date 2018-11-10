@@ -15,6 +15,10 @@ public abstract class PreferenceDts {
         this.force = force;
     }
 
-    public abstract Integer calculatePreferenceForce(Course course);
+    public Integer calculatePreferenceForce(Course course){
+        return preferencePreconditions(course) ? getForce() : getNoForce();
+    }
+
+    protected abstract boolean preferencePreconditions(Course course);
 
 }

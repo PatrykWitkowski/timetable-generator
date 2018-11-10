@@ -14,11 +14,8 @@ public class FreeDayPreferenceDts extends PreferenceDts {
     }
 
     @Override
-    public Integer calculatePreferenceForce(Course course) {
+    protected boolean preferencePreconditions(Course course) {
         final DayOfWeek courseDay = course.getCourseDay();
-        if(courseDay == preferenceFreeDay){
-            return getForce();
-        }
-        return getNoForce();
+        return courseDay == preferenceFreeDay;
     }
 }

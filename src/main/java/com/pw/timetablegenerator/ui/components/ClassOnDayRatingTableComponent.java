@@ -1,5 +1,6 @@
 package com.pw.timetablegenerator.ui.components;
 
+import com.pw.timetablegenerator.backend.dts.PreferenceDts;
 import com.pw.timetablegenerator.backend.entity.Class;
 import com.pw.timetablegenerator.backend.entity.Course;
 import com.pw.timetablegenerator.backend.entity.properties.Class_;
@@ -48,5 +49,10 @@ public class ClassOnDayRatingTableComponent extends RatingTableComponent<Class> 
     protected ItemLabelGenerator<Class> setItemLabelGenerator() {
         return (ItemLabelGenerator<Class>) cl ->
                 String.format("%s [%s]", cl.getName(), getTranslation(cl.getClassType().getProperty()));
+    }
+
+    @Override
+    public List<PreferenceDts> getPreferences() {
+        return null;
     }
 }

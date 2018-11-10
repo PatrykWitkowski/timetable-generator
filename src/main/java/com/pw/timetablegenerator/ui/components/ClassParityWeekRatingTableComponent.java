@@ -2,6 +2,7 @@ package com.pw.timetablegenerator.ui.components;
 
 import com.google.common.collect.Lists;
 import com.pw.timetablegenerator.backend.common.ParityOfTheWeek;
+import com.pw.timetablegenerator.backend.dts.PreferenceDts;
 import com.pw.timetablegenerator.backend.entity.Class;
 import com.pw.timetablegenerator.backend.entity.properties.Class_;
 import com.vaadin.flow.component.ItemLabelGenerator;
@@ -9,6 +10,8 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.data.renderer.TemplateRenderer;
 import com.vaadin.flow.function.ValueProvider;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.List;
 
 public class ClassParityWeekRatingTableComponent extends RatingTableComponent<Class> {
 
@@ -41,5 +44,10 @@ public class ClassParityWeekRatingTableComponent extends RatingTableComponent<Cl
     protected ItemLabelGenerator<Class> setItemLabelGenerator() {
         return (ItemLabelGenerator<Class>) cl ->
                 String.format("%s [%s]", cl.getName(), getTranslation(cl.getClassType().getProperty()));
+    }
+
+    @Override
+    public List<PreferenceDts> getPreferences() {
+        return null;
     }
 }
