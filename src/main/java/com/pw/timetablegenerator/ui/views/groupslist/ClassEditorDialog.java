@@ -46,6 +46,7 @@ public class ClassEditorDialog extends AbstractEditorDialog<Class> {
         classType.setItemLabelGenerator((ItemLabelGenerator<ClassType>) classType -> getTranslation(classType.getProperty()));
         classType.setAllowCustomValue(false);
         classType.setPreventInvalidInput(true);
+        classType.addValueChangeListener(e -> getCurrentItem().setClassType(e.getValue()));
         getFormLayout().add(classType);
 
         getBinder().forField(classType)
@@ -55,6 +56,7 @@ public class ClassEditorDialog extends AbstractEditorDialog<Class> {
 
     private void createEctsField() {
         classEcts.setRequired(true);
+        classEcts.addValueChangeListener(e -> getCurrentItem().setEcts(Long.parseLong(e.getValue())));
         getFormLayout().add(classEcts);
 
         getBinder().forField(classEcts)
@@ -65,6 +67,7 @@ public class ClassEditorDialog extends AbstractEditorDialog<Class> {
 
     private void createNameField() {
         className.setRequired(true);
+        className.addValueChangeListener(e -> getCurrentItem().setName(e.getValue()));
         getFormLayout().add(className);
 
         getBinder().forField(className)
@@ -105,12 +108,5 @@ public class ClassEditorDialog extends AbstractEditorDialog<Class> {
         if(coursesManager != null){
             coursesManager.refreshCoursesTable(course);
         }
-    }
-
-    @Override
-    protected void cancelClicked() {
-        classType.clear();
-        classType.setValue(getCurrentItem().getClassType());
-        super.cancelClicked();
     }
 }

@@ -208,6 +208,7 @@ public class GroupsList extends AbstractList implements BeforeEnterObserver {
             lecturer.getCourses().add(course);
             lecturerService.saveLecturer(lecturer);
         }
+        classService.saveClass(course.getClassOwner());
         courseService.saveCourse(course);
         userService.refreshUserData();
         selectorDialog.refreshClassEditorDialog(course);

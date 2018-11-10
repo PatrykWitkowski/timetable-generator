@@ -27,6 +27,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.time.format.TextStyle;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -187,7 +188,12 @@ public class CourseEditorDialog extends AbstractEditorDialog<Course> {
 
             firstOpen = false;
         }
-        classOwner.setItems(SecurityUtils.getCurrentUser().getUser().getOwnerClasses());
+
+        List<Class> ownerClasses = SecurityUtils.getCurrentUser().getUser().getOwnerClasses();
+        if(!ownerClasses.contains(getCurrentItem().getClassOwner())){
+            ownerClasses.add(getCurrentItem().getClassOwner());
+        }
+        classOwner.setItems(ownerClasses);
 
         alignParityCheckboxes();
         getCurrentItem().setParityOfTheWeek(ParityOfTheWeek.WEEKLY);
