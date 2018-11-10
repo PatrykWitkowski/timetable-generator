@@ -52,9 +52,9 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
     private RatingStarsComponent dayTimeRating;
     private ComboBox<DayOfWeek> freeDay = new ComboBox<>();
     private RatingStarsComponent freeDayRating;
-    private RatingTableComponent lecturersTable = new LecturerRatingTableComponent();
-    private ClassOnDayRatingTableComponent classOnDayTable = new ClassOnDayRatingTableComponent();
-    private ClassParityWeekRatingTableComponent classParityWeekRatingTable = new ClassParityWeekRatingTableComponent();
+    private RatingTableComponent lecturersTable;
+    private ClassOnDayRatingTableComponent classOnDayTable;
+    private ClassParityWeekRatingTableComponent classParityWeekRatingTable;
     private Checkbox avoidTimeBreak = new Checkbox();
     private RatingStarsComponent avoidTimeBreakRating;
     private FormLayout preferenceFormLayout;
@@ -67,17 +67,7 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
         super("", saveHandler, deleteHandler);
         setItemType(Timetable_.NEW, Timetable_.EDIT);
 
-        createTimetableTitle();
-        createEnrollmentGroupChoose();
-        createStartEndSemesterDataPickers();
-
         createPreferenceForm();
-        createDayTimePreference();
-        createFreeDayPreference();
-        createLecturerPreference();
-        createClassOnDayPreference();
-        createClassParityWeekPreference();
-        createAvoidTimeBreakPreference();
         tabPreference = addNewTab(getTranslation(Timetable_.PREFERENCES), new Div(preferenceFormLayout));
     }
 
@@ -87,10 +77,12 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
     }
 
     private void createClassParityWeekPreference() {
+        classParityWeekRatingTable = new ClassParityWeekRatingTableComponent();
         preferenceFormLayout.add(classParityWeekRatingTable);
     }
 
     private void createClassOnDayPreference() {
+        classOnDayTable = new ClassOnDayRatingTableComponent();
         preferenceFormLayout.add(classOnDayTable);
     }
 
@@ -107,6 +99,7 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
     }
 
     private void createLecturerPreference() {
+        lecturersTable = new LecturerRatingTableComponent();
         preferenceFormLayout.add(lecturersTable);
     }
 
@@ -235,6 +228,20 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
 
     @Override
     protected void afterDialogOpen(Operation operation) {
+        getFormLayout().removeAll();
+        preferenceFormLayout.removeAll();
+
+        createTimetableTitle();
+        createEnrollmentGroupChoose();
+        createStartEndSemesterDataPickers();
+
+        createDayTimePreference();
+        createFreeDayPreference();
+        createLecturerPreference();
+        createClassOnDayPreference();
+        createClassParityWeekPreference();
+        createAvoidTimeBreakPreference();
+
         enrollmentGroupComboBox.setItems(Optional.ofNullable(getCurrentItem().getOwner())
                 .map(User::getEnrollmentGroups)
                 .orElse(Lists.newArrayList()));
@@ -258,6 +265,7 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
     }
 
     private void addPreferences() {
+        preferences.clear();
         preferences.add(new DayTimePreferenceDts(dayTime.getValue(), dayTimeRating.getStarValue()));
         preferences.add(new FreeDayPreferenceDts(freeDay.getValue(), freeDayRating.getStarValue()));
         preferences.addAll(lecturersTable.getPreferences());
@@ -266,5 +274,9 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
         if(avoidTimeBreak.getValue()){
             preferences.add(new AvoidBreakPreferenceDts(avoidTimeBreakRating.getStarValue()));
         }
+    }
+
+    public EnrollmentGroup getEnrollmentGroup(){
+        return enrollmentGroupComboBox.getValue();
     }
 }

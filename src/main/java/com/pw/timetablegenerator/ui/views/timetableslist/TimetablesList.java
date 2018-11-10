@@ -114,8 +114,15 @@ public class TimetablesList extends PolymerTemplate<TimetablesList.TimetablesMod
 
     public void generateTimetable(Timetable timetable,
                                   AbstractEditorDialog.Operation operation){
-        // generate new timetable for ADD, for EDIT nothing to do
+        if(operation == AbstractEditorDialog.Operation.EDIT){
+            return;
+        }
+
         final List<PreferenceDts> preferences = timetableForm.getPreferences();
+        timetableService.generateTimetable(timetable, timetableForm.getEnrollmentGroup(), preferences);
+        updateList();
+        Notification.show(getTranslation(Timetable_.MSG_GENERATED), 3000,
+                Notification.Position.BOTTOM_START);
     }
 
     public void deleteTimetable(Timetable timetable){

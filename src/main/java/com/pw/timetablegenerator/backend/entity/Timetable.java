@@ -51,7 +51,7 @@ public class Timetable implements Serializable {
     private User owner;
 
     @LazyCollection(LazyCollectionOption.FALSE)
-    @ManyToMany(cascade = { CascadeType.ALL })
+    @ManyToMany(cascade = { CascadeType.MERGE })
     @JoinTable(
             name = "Timetable_Course",
             joinColumns = { @JoinColumn(name = "timetable_id") },

@@ -27,4 +27,5 @@ public class Timetable_ {
     public static final String PREFERENCES = "timetables.preferences.label";
     public static final String TIMETABLE = "timetables.label";
     public static final String EDIT = "timetables.edit.label";
+    public static final String MSG_GENERATED = "timetables.msg.generated.label";
 }

@@ -1,6 +1,5 @@
 package com.pw.timetablegenerator.ui.components;
 
-import com.pw.timetablegenerator.backend.dts.LecturerPreferenceDts;
 import com.pw.timetablegenerator.backend.dts.PreferenceDts;
 import com.pw.timetablegenerator.backend.entity.properties.App_;
 import com.vaadin.flow.component.Component;
