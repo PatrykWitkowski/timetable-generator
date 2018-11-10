@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.pw.timetablegenerator.backend.common.DayTime;
 import com.pw.timetablegenerator.backend.common.ParityOfTheWeek;
 import com.pw.timetablegenerator.backend.dts.DayTimePreferenceDts;
+import com.pw.timetablegenerator.backend.dts.FreeDayPreferenceDts;
 import com.pw.timetablegenerator.backend.dts.PreferenceDts;
 import com.pw.timetablegenerator.backend.entity.Class;
 import com.pw.timetablegenerator.backend.entity.*;
@@ -49,6 +50,7 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
     private ComboBox<DayTime> dayTime = new ComboBox<>();
     private RatingStarsComponent dayTimeRating;
     private ComboBox<DayOfWeek> freeDay = new ComboBox<>();
+    private RatingStarsComponent freeDayRating;
     private RatingTableComponent lecturersTable = new LecturerRatingTableComponent();
     private ClassOnDayRatingTableComponent classOnDayTable = new ClassOnDayRatingTableComponent();
     private ClassParityWeekRatingTableComponent classParityWeekRatingTable = new ClassParityWeekRatingTableComponent();
@@ -112,7 +114,7 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
         freeDay.setItems(DayOfWeek.values());
         freeDay.setItemLabelGenerator((ItemLabelGenerator<DayOfWeek>) dayOfWeek ->
                 dayOfWeek.getDisplayName(TextStyle.FULL, UI.getCurrent().getLocale()));
-        createFieldWithRating(freeDay);
+        freeDayRating = createFieldWithRating(freeDay);
     }
 
     private void createDayTimePreference() {
@@ -124,15 +126,15 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
     }
 
     private RatingStarsComponent createFieldWithRating(Component field) {
-        RatingStarsComponent ratingStarsComponentForDayTime = new RatingStarsComponent();
-        HorizontalLayout dayTimeLayout = new HorizontalLayout();
-        dayTimeLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.END);
-        dayTimeLayout.setWidth("100%");
-        dayTimeLayout.expand(field);
-        dayTimeLayout.setFlexGrow(0.5, ratingStarsComponentForDayTime);
-        dayTimeLayout.add(field, ratingStarsComponentForDayTime);
-        preferenceFormLayout.add(dayTimeLayout);
-        return ratingStarsComponentForDayTime;
+        RatingStarsComponent ratingStarsComponent = new RatingStarsComponent();
+        HorizontalLayout ratingStartLayout = new HorizontalLayout();
+        ratingStartLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.END);
+        ratingStartLayout.setWidth("100%");
+        ratingStartLayout.expand(field);
+        ratingStartLayout.setFlexGrow(0.5, ratingStarsComponent);
+        ratingStartLayout.add(field, ratingStarsComponent);
+        preferenceFormLayout.add(ratingStartLayout);
+        return ratingStarsComponent;
     }
 
     private void createStartEndSemesterDataPickers() {
@@ -250,6 +252,7 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
         }
 
         preferences.add(new DayTimePreferenceDts(dayTime.getValue(), dayTimeRating.getStarValue()));
+        preferences.add(new FreeDayPreferenceDts(freeDay.getValue(), freeDayRating.getStarValue()));
 
         super.saveClicked(operation);
     }

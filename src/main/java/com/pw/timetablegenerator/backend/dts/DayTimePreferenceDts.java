@@ -8,10 +8,11 @@ public class DayTimePreferenceDts extends PreferenceDts {
     private DayTime preferenceDayTime;
 
     public DayTimePreferenceDts(DayTime dayTime, Integer force){
+        super(force);
         this.preferenceDayTime = dayTime;
-        super.setForce(force);
     }
 
+    @Override
     public Integer calculatePreferenceForce(Course course){
         final DayTime actualDayTime = DayTime.getDayTime(course.getCourseStartTime());
         if(actualDayTime == preferenceDayTime){
