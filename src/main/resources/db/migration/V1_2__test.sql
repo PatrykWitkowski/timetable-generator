@@ -20,9 +20,6 @@ values  (1, 2);
 insert into enrollment_class(enrollment_id, class_id)
 values  (1, 3);
 
-insert into lecturers (lecturer_id, name)
-values (1, 'Prof. Janusz Zakrzewski');
-
 insert into courses(course_id, class_id, lecturer_id, group_code, course_start_time, course_end_time, course_day, courses_place, parity_of_the_week, free_places)
 values (1, 1, 1, 'EFG324F', '08:20:00', '10:00:00', 'MONDAY', 'C-14 A1.1', 'WEEKLY', 1);
 insert into courses(course_id, class_id, lecturer_id, group_code, course_start_time, course_end_time, course_day, courses_place, parity_of_the_week, free_places)

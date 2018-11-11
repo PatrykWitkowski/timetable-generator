@@ -14,10 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.time.DayOfWeek;
 import java.time.format.TextStyle;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ClassOnDayRatingTableComponent extends RatingTableComponent<Class> {
@@ -40,9 +37,9 @@ public class ClassOnDayRatingTableComponent extends RatingTableComponent<Class> 
                 .withProperty("name", Class::getName)).setHeader(getTranslation(Class_.CLASS));
 
         getRatingTable().addComponentColumn(c -> {
-            final List<DayOfWeek> classDays = c.getCourses().stream()
+            final Set<DayOfWeek> classDays = c.getCourses().stream()
                     .map(Course::getCourseDay)
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toSet());
             final ComboBox<DayOfWeek> dayOfWeekComboBox = new ComboBox<>();
             dayOfWeekComboBox.setItems(classDays);
             dayOfWeekComboBox.setItemLabelGenerator((ItemLabelGenerator<DayOfWeek>) dayOfWeek ->

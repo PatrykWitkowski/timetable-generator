@@ -198,10 +198,13 @@ public class CourseEditorDialog extends AbstractEditorDialog<Course> {
         classOwner.setItems(ownerClasses);
 
         alignParityCheckboxes();
-        getCurrentItem().setParityOfTheWeek(ParityOfTheWeek.WEEKLY);
+        if(operation == Operation.ADD){
+            getCurrentItem().setParityOfTheWeek(ParityOfTheWeek.WEEKLY);
+        }
         oldParityOfTheWeek  = getCurrentItem().getParityOfTheWeek();
         if(operation == Operation.EDIT){
             //resetFields();
+            resetParityCheckBoxes();
         }
     }
 

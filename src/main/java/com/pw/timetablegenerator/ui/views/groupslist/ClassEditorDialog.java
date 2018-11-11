@@ -98,7 +98,7 @@ public class ClassEditorDialog extends AbstractEditorDialog<Class> {
     public void open(Class item, Operation operation) {
         this.currentOperation = operation;
         createCoursesManager(item);
-        coursesManager.addCourseButtonEnabled(false);
+        coursesManager.addCourseButtonEnabled(StringUtils.isNotBlank(className.getValue()));
         super.open(item, operation);
     }
 

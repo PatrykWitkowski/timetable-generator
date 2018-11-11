@@ -19,7 +19,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import lombok.Getter;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -102,7 +101,9 @@ public class ClassManager extends Component implements HasComponents {
     private void createClassComboBox() {
         classComboBox.setLabel(getTranslation(Class_.CLASS));
         final List<Class> ownerClasses = currentEnrollmentGroup.getOwner().getOwnerClasses();
-        classComboBox.setItems(ownerClasses != null ? ownerClasses : Collections.emptyList());
+        classComboBox.setItems(ownerClasses != null ? ownerClasses.stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList()) : Collections.emptyList());
         classComboBox.addValueChangeListener(e -> addClass.setEnabled(e.getValue() != null));
         classComboBox.setItemLabelGenerator((ItemLabelGenerator<Class>) aClass -> String.format("%s [%s]", aClass.getName(), getTranslation(aClass.getClassType().getProperty())));
     }

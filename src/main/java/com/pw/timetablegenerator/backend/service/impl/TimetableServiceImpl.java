@@ -4,10 +4,7 @@ import com.pw.timetablegenerator.backend.common.ParityOfTheWeek;
 import com.pw.timetablegenerator.backend.common.TimetableType;
 import com.pw.timetablegenerator.backend.dts.PreferenceDts;
 import com.pw.timetablegenerator.backend.entity.Class;
-import com.pw.timetablegenerator.backend.entity.Course;
-import com.pw.timetablegenerator.backend.entity.EnrollmentGroup;
-import com.pw.timetablegenerator.backend.entity.Timetable;
-import com.pw.timetablegenerator.backend.entity.User;
+import com.pw.timetablegenerator.backend.entity.*;
 import com.pw.timetablegenerator.backend.jpa.CourseRepository;
 import com.pw.timetablegenerator.backend.jpa.TimetableRepository;
 import com.pw.timetablegenerator.backend.service.TimetableService;
@@ -22,6 +19,7 @@ import java.util.stream.Collectors;
 @Service
 public class TimetableServiceImpl implements TimetableService {
 
+    private static final int MAX_NEW_GENERATION_NUMBER = 20;
     @Autowired
     private TimetableRepository timetableRepository;
 
@@ -84,7 +82,7 @@ public class TimetableServiceImpl implements TimetableService {
         Map<Course, Integer> preferenceForces =  assignEachCoursePreferenceForce(enrollmentGroup, preferences);
         //1
         enrollCoursesWithOneTerm(timetable, coursesToEnroll, enrollmentGroup);
-        for(int i = 0; i < 20; i++){
+        for(int i = 0; i < MAX_NEW_GENERATION_NUMBER; i++){
             //3
             enrollCoursesByPreferenceForce(coursesToEnroll, preferenceForces);
             //4
