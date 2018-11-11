@@ -4,7 +4,9 @@ import com.pw.timetablegenerator.backend.dts.PreferenceDts;
 import com.pw.timetablegenerator.backend.entity.Timetable;
 import com.pw.timetablegenerator.backend.entity.properties.App_;
 import com.pw.timetablegenerator.backend.entity.properties.Timetable_;
+import com.pw.timetablegenerator.backend.service.CourseService;
 import com.pw.timetablegenerator.backend.service.TimetableService;
+import com.pw.timetablegenerator.backend.service.UserService;
 import com.pw.timetablegenerator.backend.utils.security.SecurityUtils;
 import com.pw.timetablegenerator.ui.MainLayout;
 import com.pw.timetablegenerator.ui.common.AbstractEditorDialog;
@@ -86,6 +88,12 @@ public class TimetablesList extends PolymerTemplate<TimetablesList.TimetablesMod
     @Autowired
     private TimetableService timetableService;
 
+    @Autowired
+    private CourseService courseService;
+
+    @Autowired
+    private UserService userService;
+
     /**
      * Needs to be done here, because autowireds field are injected after constructor
      */
@@ -120,15 +128,21 @@ public class TimetablesList extends PolymerTemplate<TimetablesList.TimetablesMod
 
         final List<PreferenceDts> preferences = timetableForm.getPreferences();
         timetableService.generateTimetable(timetable, timetableForm.getEnrollmentGroup(), preferences);
+        userService.refreshUserData();
         updateList();
         Notification.show(getTranslation(Timetable_.MSG_GENERATED), 3000,
                 Notification.Position.BOTTOM_START);
     }
 
     public void deleteTimetable(Timetable timetable){
-        timetable.getCourses().stream().forEach(c -> c.getTimetables().remove(timetable));
+        timetable.getCourses().stream().forEach(c -> {
+            c.getTimetables().remove(timetable);
+            courseService.saveCourse(c);
+        });
         timetable.setCourses(null);
         timetableService.delete(timetable);
+        userService.refreshUserData();
+
         updateList();
         Notification.show(getTranslation(Timetable_.MSG_DELETE), 3000,
                 Notification.Position.BOTTOM_START);
