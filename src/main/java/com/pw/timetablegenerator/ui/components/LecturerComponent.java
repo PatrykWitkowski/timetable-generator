@@ -15,6 +15,7 @@ import com.vaadin.flow.shared.Registration;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -38,6 +39,7 @@ public class LecturerComponent extends Component implements HasComponents, HasVa
     private Set<Lecturer> findAllUserLecturers() {
         if(SecurityUtils.getCurrentUser() != null){
             return SecurityUtils.getCurrentUser().getUser().getOwnerClasses().stream()
+                    .filter(Objects::nonNull)
                     .flatMap(c -> c.getCourses().stream())
                     .map(Course::getLecturer)
                     .collect(Collectors.toSet());

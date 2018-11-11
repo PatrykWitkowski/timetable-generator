@@ -52,12 +52,12 @@ public class CoursesManager extends Component implements HasComponents {
 
     public CoursesManager(Class currentClass,
                           BiConsumer<Course, AbstractEditorDialog.Operation> itemSaver,
-                          Consumer<Course> itemDeleter){
+                          Consumer<Course> itemDeleter,  BiConsumer<Class, AbstractEditorDialog.Operation> classSaver){
         this.currentClass = currentClass;
 
         createCoursesTable(currentClass);
         createDetails();
-        createButtons(itemSaver, itemDeleter);
+        createButtons(itemSaver, itemDeleter, classSaver);
 
         HorizontalLayout buttonBar = new HorizontalLayout(addCourse, deleteCourse);
         buttonBar.setClassName("buttons");
@@ -76,11 +76,12 @@ public class CoursesManager extends Component implements HasComponents {
     }
 
     private void createButtons(BiConsumer<Course, AbstractEditorDialog.Operation> itemSaver,
-                               Consumer<Course> itemDeleter) {
+                               Consumer<Course> itemDeleter, BiConsumer<Class, AbstractEditorDialog.Operation> classSaver) {
         courseEditorDialog = new CourseEditorDialog(itemSaver, itemDeleter);
         addCourse.addClickListener(e -> {
             Course newCourse = new Course();
             newCourse.setClassOwner(currentClass);
+            classSaver.accept(currentClass, AbstractEditorDialog.Operation.ADD);
             courseEditorDialog.open(newCourse, AbstractEditorDialog.Operation.ADD);
         });
         addCourse.setSizeFull();
@@ -159,5 +160,9 @@ public class CoursesManager extends Component implements HasComponents {
     public void refreshCoursesTable(Course course){
         currentClass.getCourses().add(course);
         courses.setItems(currentClass.getCourses());
+    }
+
+    public void addCourseButtonEnabled(boolean enabled){
+        addCourse.setEnabled(enabled);
     }
 }

@@ -27,12 +27,17 @@ public class ClassEditorDialog extends AbstractEditorDialog<Class> {
     private Tab tabCourses;
     private BiConsumer<Course, Operation> itemSaver;
     private Consumer<Course> itemDeleter;
+    private BiConsumer<Class, Operation> classSaver;
+    private Consumer<Class> classDeleter;
+    private Operation currentOperation;
 
     protected ClassEditorDialog(BiConsumer<Class, Operation> itemSaver, Consumer<Class> itemDeleter,
                                 BiConsumer<Course, Operation> courseSaver, Consumer<Course> courseDeleter) {
         super(StringUtils.EMPTY, itemSaver, itemDeleter);
         this.itemSaver = courseSaver;
         this.itemDeleter = courseDeleter;
+        this.classSaver = itemSaver;
+        this.classDeleter = itemDeleter;
         setItemType(Class_.NEW_CLASS, Class_.EDIT_CLASS);
 
         createNameField();
@@ -70,6 +75,8 @@ public class ClassEditorDialog extends AbstractEditorDialog<Class> {
         className.addValueChangeListener(e -> getCurrentItem().setName(e.getValue()));
         getFormLayout().add(className);
 
+        className.addValueChangeListener(e -> coursesManager.addCourseButtonEnabled(StringUtils.isNotBlank(e.getValue())));
+
         getBinder().forField(className)
                 .withValidator(StringUtils::isNotBlank, getTranslation(App_.MSG_NOT_BLANK))
                 .bind(Class::getName, Class::setName);
@@ -89,17 +96,19 @@ public class ClassEditorDialog extends AbstractEditorDialog<Class> {
 
     @Override
     public void open(Class item, Operation operation) {
+        this.currentOperation = operation;
         createCoursesManager(item);
+        coursesManager.addCourseButtonEnabled(false);
         super.open(item, operation);
     }
 
     private void createCoursesManager(Class item) {
         if(!coursesManagerAlreadyAdded){
-            coursesManager = new CoursesManager(item, itemSaver, itemDeleter);
+            coursesManager = new CoursesManager(item, itemSaver, itemDeleter, classSaver);
             tabCourses = addNewTab(getTranslation(Course_.COURSES), new Div(coursesManager));
             coursesManagerAlreadyAdded = true;
         } else{
-            coursesManager = new CoursesManager(item, itemSaver, itemDeleter);
+            coursesManager = new CoursesManager(item, itemSaver, itemDeleter, classSaver);
             updateTab(tabCourses, new Div(coursesManager));
         }
     }
@@ -108,5 +117,13 @@ public class ClassEditorDialog extends AbstractEditorDialog<Class> {
         if(coursesManager != null){
             coursesManager.refreshCoursesTable(course);
         }
+    }
+
+    @Override
+    protected void cancelClicked() {
+        if(getCurrentItem().getClassId() != null && currentOperation == Operation.ADD){
+            classDeleter.accept(getCurrentItem());
+        }
+        super.cancelClicked();
     }
 }

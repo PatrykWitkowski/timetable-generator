@@ -276,6 +276,15 @@ public class GroupsList extends AbstractList implements BeforeEnterObserver {
     private void deleteClass(Class c){
         classService.deleteClass(c);
         userService.refreshUserData();
+        SecurityUtils.getCurrentUser().getUser().getTimetables().forEach(timetable -> {
+            final List<Class> classOwners = timetable.getCourses().stream()
+                    .map(Course::getClassOwner)
+                    .collect(Collectors.toList());
+            if(classOwners.contains(null)){
+                deleteTimetable(timetable);
+            }
+        });
+        userService.refreshUserData();
 
         Notification.show(getTranslation(Class_.MSG_SUCCESS) + getTranslation(Class_.MSG_CLASS_DELETED),
                 3000,

@@ -27,6 +27,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.time.format.TextStyle;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -166,7 +167,8 @@ public class CourseEditorDialog extends AbstractEditorDialog<Course> {
         classOwner.setAllowCustomValue(false);
         classOwner.setItems(SecurityUtils.getCurrentUser().getUser().getOwnerClasses());
         classOwner.setItemLabelGenerator((ItemLabelGenerator<Class>) cl ->
-                String.format("%s [%s]", cl.getName(), getTranslation(cl.getClassType().getProperty())));
+                cl != null ? String.format("%s [%s]", cl.getName(), getTranslation(cl.getClassType().getProperty())) :
+                        StringUtils.EMPTY);
         getFormLayout().add(classOwner);
 
         getBinder().forField(classOwner)
@@ -199,7 +201,7 @@ public class CourseEditorDialog extends AbstractEditorDialog<Course> {
         getCurrentItem().setParityOfTheWeek(ParityOfTheWeek.WEEKLY);
         oldParityOfTheWeek  = getCurrentItem().getParityOfTheWeek();
         if(operation == Operation.EDIT){
-            resetFields();
+            //resetFields();
         }
     }
 
