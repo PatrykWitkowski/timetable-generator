@@ -51,7 +51,6 @@ public class ClassEditorDialog extends AbstractEditorDialog<Class> {
         classType.setItemLabelGenerator((ItemLabelGenerator<ClassType>) classType -> getTranslation(classType.getProperty()));
         classType.setAllowCustomValue(false);
         classType.setPreventInvalidInput(true);
-        classType.addValueChangeListener(e -> getCurrentItem().setClassType(e.getValue()));
         getFormLayout().add(classType);
 
         getBinder().forField(classType)
@@ -84,7 +83,8 @@ public class ClassEditorDialog extends AbstractEditorDialog<Class> {
 
     @Override
     protected void afterDialogOpen(Operation operation) {
-        // nothing to do
+        classType.clear();
+        classType.setValue(getCurrentItem().getClassType());
     }
 
     @Override
