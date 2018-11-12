@@ -3,7 +3,6 @@ package com.pw.timetablegenerator.ui.views.timetableslist;
 import com.google.common.collect.Lists;
 import com.pw.timetablegenerator.backend.common.DayTime;
 import com.pw.timetablegenerator.backend.common.ParityOfTheWeek;
-import com.pw.timetablegenerator.backend.dts.AvoidBreakPreferenceDts;
 import com.pw.timetablegenerator.backend.dts.DayTimePreferenceDts;
 import com.pw.timetablegenerator.backend.dts.FreeDayPreferenceDts;
 import com.pw.timetablegenerator.backend.dts.PreferenceDts;
@@ -55,8 +54,6 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
     private RatingTableComponent lecturersTable;
     private ClassOnDayRatingTableComponent classOnDayTable;
     private ClassParityWeekRatingTableComponent classParityWeekRatingTable;
-    private Checkbox avoidTimeBreak = new Checkbox();
-    private RatingStarsComponent avoidTimeBreakRating;
     private FormLayout preferenceFormLayout;
     private Tab tabPreference;
     @Getter
@@ -69,11 +66,6 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
 
         createPreferenceForm();
         tabPreference = addNewTab(getTranslation(Timetable_.PREFERENCES), new Div(preferenceFormLayout));
-    }
-
-    private void createAvoidTimeBreakPreference() {
-        avoidTimeBreak.setLabel(getTranslation(Timetable_.AVOID_TIME_BREAK));
-        avoidTimeBreakRating = createFieldWithRating(avoidTimeBreak);
     }
 
     private void createClassParityWeekPreference() {
@@ -240,7 +232,6 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
         createLecturerPreference();
         createClassOnDayPreference();
         createClassParityWeekPreference();
-        createAvoidTimeBreakPreference();
 
         enrollmentGroupComboBox.setItems(Optional.ofNullable(getCurrentItem().getOwner())
                 .map(User::getEnrollmentGroups)
@@ -271,9 +262,6 @@ public class TimetableEditorDialog extends AbstractEditorDialog<Timetable> {
         preferences.addAll(lecturersTable.getPreferences());
         preferences.addAll(classOnDayTable.getPreferences());
         preferences.addAll(classParityWeekRatingTable.getPreferences());
-        if(avoidTimeBreak.getValue()){
-            preferences.add(new AvoidBreakPreferenceDts(avoidTimeBreakRating.getStarValue()));
-        }
     }
 
     public EnrollmentGroup getEnrollmentGroup(){
