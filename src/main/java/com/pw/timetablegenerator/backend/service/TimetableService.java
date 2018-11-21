@@ -19,5 +19,6 @@ public interface TimetableService extends Serializable {
 
     void save(@NonNull Timetable timetable);
 
-    void generateTimetable(@NonNull Timetable timetable, @NonNull EnrollmentGroup enrollmentGroup, @NonNull List<PreferenceDts> preferences);
+    void generateTimetable(@NonNull Timetable timetable, @NonNull EnrollmentGroup enrollmentGroup,
+                           @NonNull List<PreferenceDts> preferences);
 }

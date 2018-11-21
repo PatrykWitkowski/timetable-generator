@@ -1,7 +1,11 @@
 insert into timetables(timetable_id, user_id, name, semester, semester_start_date, semester_end_date, quality, generation_date, timetable_type)
-values (1, 1, 'test_timetable', 7, '2018-10-01', '2019-01-30', 92.3, NOW(), 'EXCELLENT');
+values (1, 1, 'test_1', 1, '2018-10-01', '2019-01-30', 92.3, NOW(), 'EXCELLENT');
 insert into timetables(timetable_id, user_id, name, semester, semester_start_date, semester_end_date, quality, generation_date, timetable_type)
-values (2, 1, 'test_timetable_2', 7, '2018-10-01', '2019-01-30', 5, NOW(), 'INVALID');
+values (2, 1, 'test_2', 3, '2018-10-01', '2019-01-30', 62.1, NOW(), 'GOOD');
+insert into timetables(timetable_id, user_id, name, semester, semester_start_date, semester_end_date, quality, generation_date, timetable_type)
+values (3, 1, 'test_3', 4, '2018-10-01', '2019-01-30', 24.3, NOW(), 'BAD');
+insert into timetables(timetable_id, user_id, name, semester, semester_start_date, semester_end_date, quality, generation_date, timetable_type)
+values (4, 1, 'test_4', 7, '2018-10-01', '2019-01-30', 5, NOW(), 'INVALID');
 
 insert into enrollment_groups(enrollment_id, user_id, name, ects_sum, semester)
 values (1, 1, 'zapisowa_1', 20, 2);
