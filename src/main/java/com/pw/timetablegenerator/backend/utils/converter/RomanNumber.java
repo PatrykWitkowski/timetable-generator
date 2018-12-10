@@ -34,8 +34,6 @@ public class RomanNumber {
         int decimal = 0;
         int lastNumber = 0;
         String romanNumeral = romanNumber.toUpperCase();
-        /* operation to be performed on upper cases even if user
-           enters roman values in lower case chars */
         for (int x = romanNumeral.length() - 1; x >= 0 ; x--) {
             char convertToDecimal = romanNumeral.charAt(x);
 

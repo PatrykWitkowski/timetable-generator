@@ -2,6 +2,8 @@ package com.pw.timetablegenerator.backend.entity;
 
 import com.pw.timetablegenerator.backend.common.ClassType;
 import com.pw.timetablegenerator.backend.common.GroupType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.StringUtils;
@@ -19,6 +21,8 @@ import java.util.List;
 @Table(name = "classes")
 @Data
 @EqualsAndHashCode(exclude = {"owner", "enrollmentGroups", "courses"})
+@Builder
+@AllArgsConstructor
 public class Class implements Serializable, Group {
 
     @Id

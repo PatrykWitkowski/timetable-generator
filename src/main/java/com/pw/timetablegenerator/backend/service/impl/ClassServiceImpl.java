@@ -19,11 +19,6 @@ public class ClassServiceImpl implements ClassService {
     private ClassRepository classRepository;
 
     @Override
-    public List<Class> findByOwner(User owner) {
-        return classRepository.findByOwner(owner);
-    }
-
-    @Override
     public List<Class> findClasses(User user, String value) {
         List<Class> classes = classRepository.findByOwner(user);
 

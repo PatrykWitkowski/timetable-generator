@@ -2,13 +2,14 @@ package com.pw.timetablegenerator.backend.entity;
 
 import com.pw.timetablegenerator.backend.common.GroupType;
 import com.pw.timetablegenerator.backend.common.ParityOfTheWeek;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
@@ -20,6 +21,8 @@ import java.util.Objects;
 @Table(name = "courses")
 @Data
 @ToString(exclude = {"classOwner", "timetables"})
+@Builder
+@AllArgsConstructor
 public class Course implements Serializable, Group {
 
     @Id

@@ -15,7 +15,4 @@ public interface EnrollmentGroupService extends Serializable {
 
     void deleteEnrollmentGroup(@NonNull EnrollmentGroup enrollmentGroup);
 
-    EnrollmentGroup findEnrollmentGroupById(@NonNull Long id);
-
-
 }

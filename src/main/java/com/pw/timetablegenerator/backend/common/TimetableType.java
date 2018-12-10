@@ -3,6 +3,9 @@ package com.pw.timetablegenerator.backend.common;
 import com.vaadin.flow.component.UI;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Locale;
+import java.util.Optional;
+
 public enum TimetableType {
     INVALID, BAD, GOOD, EXCELLENT;
 
@@ -13,7 +16,10 @@ public enum TimetableType {
 
     @Override
     public String toString() {
-        final String language = UI.getCurrent().getLocale().getLanguage();
+        final String language = Optional.ofNullable(UI.getCurrent())
+                .map(UI::getLocale)
+                .map(Locale::getLanguage)
+                .orElse("en");
         if(StringUtils.equalsIgnoreCase(language, "en")){
             return name();
         } else if(StringUtils.equalsIgnoreCase(language, "pl")){

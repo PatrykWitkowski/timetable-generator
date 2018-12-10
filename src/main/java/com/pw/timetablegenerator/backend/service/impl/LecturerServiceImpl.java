@@ -12,7 +12,6 @@ public class LecturerServiceImpl implements LecturerService {
     @Autowired
     private LecturerRepository lecturerRepository;
 
-
     @Override
     public Lecturer saveLecturer(Lecturer lecturer) {
         return lecturerRepository.save(lecturer);

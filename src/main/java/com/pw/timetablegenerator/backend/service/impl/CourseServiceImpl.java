@@ -40,11 +40,6 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<Course> findByClassOwner(Class classOwner) {
-        return courseRepository.findByClassOwner(classOwner);
-    }
-
-    @Override
     public Course saveCourse(Course course) {
         return courseRepository.save(course);
     }

@@ -43,8 +43,4 @@ public class EnrollmentGroupImpl implements EnrollmentGroupService {
         enrollmentGroupRepository.delete(enrollmentGroup);
     }
 
-    @Override
-    public EnrollmentGroup findEnrollmentGroupById(Long id) {
-        return enrollmentGroupRepository.findById(id).orElse(null);
-    }
 }

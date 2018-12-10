@@ -1,6 +1,8 @@
 package com.pw.timetablegenerator.backend.entity;
 
 import com.pw.timetablegenerator.backend.common.GroupType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.LazyCollection;
@@ -17,6 +19,8 @@ import java.util.List;
 @Table(name = "enrollment_groups")
 @Data
 @EqualsAndHashCode(exclude = {"owner", "classes"})
+@Builder
+@AllArgsConstructor
 public class EnrollmentGroup implements Group, Serializable {
 
     @Id
